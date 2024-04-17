@@ -1,4 +1,6 @@
-import pyautogui, pyscreeze, time, keyboard, sys
+import pyautogui
+import time
+import sys
 
 b = 0
 start = time.time()
@@ -33,7 +35,7 @@ def click(
 
 def searchMode(b, fward, bward):
     checkActive(b, fward, bward)
-    while JEDD_locateCenterOnScreen("expmultiplier.png", confidence=0.9) != None:
+    while JEDD_locateCenterOnScreen("expmultiplier.png", confidence=0.9) is not None:
         try:
             toClick = pyautogui.locateCenterOnScreen(fward, confidence=0.9)
             pyautogui.moveTo(toClick, duration=0.2)
@@ -107,7 +109,7 @@ def summary(b, fward, bward):
         pyautogui.leftClick()
         time.sleep(1)
 
-        if trainable == True:
+        if trainable is True:
             try:
                 toClick = pyautogui.locateCenterOnScreen("train.png", confidence=0.75)
                 pyautogui.moveTo(toClick, duration=0.2)
