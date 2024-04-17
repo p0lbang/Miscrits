@@ -11,7 +11,7 @@ WEAKNESS = "nature.png"
 
 
 def JEDD_locateCenterOnScreen(
-    imagename: str, confidence: float
+    imagename: str, confidence: float = 0.999
 ) -> pyautogui.Point | None:
     try:
         return pyautogui.locateCenterOnScreen(imagename, confidence=confidence)
@@ -59,29 +59,28 @@ def searchMode():
 
 def battleMode():
     global WEAKNESS, b
-    checkActive()
-    try:
-        pyautogui.locateOnScreen("miscripedia.png", confidence=0.8)
+    while True:
+        checkActive()
+
+        if JEDD_locateCenterOnScreen("miscripedia.png", confidence=0.8) is None:
+            b += 1
+            time.sleep(0.5)
+            summary()
+            return
+
         time.sleep(0.1)
-        try:
-            toClick = pyautogui.locateCenterOnScreen("run.png", confidence=0.99)
+
+        if (
+            toClick := JEDD_locateCenterOnScreen("run.png", confidence=0.99)
+        ) is not None:
             pyautogui.moveTo(toClick, duration=0.2)
-            try:
-                pyautogui.locateOnScreen(WEAKNESS)
+
+            if JEDD_locateCenterOnScreen(WEAKNESS):
                 pyautogui.leftClick()
-            except Exception:
+            else:
                 pyautogui.moveRel(115, 80)
                 pyautogui.leftClick()
                 pyautogui.moveTo(toClick, duration=0.2)
-        except Exception:
-            battleMode()
-        # print("battlemode again")
-        battleMode()
-    except Exception:
-        b += 1
-        # print("Battle done.")
-        time.sleep(0.5)
-        summary()
 
 
 def summary():
