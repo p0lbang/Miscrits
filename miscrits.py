@@ -6,7 +6,7 @@ b = 0
 start = time.time()
 
 # SELECT WHICH ELEMENTS TO SEARCH IN ALTERNATION
-EXPLORE = ["eldertree.png", "eldershrub.png"]
+EXPLORE = ["eldertree.png", "eldershrub.png", "eldersunflower.png"]
 WEAKNESS = "nature.png"
 
 
@@ -39,21 +39,17 @@ def searchMode():
     while JEDD_locateCenterOnScreen("expmultiplier.png", confidence=0.9) is not None:
         SearchSuccess = False
         for search in EXPLORE:
-            if (
-                toClick := JEDD_locateCenterOnScreen(search, confidence=0.9)
-            ) is not None:
-                SearchSuccess = True
-                pyautogui.moveTo(toClick, duration=0.2)
-                pyautogui.leftClick()
-                time.sleep(4)
+            if (toClick := JEDD_locateCenterOnScreen(search, confidence=0.9)) is None:
+                continue
 
-                if (
-                    JEDD_locateCenterOnScreen("expmultiplier.png", confidence=0.8)
-                    is None
-                ):
-                    battleMode()
-                else:
-                    continue
+            SearchSuccess = True
+            pyautogui.moveTo(toClick, duration=0.2)
+            pyautogui.leftClick()
+            time.sleep(4)
+
+            if JEDD_locateCenterOnScreen("expmultiplier.png", confidence=0.8) is None:
+                battleMode()
+                time.sleep(0.5)
 
         if not SearchSuccess:
             checkActive()
