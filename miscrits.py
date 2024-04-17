@@ -5,11 +5,9 @@ import sys
 b = 0
 start = time.time()
 
-# SELECT WHICH TWO ELEMENTS TO SEARCH IN ALTERNATION
-fward = "eldertree.png"
-bward = "eldershrub.png"
-
+# SELECT WHICH ELEMENTS TO SEARCH IN ALTERNATION
 EXPLORE = ["eldertree.png", "eldershrub.png"]
+WEAKNESS = "nature.png"
 
 
 def JEDD_locateCenterOnScreen(
@@ -35,11 +33,12 @@ def click(
     return True
 
 
-def searchMode(b, explore):
-    checkActive(b, explore)
+def searchMode():
+    global EXPLORE
+    checkActive()
     while JEDD_locateCenterOnScreen("expmultiplier.png", confidence=0.9) is not None:
         SearchSuccess = False
-        for search in explore:
+        for search in EXPLORE:
             if (
                 toClick := JEDD_locateCenterOnScreen(search, confidence=0.9)
             ) is not None:
@@ -52,18 +51,19 @@ def searchMode(b, explore):
                     JEDD_locateCenterOnScreen("expmultiplier.png", confidence=0.8)
                     is None
                 ):
-                    battleMode(b, explore)
+                    battleMode()
                 else:
                     continue
 
         if not SearchSuccess:
-            checkActive(b, explore)
+            checkActive()
             print("Elements not found, concluding process...")
-            conclude(b)
+            conclude()
 
 
-def battleMode(b, explore):
-    checkActive(b, explore)
+def battleMode():
+    global WEAKNESS, b
+    checkActive()
     try:
         pyautogui.locateOnScreen("miscripedia.png", confidence=0.8)
         time.sleep(0.1)
@@ -71,25 +71,25 @@ def battleMode(b, explore):
             toClick = pyautogui.locateCenterOnScreen("run.png", confidence=0.99)
             pyautogui.moveTo(toClick, duration=0.2)
             try:
-                pyautogui.locateOnScreen("nature.png")
+                pyautogui.locateOnScreen(WEAKNESS)
                 pyautogui.leftClick()
             except Exception:
                 pyautogui.moveRel(115, 80)
                 pyautogui.leftClick()
                 pyautogui.moveTo(toClick, duration=0.2)
         except Exception:
-            battleMode(b, explore)
+            battleMode()
         # print("battlemode again")
-        battleMode(b, explore)
+        battleMode()
     except Exception:
         b += 1
         # print("Battle done.")
         time.sleep(0.5)
-        summary(b, explore)
+        summary()
 
 
-def summary(b, explore):
-    checkActive(b, explore)
+def summary():
+    checkActive()
     try:
         try:
             pyautogui.locateOnScreen("trainable.png", confidence=0.6)
@@ -111,24 +111,24 @@ def summary(b, explore):
                 pyautogui.moveTo(toClick, duration=0.2)
                 pyautogui.leftClick()
                 time.sleep(1)
-                train(b, explore)
+                train()
             except Exception:
-                searchMode(b, explore)
+                searchMode()
         else:
-            searchMode(b, explore)
+            searchMode()
     except Exception:
         time.sleep(1)
-        summary(b, explore)
+        summary()
 
 
-def train(b, explore):
-    checkActive(b, explore)
+def train():
+    checkActive()
     try:
         toClick = pyautogui.locateCenterOnScreen("trainable.png", confidence=0.6)
     except Exception:
         time.sleep(1)
         click("x.png", 0.8)
-        searchMode(b, explore)
+        searchMode()
     else:
         try:
             pyautogui.moveTo(toClick, duration=0.2)
@@ -160,26 +160,26 @@ def train(b, explore):
                 pyautogui.leftClick()
                 time.sleep(0.3)
             except Exception:
-                train(b, explore)
+                train()
         except Exception:
-            train(b, explore)
+            train()
 
 
-def checkActive(b, explore):
+def checkActive():
     try:
         pyautogui.locateOnScreen("appname.png", confidence=0.75)
     except Exception:
         print("Game is minimized, concluding process...")
         time.sleep(0.5)
-        conclude(b)
+        conclude()
 
 
-def conclude(b):
+def conclude():
     print(f"Ended process after {b} Miscrits fought.")
     print(f"Runtime: {time.time()-start}")
     sys.exit("Ending process.")
 
 
 time.sleep(1)
-searchMode(b, EXPLORE)
+searchMode()
 sys.exit("Ended.")
