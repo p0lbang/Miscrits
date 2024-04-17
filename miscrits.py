@@ -7,163 +7,181 @@ start = time.time()
 fward = "eldertree.png"
 bward = "eldershrub.png"
 
-def JEDD_locateCenterOnScreen(imagename: str, confidence: float) -> pyautogui.Point | None:
+
+def JEDD_locateCenterOnScreen(
+    imagename: str, confidence: float
+) -> pyautogui.Point | None:
     try:
-        return pyautogui.locateCenterOnScreen(imagename, confidence = confidence)
+        return pyautogui.locateCenterOnScreen(imagename, confidence=confidence)
     except pyautogui.ImageNotFoundException:
         return None
 
 
-def click(imagename: str, confidence: float = 0.9, sleep: float = 0.2, duration: float = 0.2) -> bool:
-    toClick = JEDD_locateCenterOnScreen(imagename, confidence = confidence)
+def click(
+    imagename: str, confidence: float = 0.9, sleep: float = 0.2, duration: float = 0.2
+) -> bool:
+    toClick = JEDD_locateCenterOnScreen(imagename, confidence=confidence)
 
     if toClick is None:
         return False
-    
-    pyautogui.moveTo(toClick, duration = duration)
+
+    pyautogui.moveTo(toClick, duration=duration)
     pyautogui.leftClick()
     time.sleep(sleep)
     return True
 
-def searchMode(b,fward,bward):
-    checkActive(b,fward,bward)
-    while JEDD_locateCenterOnScreen("expmultiplier.png", confidence = 0.9) != None:
+
+def searchMode(b, fward, bward):
+    checkActive(b, fward, bward)
+    while JEDD_locateCenterOnScreen("expmultiplier.png", confidence=0.9) != None:
         try:
-            toClick = pyautogui.locateCenterOnScreen(fward, confidence = 0.9)
-            pyautogui.moveTo(toClick, duration = 0.2)
+            toClick = pyautogui.locateCenterOnScreen(fward, confidence=0.9)
+            pyautogui.moveTo(toClick, duration=0.2)
             pyautogui.leftClick()
             time.sleep(4)
             try:
-                pyautogui.locateOnScreen("expmultiplier.png", confidence = 0.8)
+                pyautogui.locateOnScreen("expmultiplier.png", confidence=0.8)
                 continue
             except Exception:
                 # print("Entering battle mode. Waiting for battle to finish...")
-                battleMode(b,fward,bward)
+                battleMode(b, fward, bward)
         except Exception:
             try:
-                toClick = pyautogui.locateCenterOnScreen(bward, confidence = 0.9)
-                pyautogui.moveTo(toClick, duration = 0.2)
+                toClick = pyautogui.locateCenterOnScreen(bward, confidence=0.9)
+                pyautogui.moveTo(toClick, duration=0.2)
                 pyautogui.leftClick()
                 time.sleep(4)
                 try:
-                    pyautogui.locateOnScreen("expmultiplier.png", confidence = 0.8)
+                    pyautogui.locateOnScreen("expmultiplier.png", confidence=0.8)
                     continue
                 except Exception:
                     # print("Entering battle mode. Waiting for battle to finish...")
-                    battleMode(b,fward,bward)
+                    battleMode(b, fward, bward)
             except Exception:
-                checkActive(b,fward,bward)
+                checkActive(b, fward, bward)
                 print("Elements not found, concluding process...")
                 conclude(b)
-    
+
     conclude(b)
 
-def battleMode(b,fward,bward):
-    checkActive(b,fward,bward)
+
+def battleMode(b, fward, bward):
+    checkActive(b, fward, bward)
     try:
-        pyautogui.locateOnScreen("miscripedia.png", confidence = 0.8)
+        pyautogui.locateOnScreen("miscripedia.png", confidence=0.8)
         time.sleep(0.1)
-        try:   
-            toClick = pyautogui.locateCenterOnScreen("run.png", confidence = 0.99)
-            pyautogui.moveTo(toClick, duration = 0.2)
+        try:
+            toClick = pyautogui.locateCenterOnScreen("run.png", confidence=0.99)
+            pyautogui.moveTo(toClick, duration=0.2)
             try:
                 pyautogui.locateOnScreen("nature.png")
                 pyautogui.leftClick()
             except Exception:
-                pyautogui.moveRel(115,80)
+                pyautogui.moveRel(115, 80)
                 pyautogui.leftClick()
-                pyautogui.moveTo(toClick, duration = 0.2)
+                pyautogui.moveTo(toClick, duration=0.2)
         except Exception:
-            battleMode(b,fward,bward)
-        battleMode(b,fward,bward)
+            battleMode(b, fward, bward)
+        battleMode(b, fward, bward)
     except Exception:
         b += 1
         # print("Battle done.")
         time.sleep(0.5)
-        summary(b,fward,bward)
+        summary(b, fward, bward)
 
-def summary(b,fward,bward):
-    checkActive(b,fward,bward)
-    try: 
+
+def summary(b, fward, bward):
+    checkActive(b, fward, bward)
+    try:
         try:
-            pyautogui.locateOnScreen("trainable.png", confidence = 0.6)
+            pyautogui.locateOnScreen("trainable.png", confidence=0.6)
             trainable = True
         except Exception:
             trainable = False
-        
-        pyautogui.locateOnScreen("closebtn.png", confidence = 0.9)
+
+        pyautogui.locateOnScreen("closebtn.png", confidence=0.9)
         time.sleep(1)
-        pyautogui.moveTo(pyautogui.locateOnScreen("closebtn.png", confidence = 0.85), duration = 0.1)
+        pyautogui.moveTo(
+            pyautogui.locateOnScreen("closebtn.png", confidence=0.85), duration=0.1
+        )
         pyautogui.leftClick()
         time.sleep(1)
-        
+
         if trainable == True:
             try:
-                toClick = pyautogui.locateCenterOnScreen("train.png", confidence = 0.75)
-                pyautogui.moveTo(toClick, duration = 0.2)
+                toClick = pyautogui.locateCenterOnScreen("train.png", confidence=0.75)
+                pyautogui.moveTo(toClick, duration=0.2)
                 pyautogui.leftClick()
                 time.sleep(1)
-                train(b,fward,bward)
+                train(b, fward, bward)
             except Exception:
-                searchMode(b,fward,bward)
+                searchMode(b, fward, bward)
         else:
-            searchMode(b,fward,bward)
+            searchMode(b, fward, bward)
     except Exception:
         time.sleep(1)
-        summary(b,fward,bward)
+        summary(b, fward, bward)
 
-def train(b,fward,bward):
-    checkActive(b,fward,bward)
+
+def train(b, fward, bward):
+    checkActive(b, fward, bward)
     try:
-        toClick = pyautogui.locateCenterOnScreen("trainable.png", confidence = 0.6)
+        toClick = pyautogui.locateCenterOnScreen("trainable.png", confidence=0.6)
     except Exception:
         time.sleep(1)
-        click("x.png",0.8)
-        searchMode(b,fward,bward)
+        click("x.png", 0.8)
+        searchMode(b, fward, bward)
     else:
         try:
-            pyautogui.moveTo(toClick, duration = 0.2)
+            pyautogui.moveTo(toClick, duration=0.2)
             pyautogui.leftClick()
             time.sleep(0.2)
-            toClick = pyautogui.locateCenterOnScreen("train2.png", confidence = 0.75)
-            pyautogui.moveTo(toClick, duration = 0.2)
+            toClick = pyautogui.locateCenterOnScreen("train2.png", confidence=0.75)
+            pyautogui.moveTo(toClick, duration=0.2)
             pyautogui.leftClick()
             time.sleep(0.3)
-            toClick = pyautogui.locateCenterOnScreen("continuebtn.png", confidence = 0.75)
-            pyautogui.moveTo(toClick, duration = 0.2)
+            toClick = pyautogui.locateCenterOnScreen("continuebtn.png", confidence=0.75)
+            pyautogui.moveTo(toClick, duration=0.2)
             pyautogui.leftClick()
             time.sleep(0.5)
             try:
-                toClick = pyautogui.locateCenterOnScreen("continuebtn2.png", confidence = 0.75)
-                pyautogui.moveTo(toClick, duration = 0.2)
+                toClick = pyautogui.locateCenterOnScreen(
+                    "continuebtn2.png", confidence=0.75
+                )
+                pyautogui.moveTo(toClick, duration=0.2)
                 pyautogui.leftClick()
                 time.sleep(0.3)
-                toClick = pyautogui.locateCenterOnScreen("continuebtn2.png", confidence = 0.5)
-                pyautogui.moveTo(toClick, duration = 0.2)
+                toClick = pyautogui.locateCenterOnScreen(
+                    "continuebtn2.png", confidence=0.5
+                )
+                pyautogui.moveTo(toClick, duration=0.2)
                 pyautogui.leftClick()
                 time.sleep(0.3)
-                toClick = pyautogui.locateCenterOnScreen("skipbtn.png", confidence = 0.75)
-                pyautogui.moveTo(toClick, duration = 0.2)
+                toClick = pyautogui.locateCenterOnScreen("skipbtn.png", confidence=0.75)
+                pyautogui.moveTo(toClick, duration=0.2)
                 pyautogui.leftClick()
                 time.sleep(0.3)
             except Exception:
-                train(b,fward,bward)
+                train(b, fward, bward)
         except Exception:
-            train(b,fward,bward)
+            train(b, fward, bward)
 
-def checkActive(b,fward,bward):
+
+def checkActive(b, fward, bward):
     try:
-        pyautogui.locateOnScreen("appname.png", confidence = 0.75)
+        pyautogui.locateOnScreen("appname.png", confidence=0.75)
     except Exception:
         print("Game is minimized, concluding process...")
         time.sleep(0.5)
         conclude(b)
+
 
 def conclude(b):
     print(f"Ended process after {b} Miscrits fought.")
     print(f"Runtime: {time.time()-start}")
     sys.exit("Ending process.")
 
+
 time.sleep(1)
-searchMode(b,fward,bward)
+searchMode(b, fward, bward)
 sys.exit("Ended.")
