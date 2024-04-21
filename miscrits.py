@@ -27,12 +27,12 @@ dance = pygame.mixer.Sound("dance.mp3")
 # EXPLORE = ["m2_shelf.png", "m2_brush2.png", "m2_potions.png", "m2_woodcage.png"]
 EXPLORE = ["m2_statue2.png", "m2_table.png", "m2_chairL.png"]
 
-#####[    C O N F I G    ]#####
-autoSearch = True             # just True or False
-autoTrain = True              #
-WEAKNESS = "nature.png"       # choose element that is strong against main miscrit
-target = "Nanaslug"           # miscrit name without space (pray for accuracy)
-huntType = "battle"           # "battle" or "escape" the miscrits that are not the target
+#----[    C O N F I G    ]----#
+autoSearch = True  #..........# just True or False
+autoTrain = True  #...........#
+WEAKNESS = "nature.png"  #....# choose element that is strong against main miscrit
+target = "Nanaslug"  #........# miscrit name without space (pray for accuracy)
+huntType = "battle"  #........# "battle" or "escape" the miscrits that are not the target
 
 
 def LXVI_locateCenterOnScreen(
@@ -82,23 +82,31 @@ def searchMode():
         if not checkActive():
             print("Game not found during search mode, concluding process...")
             conclude()
-        
+
         if LXVI_locateCenterOnScreen("battlebtns.png", 0.8) is not None:
             time.sleep(1)
-            if huntType == "battle": battleMode()
-            else: escapeMode()
+            if huntType == "battle":
+                battleMode()
+            else:
+                escapeMode()
             summary()
         elif LXVI_locateCenterOnScreen("closebtn.png", 0.8) is not None:
             click("closebtn.png", 0.8, 1, 0)
 
-        if (LXVI_locateCenterOnScreen("gold.png", confidence=0.8, region=[0, 100, 1920, 980]) is not None
-            ) or (LXVI_locateCenterOnScreen("potion1.png", confidence=0.65) is not None):
+        if (
+            LXVI_locateCenterOnScreen(
+                "gold.png", confidence=0.8, region=[0, 100, 1920, 980]
+            )
+            is not None
+        ) or (LXVI_locateCenterOnScreen("potion1.png", confidence=0.65) is not None):
             cleanUp()
 
         if autoSearch:
             SearchSuccess = False
             for search in EXPLORE:
-                if (toClick := LXVI_locateCenterOnScreen(search, confidence=0.8)) is None:
+                if (
+                    toClick := LXVI_locateCenterOnScreen(search, confidence=0.8)
+                ) is None:
                     time.sleep(1)
                     continue
 
@@ -109,8 +117,10 @@ def searchMode():
 
                 if LXVI_locateCenterOnScreen("battlebtns.png", 0.8) is not None:
                     time.sleep(1)
-                    if huntType == "hunt": escapeMode()
-                    else: battleMode()
+                    if huntType == "hunt":
+                        escapeMode()
+                    else:
+                        battleMode()
                     summary()
 
             if not SearchSuccess:
@@ -121,9 +131,13 @@ def searchMode():
             continue
 
 
-
 def cleanUp():
-    while LXVI_locateCenterOnScreen("gold.png", confidence=0.8, region=[0, 100, 1920, 980]) is not None:
+    while (
+        LXVI_locateCenterOnScreen(
+            "gold.png", confidence=0.8, region=[0, 100, 1920, 980]
+        )
+        is not None
+    ):
         click("gold.png", 0.8, 0, 0, [0, 100, 1920, 980])
     while LXVI_locateCenterOnScreen("potion1.png", confidence=0.65) is not None:
         click("potion1.png", 0.65, 0, 0)
@@ -152,17 +166,21 @@ def battleMode():
 
         if LXVI_locateCenterOnScreen("miscripedia.png", confidence=0.8) is None:
             if LXVI_locateCenterOnScreen("closebtn.png", 0.85) is not None:
-                print(f"\033[A{miscrit} was defeated. Time: {round(time.time()-battle_start, 3)}s")
+                print(
+                    f"\033[A{miscrit} was defeated. Time: {round(time.time()-battle_start, 3)}s"
+                )
                 return
 
         if not LXVI_locateCenterOnScreen(WEAKNESS, confidence=0.9):
             r = 1
 
-        if miscrit==target:
+        if miscrit == target:
             r = 0
             dance.play()
 
-        if (toClick := LXVI_locateCenterOnScreen("run.png", confidence=0.99)) is not None:
+        if (
+            toClick := LXVI_locateCenterOnScreen("run.png", confidence=0.99)
+        ) is not None:
             if r != 0:
                 pyautogui.moveTo(toClick)
                 pyautogui.moveRel(-45 + 160 * 1, 80)
@@ -170,7 +188,9 @@ def battleMode():
                 pyautogui.moveTo(toClick)
             else:
                 if miscrit == target:
-                    print(f"\033[ATarget miscrit {target} found! Ending process for catch.")
+                    print(
+                        f"\033[ATarget miscrit {target} found! Ending process for catch."
+                    )
                     time.sleep(10)
                     augh.play()
                     conclude()
@@ -198,7 +218,8 @@ def escapeMode():
         print(f"{target} found!!!")
         dance.play()
         augh.play()
-    else: print(f"{miscrit} showed up.")
+    else:
+        print(f"{miscrit} showed up.")
     click("mpedia_exit.png", 0.8, 0, 0)
     click("mpedia_exit.png", 0.8, 0, 0)
 
@@ -220,7 +241,9 @@ def escapeMode():
                 pyautogui.leftClick()
             else:
                 if miscrit == target:
-                    print(f"\033[ATarget miscrit {target} found! Ending process for catch.")
+                    print(
+                        f"\033[ATarget miscrit {target} found! Ending process for catch."
+                    )
                     time.sleep(10)
                     augh.play()
                     conclude()
