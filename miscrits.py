@@ -7,7 +7,7 @@ import numpy
 import easyocr.character
 import pygame
 
-reader = easyocr.Reader(["en"], gpu=True, verbose=False)
+reader = easyocr.Reader(["en"], gpu=False, verbose=False)
 pygame.init()
 
 b = 0
@@ -18,12 +18,16 @@ off = pygame.mixer.Sound("off.mp3")
 dance = pygame.mixer.Sound("dance.mp3")
 
 # SELECT WHICH ELEMENTS TO SEARCH IN ALTERNATION
+# EXPLORE = ["a1_cattail_02.png","a1_cattail_01.png","a1_cattail_03.png",]
+# EXPLORE = ["a2_stump.png","a2_smallrock.png","a2_bigrock.png",]
+# EXPLORE = ["a3_smallrock.png","a3_deadtree.png","a3_bigrock.png",]
 # EXPLORE = ["a2_puddle.png", "a2_palm.png", "a2_stone.png", "a2_tree.png"]
 # EXPLORE = ["eldertree.png", "eldershrub.png", "eldersunflower.png", "elderleafpile.png"]
 # EXPLORE = ["a4_bush.png", "a4_cattail2.png", "a4_tree.png" "a4_empty.png"]
 # EXPLORE = ["a4_blightbush.png", "a4_blightbush2.png", "a4_flowers.png"]
 # EXPLORE = ["m0_cattail3.png", "m0_cattail2.png", "m0_cattail1.png", "m0_stone.png"]
 # EXPLORE = ["m2_sofa.png", "m2_statue.png", "m2_brush1.png", "m2_cage.png"]
+# EXPLORE = ["m2_statue2.png", "m2_table.png", "m2_chairL.png", "m2_chairR.png"]
 # EXPLORE = ["m2_shelf.png", "m2_brush2.png", "m2_potions.png", "m2_woodcage.png"]
 EXPLORE = ["m2_statue2.png", "m2_table.png", "m2_chairL.png"]
 
@@ -41,6 +45,7 @@ def LXVI_locateCenterOnScreen(
     region: tuple[int, int, int, int] | None = None,
 ) -> pyautogui.Point | None:
     try:
+        # pyautogui.screenshot("1_locatecenter.jpg",region=region)
         return pyautogui.locateCenterOnScreen(
             imagename, confidence=confidence, region=region
         )
@@ -52,6 +57,7 @@ def LXVI_readImage(region: tuple[int, int, int, int] | None = None):
     global reader
 
     img = pyautogui.screenshot(region=region)
+
     read = reader.recognize(numpy.array(img))
     (_, text, _) = read[0]
     return text
@@ -151,6 +157,32 @@ def battleMode():
         if LXVI_locateCenterOnScreen("closebtn.png", 0.85) is not None:
             return
 
+    # click("miscripedia.png", 0.9, 0.555, 0)
+    # miscrit = LXVI_readImage([1367, 294, 245, 40])
+    # print(f"Wild {miscrit} wants to fight!")
+    # click("mpedia_exit.png", 0.8, 0.1, 0)
+    # click("mpedia_exit.png", 0.8, 0.1, 0)
+    
+    miscrit = "PLACEHOLDER"
+    r = 1
+    
+    battle_start = time.time()
+
+    while LXVI_locateCenterOnScreen("miscripedia.png", confidence=0.8) is None:
+        pass
+    
+    if LXVI_locateCenterOnScreen(WEAKNESS, confidence=0.9) is not None:
+        r = 0
+
+    # check if ready to attack
+    while (toClick := LXVI_locateCenterOnScreen("run.png", confidence=0.99)) is None:
+        pass
+
+    if not checkActive():
+        print("Minimized while in battle mode, concluding process...")
+        conclude()
+    
+    loopcount = 0
     click("miscripedia.png", 0.9, 0.555, 0)
     miscrit = LXVI_readImage([1375, 330, 238, 38])
     print(f"{miscrit} wants to fight!")
@@ -160,9 +192,30 @@ def battleMode():
     battle_start = time.time()
 
     while True:
+        if r > 0:
+            pyautogui.moveTo(toClick)
+            pyautogui.moveRel(-45 + 160 * 1, 80)
+            pyautogui.leftClick()
+            pyautogui.moveTo(toClick)
+        else:
+            click("skillsetR.png", 0.75)
+            pyautogui.moveTo(toClick)
+            pyautogui.moveRel(-45 + 160 * 1, 80)
+            pyautogui.leftClick()
+            click("skillsetL.png", 0.75)
+            pyautogui.moveTo(toClick)
+            r = 1
+        
+        if LXVI_locateCenterOnScreen("closebtn.png", 0.85) is not None:
+            print(f"Battle lasted: {time.time()-battle_start}")
+            print(f"loopcount: {loopcount}")
+            return
+        
         if not checkActive():
             print(f"\033[AMinimized while battling {miscrit}, concluding process...")
             conclude()
+        
+        loopcount+= 1
 
         if LXVI_locateCenterOnScreen("miscripedia.png", confidence=0.8) is None:
             if LXVI_locateCenterOnScreen("closebtn.png", 0.85) is not None:
@@ -305,7 +358,7 @@ def train():
 
 
 def checkActive():
-    if LXVI_locateCenterOnScreen("appname.png", 0.8, [0, 0, 1920, 100]) is not None:
+    if LXVI_locateCenterOnScreen("appname_linux.png", 0.8, [0, 0, 1920, 100]) is not None:
         return True
     else:
         return False
