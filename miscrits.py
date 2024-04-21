@@ -135,7 +135,7 @@ def cleanUp():
         )
         is not None
     ):
-        click("gold.png", 0.9, region=[0, 100, 1920, 980])
+        click("gold.png", 0.8, region=[0, 100, 1920, 980])
         continue
     return
 
@@ -144,7 +144,7 @@ def battleMode():
     global WEAKNESS 
     global miscrit
 
-    target = "Shellbee"
+    target = "Delfilio"
 
     if LXVI_locateCenterOnScreen("miscripedia.png", confidence=0.8) is None:
         if LXVI_locateCenterOnScreen("closebtn.png", 0.85) is not None:
