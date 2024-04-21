@@ -132,9 +132,10 @@ def battleMode():
     global WEAKNESS 
     global miscrit
 
-    click("miscripedia.png", 0.9, 0.6, 0)
-    miscrit = LXVI_readImage([1367, 325, 245, 35])
+    click("miscripedia.png", 0.9, 0.4, 0)
+    miscrit = LXVI_readImage([1367, 325, 245, 40])
     print(f"Wild {miscrit} wants to fight!")
+    click("mpedia_exit.png", 0.8, 0.1, 0)
     click("mpedia_exit.png", 0.8, 0.1, 0)
 
     r = 0
