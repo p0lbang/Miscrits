@@ -39,6 +39,12 @@ WEAKNESS = "nature.png"  # choose element that is strong against main miscrit
 target = "Nanaslug"  # miscrit name without space (pray for accuracy)
 huntType = "battle"  # "battle" or "escape" the miscrits that are not the target
 checkForTarget = True
+SoundsEnabled = False
+
+def playSound(sound: pygame.mixer.Sound) -> None:
+    global SoundsEnabled
+    if SoundsEnabled:
+        sound.play()
 
 def LXVI_locateCenterOnScreen(
     imagename: str,
@@ -183,7 +189,7 @@ def battleMode():
             print(
                 f"\033[ATarget miscrit {target} found! Ending process for catch."
             )
-            augh.play()
+            playSound(augh)
             time.sleep(10)
             conclude()
 
@@ -237,8 +243,8 @@ def escapeMode():
     if miscrit == target:
         r = 1
         print(f"{target} found!!!")
-        dance.play()
-        augh.play()
+        playSound(dance)
+        playSound(augh)
     else:
         print(f"{miscrit} showed up.")
     click("mpedia_exit.png", 0.8, 0, 0)
@@ -266,7 +272,7 @@ def escapeMode():
                         f"\033[ATarget miscrit {target} found! Ending process for catch."
                     )
                     time.sleep(10)
-                    augh.play()
+                    playSound(augh)
                     conclude()
 
                 click("skillsetR.png", 0.75, 0, 0)
@@ -335,19 +341,18 @@ def checkActive():
 def conclude():
     print(f"\nEnded process after {b} Miscrits encountered.")
     print(f"Runtime: {time.time()-start}\n")
-    off.play()
+    playSound(off)
     time.sleep(1)
     sys.exit()
 
 
 time.sleep(2)
-on.play()
+playSound(on)
 time.sleep(1)
 print()
 if checkActive():
     searchMode()
 else:
     print("Game not found on screen. Nothing happened.\n")
-off.play()
+playSound(off)
 time.sleep(1)
-sys.exit()
