@@ -1,22 +1,26 @@
+import PIL.ImageFilter
 import easyocr.imgproc
 import pyautogui
 import time
 import sys
 import easyocr
-
+import numpy
+import PIL
 import easyocr.character
 
 b = 0
 start = time.time()
 
-reader = easyocr.Reader(['en'])
+reader = easyocr.Reader(["en"], gpu=True, verbose=False)
 
 # SELECT WHICH ELEMENTS TO SEARCH IN ALTERNATION
-# EXPLORE = ["eldertree.png", "eldershrub.png", "eldersunflower.png", "elderleafpile.png"]
 # EXPLORE = ["a2_puddle.png", "a2_palm.png", "a2_stone.png", "a2_tree.png"]
+# EXPLORE = ["eldertree.png", "eldershrub.png", "eldersunflower.png", "elderleafpile.png"]
+EXPLORE = ["a4_blightbush.png", "a4_flowers.png"]
 # EXPLORE = ["m0_cattail3.png", "m0_cattail2.png", "m0_cattail1.png", "m0_stone.png"]
 # EXPLORE = ["m2_sofa.png", "m2_statue.png", "m2_brush1.png", "m2_cage.png"]
-EXPLORE = ["m2_shelf.png", "m2_brush2.png", "m2_potions.png", "m2_woodcage.png"]
+# EXPLORE = ["m2_statue2.png", "m2_table.png", "m2_chairL.png", "m2_chairR.png"]
+# EXPLORE = ["m2_shelf.png", "m2_brush2.png", "m2_potions.png", "m2_woodcage.png"]
 WEAKNESS = "nature.png"
 
 
@@ -33,14 +37,22 @@ def LXVI_locateCenterOnScreen(
         return None
 
 
-def LXVI_readImage(
-    region: tuple[int, int, int, int] | None = None
-):
+def LXVI_readImage(region: tuple[int, int, int, int] | None = None):
     global reader
 
     img = pyautogui.screenshot(region=region)
-    read = reader.readtext(img)
-    return read[0]
+    old = img.copy()
+    img = img.convert('L')
+    img = img.filter(PIL.ImageFilter.DETAIL)
+    img = img.filter(PIL.ImageFilter.SMOOTH)
+    img = img.filter(PIL.ImageFilter.EDGE_ENHANCE)
+    img = img.filter(PIL.ImageFilter.DETAIL)
+
+    read = reader.recognize(numpy.array(img))
+    (_, text, _) = read[0]
+    # old.save(f"{text}-b4.jpg")
+    # img.save(f"{text}.jpg")
+    return text
 
 
 def click(
@@ -91,6 +103,7 @@ def searchMode():
 
             if LXVI_locateCenterOnScreen("expmultiplier.png", 0.8) is None:
                 if LXVI_locateCenterOnScreen("battlebtns.png", 0.8) is not None:
+                    time.sleep(1)
                     battleMode()
                     summary()
 
@@ -116,7 +129,11 @@ def cleanUp():
 
 
 def battleMode():
-    global WEAKNESS
+    global WEAKNESS 
+    global miscrit
+
+    miscrit = LXVI_readImage([1555, 80, 78, 20])
+    print(f"Wild {miscrit} wants to fight!")
     r = 0
     while True:
         if not checkActive():
@@ -129,8 +146,11 @@ def battleMode():
 
         time.sleep(0.1)
 
-        if not LXVI_locateCenterOnScreen(WEAKNESS, confidence=0.8):
+        if not LXVI_locateCenterOnScreen(WEAKNESS, confidence=0.9):
             r = 1
+
+        if miscrit == "Deflllo":
+            r = 0
 
         if (
             toClick := LXVI_locateCenterOnScreen("run.png", confidence=0.99)
@@ -170,7 +190,6 @@ def summary():
             trainable = True
 
         b += 1
-        miscrit = LXVI_readImage([1550, 80, 80, 20])
         print(f"{b} Miscrits fought. Defeated: {miscrit}")
         click("closebtn.png", 0.85, 1)
 
@@ -223,5 +242,5 @@ print()
 if checkActive():
     searchMode()
 else:
-    print("Game not found on screen. Nothing happened.")
+    print("Game not found on screen. Nothing happened.\n")
 sys.exit()
