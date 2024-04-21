@@ -17,8 +17,6 @@ def LXVI_readImage(region: tuple[int, int, int, int] | None = None):
 
 def mpediaTest():
     miscrit = LXVI_readImage([1375, 330, 238, 38])
-    print()
-    print(miscrit)
-    print()
+    print(f"\n{miscrit}\n")
 
 mpediaTest()
