@@ -7,11 +7,14 @@ import easyocr
 import numpy
 import PIL
 import easyocr.character
+import pygame
+
+reader = easyocr.Reader(["en"], gpu=True, verbose=False)
+pygame.init()
 
 b = 0
 start = time.time()
-
-reader = easyocr.Reader(["en"], gpu=True, verbose=False)
+sound = pygame.mixer.Sound("dance.mp3")
 
 # SELECT WHICH ELEMENTS TO SEARCH IN ALTERNATION
 # EXPLORE = ["a2_puddle.png", "a2_palm.png", "a2_stone.png", "a2_tree.png"]
@@ -153,8 +156,9 @@ def battleMode():
         if not LXVI_locateCenterOnScreen(WEAKNESS, confidence=0.9):
             r = 1
 
-        if miscrit == "Deflllo":
+        if miscrit == "Defilio":
             r = 0
+            sound.play()
 
         if (
             toClick := LXVI_locateCenterOnScreen("run.png", confidence=0.99)
@@ -244,6 +248,7 @@ def conclude():
 # time.sleep(2)
 print()
 if checkActive():
+    sound.play()
     searchMode()
 else:
     print("Game not found on screen. Nothing happened.\n")
