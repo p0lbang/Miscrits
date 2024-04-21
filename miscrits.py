@@ -141,7 +141,7 @@ def cleanUp():
 
 
 def battleMode():
-    global WEAKNESS 
+    global WEAKNESS
     global miscrit
 
     target = "Delfilio"
@@ -149,7 +149,7 @@ def battleMode():
     if LXVI_locateCenterOnScreen("miscripedia.png", confidence=0.8) is None:
         if LXVI_locateCenterOnScreen("closebtn.png", 0.85) is not None:
             return
-    
+
     click("miscripedia.png", 0.9, 0.555, 0)
     miscrit = LXVI_readImage([1367, 325, 245, 40])
     print(f"Wild {miscrit} wants to fight!")
