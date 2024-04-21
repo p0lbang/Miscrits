@@ -6,6 +6,7 @@ import easyocr
 import numpy
 import easyocr.character
 import pygame
+from pyscreeze import Point
 
 reader = easyocr.Reader(["en"], gpu=False, verbose=False)
 pygame.init()
@@ -27,9 +28,9 @@ dance = pygame.mixer.Sound("dance.mp3")
 # EXPLORE = ["a4_blightbush.png", "a4_blightbush2.png", "a4_flowers.png"]
 # EXPLORE = ["m0_cattail3.png", "m0_cattail2.png", "m0_cattail1.png", "m0_stone.png"]
 # EXPLORE = ["m2_sofa.png", "m2_statue.png", "m2_brush1.png", "m2_cage.png"]
-# EXPLORE = ["m2_statue2.png", "m2_table.png", "m2_chairL.png", "m2_chairR.png"]
+EXPLORE = ["m2_statue2.png", "m2_table.png", "m2_chairL.png", "m2_chairR.png"]
 # EXPLORE = ["m2_shelf.png", "m2_brush2.png", "m2_potions.png", "m2_woodcage.png"]
-EXPLORE = ["m2_statue2.png", "m2_table.png", "m2_chairL.png"]
+# EXPLORE = ["m2_statue2.png", "m2_table.png", "m2_chairL.png"]
 
 #####[    C O N F I G    ]#####
 autoSearch = True  # just True or False
@@ -37,13 +38,13 @@ autoTrain = True  #
 WEAKNESS = "nature.png"  # choose element that is strong against main miscrit
 target = "Nanaslug"  # miscrit name without space (pray for accuracy)
 huntType = "battle"  # "battle" or "escape" the miscrits that are not the target
-
+checkForTarget = True
 
 def LXVI_locateCenterOnScreen(
     imagename: str,
     confidence: float = 0.999,
     region: tuple[int, int, int, int] | None = None,
-) -> pyautogui.Point | None:
+) -> Point | None:
     try:
         # pyautogui.screenshot("1_locatecenter.jpg",region=region)
         return pyautogui.locateCenterOnScreen(
@@ -150,20 +151,43 @@ def cleanUp():
 
 
 def battleMode():
-    global WEAKNESS, miscrit, target
+    global WEAKNESS, miscrit, target, checkForTarget
 
-    miscrit = "PLACEHOLDER"
-    r = 1
-    
+    miscrit = "wild miscrit"
+    action = 1
+    loopcount = 0
     battle_start = time.time()
 
+    # check until miscripedia is shown
     while LXVI_locateCenterOnScreen("miscripedia.png", confidence=0.8) is None:
         pass
     
     if LXVI_locateCenterOnScreen(WEAKNESS, confidence=0.9) is not None:
-        r = 0
+        action = 0
+    
+    if checkForTarget:
+        click("miscripedia.png", 0.9, 0.555, 0)
+        miscrits_lore = LXVI_locateCenterOnScreen("miscrits_lore.png", confidence=0.7)
+        
+        if isinstance(miscrits_lore, Point):
+            miscrit = LXVI_readImage(region=(
+                int(miscrits_lore.x) + -140, 
+                int(miscrits_lore.y) + 35, 
+                238, 38))
 
-    # check if ready to attack
+        print(f"{miscrit} wants to fight!")
+        click("mpedia_exit.png", 0.8, 0, 0)
+        click("mpedia_exit.png", 0.8, 0, 0)
+
+        if miscrit == target:
+            print(
+                f"\033[ATarget miscrit {target} found! Ending process for catch."
+            )
+            augh.play()
+            time.sleep(10)
+            conclude()
+
+    # check until run is shown. which means ready to attack
     while (toClick := LXVI_locateCenterOnScreen("run.png", confidence=0.99)) is None:
         pass
 
@@ -171,25 +195,8 @@ def battleMode():
         print("Minimized while in battle mode, concluding process...")
         conclude()
     
-    loopcount = 0
-    click("miscripedia.png", 0.9, 0.555, 0)
-    miscrit = LXVI_readImage([1375, 330, 238, 38])
-    print(f"{miscrit} wants to fight!")
-    click("mpedia_exit.png", 0.8, 0, 0)
-    click("mpedia_exit.png", 0.8, 0, 0)
-
-    battle_start = time.time()
-
     while True:
-
-        if miscrit == target:
-            print(
-                f"\033[ATarget miscrit {target} found! Ending process for catch."
-            )
-            time.sleep(10)
-            augh.play()
-            conclude()
-        elif r > 0:
+        if action > 0:
             pyautogui.moveTo(toClick)
             pyautogui.moveRel(-45 + 160 * 1, 80)
             pyautogui.leftClick()
@@ -201,7 +208,7 @@ def battleMode():
             pyautogui.leftClick()
             click("skillsetL.png", 0.75)
             pyautogui.moveTo(toClick)
-            r = 1
+            action = 1
         
         if LXVI_locateCenterOnScreen("closebtn.png", 0.85) is not None:
             print(
@@ -333,7 +340,7 @@ def conclude():
     sys.exit()
 
 
-# time.sleep(2)
+time.sleep(2)
 on.play()
 time.sleep(1)
 print()
