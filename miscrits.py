@@ -14,7 +14,10 @@ pygame.init()
 
 b = 0
 start = time.time()
-sound = pygame.mixer.Sound("dance.mp3")
+augh = pygame.mixer.Sound("augh.mp3")
+on = pygame.mixer.Sound("on.mp3")
+off = pygame.mixer.Sound("off.mp3")
+dance = pygame.mixer.Sound("dance.mp3")
 
 # SELECT WHICH ELEMENTS TO SEARCH IN ALTERNATION
 # EXPLORE = ["a2_puddle.png", "a2_palm.png", "a2_stone.png", "a2_tree.png"]
@@ -44,12 +47,12 @@ def LXVI_readImage(region: tuple[int, int, int, int] | None = None):
     global reader
 
     img = pyautogui.screenshot(region=region)
-    old = img.copy()
-    img = img.convert('L')
-    img = img.filter(PIL.ImageFilter.DETAIL)
-    img = img.filter(PIL.ImageFilter.SMOOTH)
-    img = img.filter(PIL.ImageFilter.EDGE_ENHANCE)
-    img = img.filter(PIL.ImageFilter.DETAIL)
+    # old = img.copy()
+    # img = img.convert('L')
+    # img = img.filter(PIL.ImageFilter.DETAIL)
+    # img = img.filter(PIL.ImageFilter.SMOOTH)
+    # img = img.filter(PIL.ImageFilter.EDGE_ENHANCE)
+    # img = img.filter(PIL.ImageFilter.DETAIL)
 
     read = reader.recognize(numpy.array(img))
     (_, text, _) = read[0]
@@ -82,6 +85,12 @@ def searchMode():
     if not checkActive():
         print("Game not found during search mode, concluding process...")
         conclude()
+
+    if LXVI_locateCenterOnScreen("expmultiplier.png", 0.8) is None:
+        if LXVI_locateCenterOnScreen("battlebtns.png", 0.8) is not None:
+            time.sleep(1)
+            battleMode()
+            summary()
 
     while LXVI_locateCenterOnScreen("expmultiplier.png", 0.85) is not None:
         SearchSuccess = False
@@ -135,11 +144,20 @@ def battleMode():
     global WEAKNESS 
     global miscrit
 
-    click("miscripedia.png", 0.9, 0.4, 0)
+    target = "Shellbee"
+
+    if LXVI_locateCenterOnScreen("miscripedia.png", confidence=0.8) is None:
+        if LXVI_locateCenterOnScreen("closebtn.png", 0.85) is not None:
+            return
+    
+    click("miscripedia.png", 0.9, 0.555, 0)
     miscrit = LXVI_readImage([1367, 325, 245, 40])
     print(f"Wild {miscrit} wants to fight!")
-    click("mpedia_exit.png", 0.8, 0.1, 0)
-    click("mpedia_exit.png", 0.8, 0.1, 0)
+    if miscrit == target:
+        dance.play()
+        augh.play()
+    click("mpedia_exit.png", 0.8, 0.05, 0)
+    click("mpedia_exit.png", 0.8, 0.05, 0)
 
     r = 0
     while True:
@@ -156,9 +174,8 @@ def battleMode():
         if not LXVI_locateCenterOnScreen(WEAKNESS, confidence=0.9):
             r = 1
 
-        if miscrit == "Defilio":
+        if miscrit == target:
             r = 0
-            sound.play()
 
         if (
             toClick := LXVI_locateCenterOnScreen("run.png", confidence=0.99)
@@ -242,13 +259,14 @@ def conclude():
     print(f"Runtime: {time.time()-start}")
     print()
     time.sleep(1)
+    off.play()
     sys.exit()
 
 
 # time.sleep(2)
 print()
 if checkActive():
-    sound.play()
+    on.play()
     searchMode()
 else:
     print("Game not found on screen. Nothing happened.\n")
