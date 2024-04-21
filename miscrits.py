@@ -144,7 +144,7 @@ def battleMode():
     global WEAKNESS 
     global miscrit
 
-    target = "Shellbee"
+    target = "Delfilio"
 
     if LXVI_locateCenterOnScreen("miscripedia.png", confidence=0.8) is None:
         if LXVI_locateCenterOnScreen("closebtn.png", 0.85) is not None:
