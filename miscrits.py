@@ -151,18 +151,7 @@ def cleanUp():
 
 def battleMode():
     global WEAKNESS, miscrit, target
-    r = 0
 
-    if LXVI_locateCenterOnScreen("miscripedia.png", confidence=0.8) is None:
-        if LXVI_locateCenterOnScreen("closebtn.png", 0.85) is not None:
-            return
-
-    # click("miscripedia.png", 0.9, 0.555, 0)
-    # miscrit = LXVI_readImage([1367, 294, 245, 40])
-    # print(f"Wild {miscrit} wants to fight!")
-    # click("mpedia_exit.png", 0.8, 0.1, 0)
-    # click("mpedia_exit.png", 0.8, 0.1, 0)
-    
     miscrit = "PLACEHOLDER"
     r = 1
     
@@ -192,7 +181,15 @@ def battleMode():
     battle_start = time.time()
 
     while True:
-        if r > 0:
+
+        if miscrit == target:
+            print(
+                f"\033[ATarget miscrit {target} found! Ending process for catch."
+            )
+            time.sleep(10)
+            augh.play()
+            conclude()
+        elif r > 0:
             pyautogui.moveTo(toClick)
             pyautogui.moveRel(-45 + 160 * 1, 80)
             pyautogui.leftClick()
@@ -207,7 +204,9 @@ def battleMode():
             r = 1
         
         if LXVI_locateCenterOnScreen("closebtn.png", 0.85) is not None:
-            print(f"Battle lasted: {time.time()-battle_start}")
+            print(
+                    f"\033[A{miscrit} was defeated. Time: {round(time.time()-battle_start, 3)}s"
+                )
             print(f"loopcount: {loopcount}")
             return
         
@@ -216,45 +215,7 @@ def battleMode():
             conclude()
         
         loopcount+= 1
-
-        if LXVI_locateCenterOnScreen("miscripedia.png", confidence=0.8) is None:
-            if LXVI_locateCenterOnScreen("closebtn.png", 0.85) is not None:
-                print(
-                    f"\033[A{miscrit} was defeated. Time: {round(time.time()-battle_start, 3)}s"
-                )
-                return
-
-        if not LXVI_locateCenterOnScreen(WEAKNESS, confidence=0.9):
-            r = 1
-
-        if miscrit == target:
-            r = 0
-            dance.play()
-
-        if (
-            toClick := LXVI_locateCenterOnScreen("run.png", confidence=0.99)
-        ) is not None:
-            if r != 0:
-                pyautogui.moveTo(toClick)
-                pyautogui.moveRel(-45 + 160 * 1, 80)
-                pyautogui.leftClick()
-                pyautogui.moveTo(toClick)
-            else:
-                if miscrit == target:
-                    print(
-                        f"\033[ATarget miscrit {target} found! Ending process for catch."
-                    )
-                    time.sleep(10)
-                    augh.play()
-                    conclude()
-                click("skillsetR.png", 0.75, 0, 0)
-                pyautogui.moveTo(toClick)
-                pyautogui.moveRel(-45 + 160 * 1, 80)
-                pyautogui.leftClick()
-                r = 1
-                click("skillsetL.png", 0.75, 0, 0)
-                pyautogui.moveTo(toClick)
-
+        
 
 def escapeMode():
     global miscrit, target
