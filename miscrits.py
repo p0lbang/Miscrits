@@ -3,13 +3,13 @@ sounds = True  # ...................# just True or False
 autoSearch = True  # ...............#
 autoTrain = True  # ................#
 miscritCheck = True  # .............# set to True to get miscrit's name
-huntType = "battle" # ..............# "battle" or "escape" the miscrits that are not the target
+huntType = "battle"  # ..............# "battle" or "escape" the miscrits that are not the target
 autoCatch = True  # ................# try to catch miscrit if catch rate is greater than
 catchable = 90  # ..................# this catch percentage
-catchStandard = 30  # ..............# initial catch percentage to capture [msx is 42]
+catchStandard = 28  # ..............# initial catch percentage to capture [msx is 42]
 WEAKNESS = "nature.png"  # .........# choose element that is strong against main miscrit
 targetAll = True  # ................# set to True to make everyone a target for capture
-targets = ["Waddles"]  # ...........# miscrit names without space (pray for accuracy)
+targets = ["BlightedKiloray"]  # ...# miscrit names without space (pray for accuracy)
 
 # SELECT WHICH ELEMENTS TO SEARCH IN ALTERNATION
 # ["a1_cattail.png", "a1_jagbush.png", "a1_sapling.png"]
@@ -205,12 +205,13 @@ def encounterMode():
                     toCatch = (
                         int(
                             LXVI_readImage(
-                                region=(
+                                [
                                     int(catchButton.x) - 17,
                                     int(catchButton.y) + 13,
                                     18,
                                     22,
-                                )
+                                ],
+                                True,
                             )
                         )
                         <= catchStandard
@@ -300,7 +301,7 @@ def catchMode():
 
             if isinstance(catchButton, Point):
                 chance = LXVI_readImage(
-                    region=(int(catchButton.x) - 17, int(catchButton.y) + 13, 18, 22)
+                    [int(catchButton.x) - 17, int(catchButton.y) + 13, 18, 22], True
                 )
 
             if int(chance) >= catchable:
