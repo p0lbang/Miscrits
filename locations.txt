@@ -1,0 +1,21 @@
+RARE, EPIC, EXOTIC MISCRITS     WHERE TO FIND THEM
+Waddles                         ["a1_typha1", "a1_sapling", "a1_typha2", "a1_jagbush"]
+
+DarkFlue                        ["a2_stump", "a2_cattail1", "a2_flower", "a2_cattail2"]
+BlightedKiloray                 ["a2_blight", "a2_palm", "a2_tree", "a2_rock"]
+
+Tulipinny                       ["a3_magic", "a3_minis1", "a3_sun1", "a3_pink1"]
+DarkFlowerpiller                ["a3_minis2", "a3_palm", "a3_pink2", "a3_sun2"]
+BlightedFiender                 ["a3_blight", "a3_sun3", "a3_magic", "a3_fuchsia"]
+
+Blazebit                        ["a4_elder", "a4_bush1", "a4_sun", "a4_pool1"]
+DarkShelbee                     ["a4_pool2", "a4_shrub1", "a4_bush2", "a4_typha1"]
+DarkPrawnja                     ["a4_typha2", "a4_dead", "a4_shrub2", "a4_typha3"]
+Defilio                         ["a4_blight", "a4_typha4", "a4_minis", "a4_yellow"]
+
+Treemur                         ["", "", "", ""]
+Thundercracker                  ["", "", "", ""]
+Rafiery                         ["", "", "", ""]
+Raldio                          ["", "", "", ""]
+Flutterpat                      ["", "", "", ""]
+Nanaslug                        

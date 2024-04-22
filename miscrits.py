@@ -1,29 +1,17 @@
-# ------[    C O N F I G    ]-------#
-sounds = True  # ...................# just True or False
-autoSearch = True  # ..............#
-searchInterval = 2  # ..............# interval for clicking between searches 
-autoTrain = True  # ...............#
-miscritCheck = True  # .............# set to True to get miscrit's name
-huntType = "battle"  # .............# "battle" or "escape" the miscrits that are not the target
-autoCatch = False  # ................# try to catch miscrit if catch rate is greater than
-catchable = 90  # ..................# this catch percentage
-catchStandard = 28  # ..............# initial catch percentage to capture [msx is 42]
-WEAKNESS = "nature.png"  # .........# choose element that is strong against main miscrit
-targetAll = False  # ...............# set to True to make everyone a target for capture
-targets = ["BlightedKiloray"]  # ...# miscrit names without space (pray for accuracy)
-
-# SELECT WHICH ELEMENTS TO SEARCH IN ALTERNATION
-# ["a1_cattail.png", "a1_jagbush.png", "a1_sapling.png"]
-# ["a2_puddle.png", "a2_palm.png", "a2_stone.png", "a2_tree.png"]
-# ["eldertree.png", "eldershrub.png", "eldersunflower.png", "elderleafpile.png"]
-# ["a4_bush.png", "a4_cattail2.png", "a4_tree.png" "a4_empty.png"]
-# ["a4_blightbush.png", "a4_blightbush2.png", "a4_flowers.png"]
-# ["m0_cattail3.png", "m0_cattail2.png", "m0_cattail1.png", "m0_stone.png"]
-# ["m2_sofa.png", "m2_statue.png", "m2_brush1.png", "m2_cage.png"]
-# ["m2_shelf.png", "m2_brush2.png", "m2_potions.png", "m2_woodcage.png"]
-# ["m2_statue2.png", "m2_chairL.png"]
-
-searchSeq = ["a2_puddle.png", "a2_puddleR.png"]
+# -------[    C O N F I G    ]-------#
+sounds = True  # ....................# just True or False
+autoSearch = True  # ................#
+searchInterval = 4  # ...............# interval for clicking between searches 
+autoTrain = True  # .................#
+miscritCheck = True  # ..............# set to True to get miscrit's name
+huntType = "battle"  # ..............# "battle" or "escape" the miscrits that are not the target
+autoCatch = True  # .................# try to catch miscrit if catch rate is greater than
+catchable = 85  # ...................# this catch percentage
+catchStandard = 28  # ...............# initial catch percentage to capture [msx is 42]
+WEAKNESS = "nature.png"  # ..........# choose element that is strong against main miscrit
+targetAll = True  # ................# set to True to make everyone a target for capture
+targets = ["BlightedFiender"]  # ....# miscrit names without space (pray for accuracy)
+searchSeq = ["a3_blight", "a3_sun3", "a3_magic", "a3_fuchsia"]
 
 import sys
 import time
@@ -51,6 +39,8 @@ APPNAMEPNG = "appname.png"
 if sys.platform.startswith("linux"):
     APPNAMEPNG = "appname_linux.png"
 
+for s, search in enumerate(searchSeq):
+    searchSeq[s] =".\\imgSources\\" + search + ".png"
 
 def checkActive():
     if LXVI_locateCenterOnScreen(APPNAMEPNG, 0.8, [0, 0, 1920, 100]) is not None:
@@ -142,6 +132,10 @@ def searchMode():
         if autoSearch:
             SearchSuccess = False
             for search in searchSeq:
+                if LXVI_locateCenterOnScreen("battlebtns.png", 0.8) is not None:
+                    encounterMode()
+                    summary()
+                
                 if (
                     toClick := LXVI_locateCenterOnScreen(search, confidence=0.8)
                 ) is None:
@@ -153,10 +147,6 @@ def searchMode():
                 pyautogui.leftClick()
                 time.sleep(searchInterval)
 
-                if LXVI_locateCenterOnScreen("battlebtns.png", 0.8) is not None:
-                    time.sleep(1)
-                    encounterMode()
-                    summary()
 
             if not SearchSuccess:
                 print("Elements not found, concluding process...")
@@ -185,7 +175,7 @@ def encounterMode():
 
         if isinstance(miscrits_lore, Point):
             miscrit = LXVI_readImage(
-                region=(int(miscrits_lore.x) + -130, int(miscrits_lore.y) + 32, 238, 40)
+                region=(int(miscrits_lore.x) + -130, int(miscrits_lore.y) + 33, 238, 40)
             )
 
         print(f"{Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} wants to fight.")

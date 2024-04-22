@@ -66,5 +66,4 @@ def catchrateTest():
         )
     print(chance)
 
-
-catchrateTest()
+mpediaTest()
