@@ -11,23 +11,18 @@ miscritCheck = True #.............# set to True
 targetAll = True #................# set to True to make everyone a target for capture
 targets = ["BlightedKiloray"] #...# miscrit names without space (pray for accuracy)
 
-# SELECT WHICH ELEMENTS TO SEARCH IN ALTERNATION AND PASTE THEM UNCOMMENTED
-# searchSeq = ["a2_puddle.png", "a2_palm.png", "a2_stone.png", "a2_tree.png"]
-# searchSeq = ["eldertree.png", "eldershrub.png", "eldersunflower.png", "elderleafpile.png"]
-# searchSeq = ["a4_bush.png", "a4_cattail2.png", "a4_tree.png" "a4_empty.png"]
-# searchSeq = ["a4_blightbush.png", "a4_tree.png", "a4_flowers.png"]
-# searchSeq = ["m0_cattail3.png", "m0_cattail2.png", "m0_cattail1.png", "m0_stone.png"]
-# searchSeq = ["m2_sofa.png", "m2_statue.png", "m2_brush1.png", "m2_cage.png"]
-# searchSeq = ["m2_shelf.png", "m2_brush2.png", "m2_potions.png", "m2_woodcage.png"]
-# searchSeq = ["m2_statue2.png", "m2_table.png", "m2_chairL.png", "m2_chairR"]
+# SELECT WHICH ELEMENTS TO SEARCH IN ALTERNATION
+EXPLORE = ["a2_puddle.png", "a2_palm.png"]
+# EXPLORE = ["a2_puddle.png", "a2_palm.png", "a2_stone.png", "a2_tree.png"]
+# EXPLORE = ["eldertree.png", "eldershrub.png", "eldersunflower.png", "elderleafpile.png"]
+# EXPLORE = ["a4_bush.png", "a4_cattail2.png", "a4_tree.png" "a4_empty.png"]
+# EXPLORE = ["a4_blightbush.png", "a4_blightbush2.png", "a4_flowers.png"]
+# EXPLORE = ["m0_cattail3.png", "m0_cattail2.png", "m0_cattail1.png", "m0_stone.png"]
+# EXPLORE = ["m2_sofa.png", "m2_statue.png", "m2_brush1.png", "m2_cage.png"]
+# EXPLORE = ["m2_shelf.png", "m2_brush2.png", "m2_potions.png", "m2_woodcage.png"]
+# EXPLORE = ["m2_statue2.png", "m2_chairL.png"]
 
-searchSeq = ["a2_puddle.png", "a2_palm.png"]
-
-#------------------------------------------------------------------------------------#
-
-import sys
-import time
-import numpy
+import easyocr.imgproc
 import pyautogui
 import easyocr
 import easyocr.imgproc
@@ -195,7 +190,11 @@ def encounterMode():
         toCatch = False
         catchButton = LXVI_locateCenterOnScreen("catchbtn.png", 0.75)
 
+<<<<<<< HEAD
         if (miscrit in targets or targetAll) :
+=======
+        if (miscrit in targets or targetBypass) :
+>>>>>>> c8b61256973304da8f78bf92c106f47645590a43
             print(f"\033[A{Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} found!{Fore.LIGHTBLACK_EX}")
             playSound(augh)
 
