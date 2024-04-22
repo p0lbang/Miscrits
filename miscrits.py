@@ -5,21 +5,21 @@ autoTrain = True  # ................#
 huntType = "battle" # ..............# "battle" or "escape" the miscrits that are not the target
 autoCatch = True  # ................# try to catch miscrit if catch rate is greater than
 catchable = 90  # ..................# this catch percentage
-catchStandard = 30  # ..............# initial catch percentage to capture
+catchStandard = 29  # ..............# initial catch percentage to capture
 WEAKNESS = "nature.png"  # .........# choose element that is strong against main miscrit
 miscritCheck = True  # .............# set to True
 targetAll = True  # ................# set to True to make everyone a target for capture
 targets = ["BlightedKiloray"]  # ...# miscrit names without space (pray for accuracy)
 
 # SELECT WHICH ELEMENTS TO SEARCH IN ALTERNATION
-# EXPLORE = ["a2_puddle.png", "a2_palm.png", "a2_stone.png", "a2_tree.png"]
-# EXPLORE = ["eldertree.png", "eldershrub.png", "eldersunflower.png", "elderleafpile.png"]
-# EXPLORE = ["a4_bush.png", "a4_cattail2.png", "a4_tree.png" "a4_empty.png"]
-# EXPLORE = ["a4_blightbush.png", "a4_blightbush2.png", "a4_flowers.png"]
-# EXPLORE = ["m0_cattail3.png", "m0_cattail2.png", "m0_cattail1.png", "m0_stone.png"]
-# EXPLORE = ["m2_sofa.png", "m2_statue.png", "m2_brush1.png", "m2_cage.png"]
-# EXPLORE = ["m2_shelf.png", "m2_brush2.png", "m2_potions.png", "m2_woodcage.png"]
-# EXPLORE = ["m2_statue2.png", "m2_chairL.png"]
+# ["a2_puddle.png", "a2_palm.png", "a2_stone.png", "a2_tree.png"]
+# ["eldertree.png", "eldershrub.png", "eldersunflower.png", "elderleafpile.png"]
+# ["a4_bush.png", "a4_cattail2.png", "a4_tree.png" "a4_empty.png"]
+# ["a4_blightbush.png", "a4_blightbush2.png", "a4_flowers.png"]
+# ["m0_cattail3.png", "m0_cattail2.png", "m0_cattail1.png", "m0_stone.png"]
+# ["m2_sofa.png", "m2_statue.png", "m2_brush1.png", "m2_cage.png"]
+# ["m2_shelf.png", "m2_brush2.png", "m2_potions.png", "m2_woodcage.png"]
+# ["m2_statue2.png", "m2_chairL.png"]
 
 searchSeq = ["a2_puddle.png", "a2_palm.png"]
 
@@ -393,7 +393,7 @@ def conclude():
     print(
         f"\nEnded process after {Fore.CYAN}{b}{Fore.LIGHTBLACK_EX} Miscrits encountered."
     )
-    print(f"Runtime: {Fore.CYAN}{time.time()-start}{Fore.LIGHTBLACK_EX}\n")
+    print(f"Runtime: {Fore.CYAN}{time.time()-start}{Fore.LIGHTBLACK_EX}")
     playSound(off)
     print(Fore.RESET)
     time.sleep(1)
