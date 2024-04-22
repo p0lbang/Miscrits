@@ -9,9 +9,10 @@ catchStandard = 29  # ..............# initial catch percentage to capture
 WEAKNESS = "nature.png"  # .........# choose element that is strong against main miscrit
 miscritCheck = True  # .............# set to True
 targetAll = True  # ................# set to True to make everyone a target for capture
-targets = ["BlightedKiloray"]  # ...# miscrit names without space (pray for accuracy)
+targets = ["Waddles"]  # ...........# miscrit names without space (pray for accuracy)
 
 # SELECT WHICH ELEMENTS TO SEARCH IN ALTERNATION
+# ["a1_cattail.png", "a1_jagbush.png", "a1_sapling.png"]
 # ["a2_puddle.png", "a2_palm.png", "a2_stone.png", "a2_tree.png"]
 # ["eldertree.png", "eldershrub.png", "eldersunflower.png", "elderleafpile.png"]
 # ["a4_bush.png", "a4_cattail2.png", "a4_tree.png" "a4_empty.png"]
@@ -21,7 +22,7 @@ targets = ["BlightedKiloray"]  # ...# miscrit names without space (pray for accu
 # ["m2_shelf.png", "m2_brush2.png", "m2_potions.png", "m2_woodcage.png"]
 # ["m2_statue2.png", "m2_chairL.png"]
 
-searchSeq = ["a2_puddle.png", "a2_palm.png"]
+searchSeq = ["a1_cattail.png", "a1_jagbush.png", "a1_sapling.png"]
 
 import sys
 import time
@@ -213,7 +214,7 @@ def encounterMode():
                         )
                         <= catchStandard
                     )
-                if toCatch:
+                if toCatch or miscrit in targets:
                     playSound(dance)
                     catchMode()
                     return
