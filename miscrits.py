@@ -103,21 +103,12 @@ def searchMode():
 
         if LXVI_locateCenterOnScreen("battlebtns.png", 0.8) is not None:
             time.sleep(1)
-            if huntType == "battle":
-                battleMode()
-            else:
-                escapeMode()
+            battleMode()
             summary()
         elif LXVI_locateCenterOnScreen("closebtn.png", 0.8) is not None:
             click("closebtn.png", 0.8, 1, 0)
 
-        if (
-            LXVI_locateCenterOnScreen(
-                "gold.png", confidence=0.8, region=[0, 100, 1920, 980]
-            )
-            is not None
-        ) or (LXVI_locateCenterOnScreen("potion1.png", confidence=0.65) is not None):
-            cleanUp()
+        cleanUp()
 
         if autoSearch:
             SearchSuccess = False
@@ -135,10 +126,7 @@ def searchMode():
 
                 if LXVI_locateCenterOnScreen("battlebtns.png", 0.8) is not None:
                     time.sleep(1)
-                    if huntType == "hunt":
-                        escapeMode()
-                    else:
-                        battleMode()
+                    battleMode()
                     summary()
 
             if not SearchSuccess:
@@ -166,7 +154,6 @@ def battleMode():
 
     miscrit = "wild miscrit"
     action = 1
-    loopcount = 0
     battle_start = time.time()
 
     # check until miscripedia is shown
@@ -195,12 +182,17 @@ def battleMode():
                 f"\033[ATarget miscrit {target} found! Ending process for catch."
             )
             playSound(augh)
-            time.sleep(10)
             conclude()
 
     # check until run is shown. which means ready to attack
     while (toClick := LXVI_locateCenterOnScreen("run.png", confidence=0.99)) is None:
         pass
+    
+    # escape if not in battle
+    if huntType != "battle":
+        pyautogui.moveTo(toClick)
+        print(f"\033[AEscaped from {miscrit}.")
+        pyautogui.leftClick()
 
     if not checkActive():
         print("Minimized while in battle mode, concluding process...")
@@ -225,71 +217,12 @@ def battleMode():
             print(
                     f"\033[A{miscrit} was defeated. Time: {round(time.time()-battle_start, 3)}s"
                 )
-            print(f"loopcount: {loopcount}")
             return
         
         if not checkActive():
             print(f"\033[AMinimized while battling {miscrit}, concluding process...")
             conclude()
         
-        loopcount+= 1
-        
-
-def escapeMode():
-    global miscrit, target
-    r = 0
-
-    if LXVI_locateCenterOnScreen("miscripedia.png", confidence=0.8) is None:
-        if LXVI_locateCenterOnScreen("closebtn.png", 0.85) is not None:
-            return
-
-    click("miscripedia.png", 0.9, 0.555, 0)
-    miscrit = LXVI_readImage([1370, 330, 238, 38])
-    if miscrit == target:
-        r = 1
-        print(f"{target} found!!!")
-        playSound(dance)
-        playSound(augh)
-    else:
-        print(f"{miscrit} showed up.")
-    click("mpedia_exit.png", 0.8, 0, 0)
-    click("mpedia_exit.png", 0.8, 0, 0)
-
-    while True:
-        if not checkActive():
-            print(f"\033[AMinimized while hunting for {target}, concluding process...")
-            conclude()
-
-        if LXVI_locateCenterOnScreen("miscripedia.png", confidence=0.8) is None:
-            if LXVI_locateCenterOnScreen("closebtn.png", 0.85) is not None:
-                return
-
-        if (
-            toClick := LXVI_locateCenterOnScreen("run.png", confidence=0.99)
-        ) is not None:
-            if r == 0:
-                pyautogui.moveTo(toClick)
-                print(f"\033[AEscaped from {miscrit}.")
-                pyautogui.leftClick()
-            else:
-                if miscrit == target:
-                    print(
-                        f"\033[ATarget miscrit {target} found! Ending process for catch."
-                    )
-                    time.sleep(10)
-                    playSound(augh)
-                    conclude()
-
-                click("skillsetR.png", 0.75, 0, 0)
-
-                pyautogui.moveTo(toClick)
-                pyautogui.moveRel(-45 + 160 * 1, 80)
-                pyautogui.leftClick()
-                r = 1
-
-                click("skillsetL.png", 0.75, 0, 0)
-
-                pyautogui.moveTo(toClick)
 
 
 def summary():
