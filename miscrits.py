@@ -17,7 +17,6 @@ augh = pygame.mixer.Sound("augh.mp3")
 on = pygame.mixer.Sound("on.mp3")
 off = pygame.mixer.Sound("off.mp3")
 dance = pygame.mixer.Sound("dance.mp3")
-
 # SELECT WHICH ELEMENTS TO SEARCH IN ALTERNATION
 # EXPLORE = ["a1_cattail_02.png","a1_cattail_01.png","a1_cattail_03.png",]
 # EXPLORE = ["a2_stump.png","a2_smallrock.png","a2_bigrock.png",]
@@ -31,6 +30,12 @@ dance = pygame.mixer.Sound("dance.mp3")
 EXPLORE = ["m2_statue2.png", "m2_table.png", "m2_chairL.png", "m2_chairR.png"]
 # EXPLORE = ["m2_shelf.png", "m2_brush2.png", "m2_potions.png", "m2_woodcage.png"]
 # EXPLORE = ["m2_statue2.png", "m2_table.png", "m2_chairL.png"]
+
+APPNAMEPNG = "appname.png"
+
+if sys.platform.startswith('linux'):
+    APPNAMEPNG = "appname_linux.png"
+
 
 #####[    C O N F I G    ]#####
 autoSearch = True  # just True or False
@@ -332,7 +337,9 @@ def train():
 
 
 def checkActive():
-    if LXVI_locateCenterOnScreen("appname_linux.png", 0.8, [0, 0, 1920, 100]) is not None:
+    global APPNAMEPNG
+    
+    if LXVI_locateCenterOnScreen(APPNAMEPNG, 0.8, [0, 0, 1920, 100]) is not None:
         return True
     else:
         return False
