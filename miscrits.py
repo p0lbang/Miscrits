@@ -329,16 +329,13 @@ def train():
         click("continuebtn2.png", 0.75, 2, 0.1)
         click("continuebtn3.png", 0.75, 2, 0.1)
         click("skipbtn.png", 0.75, 2.5, 0.1)
-        continue
 
-    else:
-        click("x.png", 0.8, 0.2, 0)
-        return
+    click("x.png", 0.8, 0.2, 0)
 
 
 def checkActive():
     global APPNAMEPNG
-    
+
     if LXVI_locateCenterOnScreen(APPNAMEPNG, 0.8, [0, 0, 1920, 100]) is not None:
         return True
     else:
