@@ -20,12 +20,15 @@ def LXVI_readImage(region: tuple[int, int, int, int] | None = None):
     # img = img.filter(PIL.ImageFilter.EDGE_ENHANCE)
     # img = img.filter(PIL.ImageFilter.DETAIL)
 
-    read = reader.recognize(numpy.array(img))
+    read = reader.recognize(numpy.array(img)
+    # , allowlist='0123456789'
+    )
+
     (_, text, _) = read[0]
 
     # old.save(f"{text}-b4.jpg")
     # img.save(f"{text}.jpg")
-    img.save(f"{text}.jpg")
+    img.save(f"testing.jpg")
 
     return text
 
@@ -34,5 +37,8 @@ def mpediaTest():
     miscrit = LXVI_readImage([1375, 325, 238, 40])
     print(f"\n{miscrit}\n")
 
+def catchrateTest():
+    critHP = LXVI_readImage([1328, 158, 18, 22])
+    print(critHP)
 
 mpediaTest()
