@@ -41,7 +41,7 @@ if sys.platform.startswith('linux'):
 autoSearch = True  # just True or False
 autoTrain = True  #
 WEAKNESS = "nature.png"  # choose element that is strong against main miscrit
-target = "Nanaslug"  # miscrit name without space (pray for accuracy)
+targets = ["Nanaslug","Raldio"]  # miscrit name without space (pray for accuracy)
 huntType = "battle"  # "battle" or "escape" the miscrits that are not the target
 checkForTarget = True
 SoundsEnabled = False
@@ -150,7 +150,7 @@ def cleanUp():
 
 
 def battleMode():
-    global WEAKNESS, miscrit, target, checkForTarget
+    global WEAKNESS, miscrit, targets, checkForTarget
 
     miscrit = "wild miscrit"
     action = 1
@@ -177,9 +177,9 @@ def battleMode():
         click("mpedia_exit.png", 0.8, 0, 0)
         click("mpedia_exit.png", 0.8, 0, 0)
 
-        if miscrit == target:
+        if miscrit in targets:
             print(
-                f"\033[ATarget miscrit {target} found! Ending process for catch."
+                f"\033[ATarget miscrit {miscrit} found! Ending process for catch."
             )
             playSound(augh)
             conclude()
