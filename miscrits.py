@@ -1,13 +1,13 @@
 # ------[    C O N F I G    ]-------#
-alerts = False  # ..................# just True or False
+sounds = True  # ...................# just True or False
 autoSearch = True  # ...............#
 autoTrain = True  # ................#
+miscritCheck = True  # .............# set to True to get miscrit's name
 huntType = "battle" # ..............# "battle" or "escape" the miscrits that are not the target
 autoCatch = True  # ................# try to catch miscrit if catch rate is greater than
 catchable = 90  # ..................# this catch percentage
-catchStandard = 29  # ..............# initial catch percentage to capture
+catchStandard = 30  # ..............# initial catch percentage to capture [msx is 42]
 WEAKNESS = "nature.png"  # .........# choose element that is strong against main miscrit
-miscritCheck = True  # .............# set to True
 targetAll = True  # ................# set to True to make everyone a target for capture
 targets = ["Waddles"]  # ...........# miscrit names without space (pray for accuracy)
 
@@ -22,7 +22,7 @@ targets = ["Waddles"]  # ...........# miscrit names without space (pray for accu
 # ["m2_shelf.png", "m2_brush2.png", "m2_potions.png", "m2_woodcage.png"]
 # ["m2_statue2.png", "m2_chairL.png"]
 
-searchSeq = ["a1_cattail.png", "a1_jagbush.png", "a1_sapling.png"]
+searchSeq = ["a2_puddle.png", "a2_palm.png", "a2_stone.png", "a2_tree.png"]
 
 import sys
 import time
@@ -40,10 +40,10 @@ pygame.init()
 
 b = 0
 start = time.time()
-augh = pygame.mixer.Sound("augh.mp3")
+rizz = pygame.mixer.Sound("rizz.mp3")
 on = pygame.mixer.Sound("on.mp3")
 off = pygame.mixer.Sound("off.mp3")
-dance = pygame.mixer.Sound("dance.mp3")
+pluck = pygame.mixer.Sound("pluck.mp3")
 
 APPNAMEPNG = "appname.png"
 if sys.platform.startswith("linux"):
@@ -58,7 +58,7 @@ def checkActive():
 
 
 def playSound(sound: pygame.mixer.Sound) -> None:
-    if alerts:
+    if sounds:
         sound.play()
 
 
@@ -196,7 +196,7 @@ def encounterMode():
             print(
                 f"\033[A{Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} found!{Fore.LIGHTBLACK_EX}"
             )
-            playSound(augh)
+            playSound(rizz)
 
             if autoCatch:
                 time.sleep(1)
@@ -215,7 +215,7 @@ def encounterMode():
                         <= catchStandard
                     )
                 if toCatch or miscrit in targets:
-                    playSound(dance)
+                    playSound(pluck)
                     catchMode()
                     return
                 else:
@@ -288,7 +288,7 @@ def catchMode():
         if LXVI_locateCenterOnScreen("miscripedia.png", confidence=0.8) is None:
             if LXVI_locateCenterOnScreen("closebtn.png", 0.85) is not None:
                 print(
-                    f"\033[A{Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} died. Failed to catch.{Fore.LIGHTBLACK_EX}\n"
+                    f"\033[A{Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} died. Failed to catch.{Fore.LIGHTBLACK_EX}"
                 )
                 return
 
@@ -302,8 +302,9 @@ def catchMode():
                     region=(int(catchButton.x) - 17, int(catchButton.y) + 13, 18, 22)
                 )
 
-            if int(chance) >= catchable and action != 4:
-                action = 3
+            if int(chance) >= catchable:
+                if action != 4:
+                    action = 3
             if action == 0:
                 click("skillsetR.png", 0.75, 0, 0)
                 pyautogui.moveTo(toClick)
@@ -343,7 +344,7 @@ def catchMode():
                 pyautogui.moveTo(toClick)
 
     print(
-        f"\033[A{Fore.YELLOW}{miscrit}{Fore.WHITE} has been caught.{Fore.LIGHTBLACK_EX}"
+        f"\033[A{Fore.YELLOW}{miscrit}{Fore.WHITE} has been caught.     {Fore.LIGHTBLACK_EX}"
     )
     click("catchSkip.png", 0.9, 2, 0)
     click("closebtn.png", 0.85, 2, 0)
@@ -358,7 +359,7 @@ def summary():
         conclude()
     time.sleep(1.5)
 
-    if LXVI_locateCenterOnScreen("trainable1.png", 0.675) is not None:
+    if LXVI_locateCenterOnScreen("trainable1.png", 0.9) is not None:
         trainable = autoTrain
 
     b += 1
