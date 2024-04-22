@@ -10,6 +10,7 @@ catchStandard = 28  # ..............# initial catch percentage to capture [msx i
 WEAKNESS = "nature.png"  # .........# choose element that is strong against main miscrit
 targetAll = True  # ................# set to True to make everyone a target for capture
 targets = ["BlightedKiloray"]  # ...# miscrit names without space (pray for accuracy)
+targets = ["BlightedKiloray"]  # ...# miscrit names without space (pray for accuracy)
 
 # SELECT WHICH ELEMENTS TO SEARCH IN ALTERNATION
 # ["a1_cattail.png", "a1_jagbush.png", "a1_sapling.png"]
@@ -213,7 +214,7 @@ def encounterMode():
                                 ],
                                 True,
                             )
-                        )
+                        
                         <= catchStandard
                     )
                 if toCatch or miscrit in targets:
