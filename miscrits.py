@@ -299,21 +299,16 @@ def summary():
     if not checkActive():
         print("Minimized after Miscrit encounter, concluding process...")
         conclude()
-    try:
-        time.sleep(1.5)
-        if LXVI_locateCenterOnScreen("trainable1.png", 0.675) is not None:
-            trainable = autoTrain
+    time.sleep(1.5)
+    if LXVI_locateCenterOnScreen("trainable1.png", 0.675) is not None:
+        trainable = autoTrain
 
-        b += 1
-        click("closebtn.png", 0.8, 1, 0)
+    b += 1
+    click("closebtn.png", 0.8, 1, 0)
 
-        if trainable is True:
-            click("train.png", 0.75, 0.5, 0)
-            train()
-            return
-
-    except Exception:
-        return
+    if trainable:
+        click("train.png", 0.75, 0.5, 0)
+        train()
 
 
 def train():
