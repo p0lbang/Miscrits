@@ -44,6 +44,7 @@ rizz = pygame.mixer.Sound("rizz.mp3")
 on = pygame.mixer.Sound("on.mp3")
 off = pygame.mixer.Sound("off.mp3")
 pluck = pygame.mixer.Sound("pluck.mp3")
+bend = pygame.mixer.Sound("bend.mp3")
 
 APPNAMEPNG = "appname.png"
 if sys.platform.startswith("linux"):
@@ -331,6 +332,7 @@ def catchMode():
             elif action == 3:
                 click("catchbtn.png", 0.75, 6, 0)
                 if LXVI_locateCenterOnScreen("catchSuccess.png", 0.9) is not None:
+                    playSound(bend)
                     caught = True
                 else:
                     action = 4
