@@ -1,16 +1,17 @@
 #----[    C O N F I G    ]----#
 alerts = True  #..............# just True or False
-autoSearch = True  #..........# 
-autoTrain = True  #...........#
-huntType = "battle"  #........# "battle" or "escape" the miscrits that are not the target
-autoCatch = True  #...........# try to catch miscrit if catch rate is greater than 
-catchable = 90  #.............# this catch percentage
+autoSearch = True #...........# 
+autoTrain = True #............#
+huntType = "battle" #.........# "battle" or "escape" the miscrits that are not the target
+autoCatch = True #............# try to catch miscrit if catch rate is greater than 
+catchable = 90 #..............# this catch percentage
 WEAKNESS = "nature.png"  #....# choose element that is strong against main miscrit
-target = "BlightedKiloray"  #.# miscrit name without space (pray for accuracy)
+target = "BlightedKiloray" #..# miscrit name without space (pray for accuracy)
 targetBypass = False #........# set to True to make everyone a target for capture
 
 # SELECT WHICH ELEMENTS TO SEARCH IN ALTERNATION
-EXPLORE = ["a2_puddle.png", "a2_palm.png", "a2_stone.png", "a2_tree.png"]
+EXPLORE = ["a2_puddle.png", "a2_palm.png"]
+# EXPLORE = ["a2_puddle.png", "a2_palm.png", "a2_stone.png", "a2_tree.png"]
 # EXPLORE = ["eldertree.png", "eldershrub.png", "eldersunflower.png", "elderleafpile.png"]
 # EXPLORE = ["a4_bush.png", "a4_cattail2.png", "a4_tree.png" "a4_empty.png"]
 # EXPLORE = ["a4_blightbush.png", "a4_blightbush2.png", "a4_flowers.png"]
@@ -285,6 +286,7 @@ def catchMode():
 
         if LXVI_locateCenterOnScreen("miscripedia.png", confidence=0.8) is None:
             if LXVI_locateCenterOnScreen("closebtn.png", 0.85) is not None:
+                print(f"\033[ATarget miscrit {miscrit} died. Failed to catch.\n")
                 return
             
         if (
@@ -292,7 +294,7 @@ def catchMode():
         ) is not None:
             chance = LXVI_readImage([1328, 158, 18, 22], True)
             time.sleep(0.1)
-            if int(chance) >= catchable:
+            if int(chance) >= catchable and c != 4:
                 c = 3
             if c == 0:
                 click("skillsetR.png", 0.75, 0, 0)
