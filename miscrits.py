@@ -1,15 +1,15 @@
 # ------[    C O N F I G    ]-------#
 sounds = True  # ...................# just True or False
-autoSearch = True  # ...............#
-autoTrain = True  # ................#
+autoSearch = True  # ..............#
+searchInterval = 2  # ..............# interval for clicking between searches 
+autoTrain = True  # ...............#
 miscritCheck = True  # .............# set to True to get miscrit's name
-huntType = "battle"  # ..............# "battle" or "escape" the miscrits that are not the target
-autoCatch = True  # ................# try to catch miscrit if catch rate is greater than
+huntType = "battle"  # .............# "battle" or "escape" the miscrits that are not the target
+autoCatch = False  # ................# try to catch miscrit if catch rate is greater than
 catchable = 90  # ..................# this catch percentage
 catchStandard = 28  # ..............# initial catch percentage to capture [msx is 42]
 WEAKNESS = "nature.png"  # .........# choose element that is strong against main miscrit
-targetAll = True  # ................# set to True to make everyone a target for capture
-targets = ["BlightedKiloray"]  # ...# miscrit names without space (pray for accuracy)
+targetAll = False  # ...............# set to True to make everyone a target for capture
 targets = ["BlightedKiloray"]  # ...# miscrit names without space (pray for accuracy)
 
 # SELECT WHICH ELEMENTS TO SEARCH IN ALTERNATION
@@ -23,7 +23,7 @@ targets = ["BlightedKiloray"]  # ...# miscrit names without space (pray for accu
 # ["m2_shelf.png", "m2_brush2.png", "m2_potions.png", "m2_woodcage.png"]
 # ["m2_statue2.png", "m2_chairL.png"]
 
-searchSeq = ["a2_puddle.png", "a2_palm.png", "a2_stone.png", "a2_tree.png"]
+searchSeq = ["a2_puddle.png", "a2_puddleR.png"]
 
 import sys
 import time
@@ -149,9 +149,9 @@ def searchMode():
                     continue
 
                 SearchSuccess = True
-                pyautogui.moveTo(toClick, duration=0.2)
+                pyautogui.moveTo(toClick, duration=0.1)
                 pyautogui.leftClick()
-                time.sleep(4)
+                time.sleep(searchInterval)
 
                 if LXVI_locateCenterOnScreen("battlebtns.png", 0.8) is not None:
                     time.sleep(1)
@@ -171,6 +171,7 @@ def encounterMode():
 
     miscrit = "WILD MISCRIT"
     action = 1
+    battle_start = time.time()
 
     while LXVI_locateCenterOnScreen("battlebtns.png", 0.8) is None:
         pass
@@ -203,20 +204,7 @@ def encounterMode():
             if autoCatch:
                 time.sleep(1)
                 if isinstance(catchButton, Point):
-                    toCatch = (
-                        int(
-                            LXVI_readImage(
-                                [
-                                    int(catchButton.x) - 17,
-                                    int(catchButton.y) + 13,
-                                    18,
-                                    22,
-                                ],
-                                True,
-                            )
-                        
-                        <= catchStandard
-                    )
+                    toCatch = int(LXVI_readImage([int(catchButton.x) - 17,int(catchButton.y) + 13, 18, 22], True)) <= catchStandard
                 if toCatch or miscrit in targets:
                     playSound(pluck)
                     catchMode()
@@ -247,7 +235,6 @@ def encounterMode():
     else:
         toClick = (toClick.x + 115, toClick.y + 80)
 
-    battle_start = time.time()
 
     while True:
         if action > 0:
@@ -301,9 +288,7 @@ def catchMode():
             toClick = (toClick.x - 45, toClick.y + 80)
 
             if isinstance(catchButton, Point):
-                chance = LXVI_readImage(
-                    [int(catchButton.x) - 17, int(catchButton.y) + 13, 18, 22], True
-                )
+                chance = LXVI_readImage([int(catchButton.x) - 17, int(catchButton.y) + 13, 18, 22], True)
 
             if int(chance) >= catchable:
                 if action != 4:
@@ -361,10 +346,11 @@ def summary():
     if not checkActive():
         print("Minimized after Miscrit encounter, concluding process...")
         conclude()
-    time.sleep(1.5)
+    
+    # time.sleep(1)
 
-    if LXVI_locateCenterOnScreen("trainable1.png", 0.9) is not None:
-        trainable = autoTrain
+    if LXVI_locateCenterOnScreen("trainable1.png", 0.675) is not None:
+        trainable = True
 
     b += 1
     click("closebtn.png", 0.8, 1, 0)
@@ -383,7 +369,9 @@ def train():
         if not checkActive():
             print("Minimized while training Miscrits, concluding process...")
             conclude()
-
+        if not autoTrain:
+            print("You have trainable Miscrits, concluding process...")
+            conclude()
         click("trainable.png", 0.6, 0.2, 0.1)
         click("train2.png", 0.8, 0.5, 0.1)
         click("continuebtn.png", 0.9, 1, 0.1)
