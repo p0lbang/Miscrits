@@ -1,17 +1,26 @@
-# -------[    C O N F I G    ]-------#
+# -------[    C O N F I G    ]--------#
 sounds = False  # ....................# just True or False
-autoSearch = True  # ................#
-searchInterval = 4  # ...............# interval for clicking between searches 
-autoTrain = True  # .................#
-miscritCheck = True  # ..............# set to True to get miscrit's name
-huntType = "battle"  # ..............# "battle" or "escape" the miscrits that are not the target
-autoCatch = True  # .................# try to catch miscrit if catch rate is greater than
-catchable = 94  # ...................# this catch percentage
-catchStandard = 28  # ...............# initial catch percentage to capture [msx is 42]
-WEAKNESS = "nature.png"  # ..........# choose element that is strong against main miscrit
-targetAll = True  # ................# set to True to make everyone a target for capture
+autoSearch = True  # .................#
+searchInterval = 4  # ................# interval for clicking between searches 
+autoTrain = True  # ..................# set to True to automatically level up miscrits
+bonusTrain = False  # .................# set to True if you want to spend platinum on your trainable miscrits
+miscritCheck = False  # ...............# set to True to get miscrit's name
+huntType = "battle"  # ...............# "battle" or "escape" the miscrits that are not the target
+autoCatch = True  # ..................# try to catch miscrit if catch rate is greater than
+catchable = 94  # ....................# this catch percentage
+catchStandardDict = {"Common": 27,    # 27-45%
+                     "Rare": 27,      # 17-35%
+                     "Epic": 25,      # 10-25%
+                     "Exotic": 25,    # ?-10%
+                     "Legendary": 25, # ?-?
+                     "Unidentified": 27
+                     } # .............# initial catch percentage to capture for each rarity
+WEAKNESS = "nature.png"  # ...........# choose element that is strong against main miscrit
+targetAll = True  # ..................# set to True to make everyone a target for capture
 targets = ["BlightedFender", "BlightedFiender"]  # miscrit names without space (pray for accuracy)
 searchSeq = ["a3_blight", "a3_sun3", "a3_magic", "a3_fuchsia"]
+
+#-------------------------------------#
 
 import sys
 import time
@@ -83,7 +92,7 @@ def LXVI_readImage(
         read = reader.recognize(numpy.array(img), blocklist="-~( ).,")
     (_, text, _) = read[0]
 
-    img.save(f"errorer.jpg")
+    #img.save(f"errorer.jpg")
     return text
 
 
@@ -120,9 +129,24 @@ def cleanUp():
 def getMiscritName():
     miscrits_lore = LXVI_locateCenterOnScreen("miscrits_lore.png", 0.8)
     if isinstance(miscrits_lore, Point):
-        return LXVI_readImage(region=(int(miscrits_lore.x) + -130, int(miscrits_lore.y) + 33, 238, 35))
+        name = LXVI_readImage([int(miscrits_lore.x) + -130, int(miscrits_lore.y) + 33, 238, 35])
+        return name
     else:
-        return None
+        return "[unidentified]"
+
+
+def getMiscritRarity():
+    rarDict ={"com": "Common", "rar": "Rare", "epi": "Epic", "exo": "Exotic", "lag": "Legendary"}
+    miscrits_lore = LXVI_locateCenterOnScreen("miscrits_lore.png", 0.8)
+    if isinstance(miscrits_lore, Point):
+        rarity = LXVI_readImage([int(miscrits_lore.x) + -86, int(miscrits_lore.y) + 116, 60, 25])
+        rarity = rarity[:3].lower()
+        if rarity in rarDict:
+            return rarDict[rarity]
+        else:
+            return "Unidentified"
+    else:
+        return "Unidentified"
 
 
 def getCatchChance():
@@ -173,9 +197,11 @@ def searchMode():
 
 
 def encounterMode():
-    global miscrit
-
-    miscrit = "WILD MISCRIT"
+    global miscrit, b
+    
+    b += 1
+    miscrit = "[redacted]"
+    rarity = "Unidentified"
     action = 1
     battle_start = time.time()
 
@@ -188,6 +214,7 @@ def encounterMode():
     if miscritCheck:
         click("miscripedia.png", 0.8, 0.555, 0)
         miscrit = getMiscritName()
+        rarity = getMiscritRarity()
         print(f"{Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} wants to fight.")
         click("mpedia_exit.png", 0.8, 0, 0)
         click("mpedia_exit.png", 0.8, 0, 0)
@@ -198,6 +225,7 @@ def encounterMode():
 
             if autoCatch:
                 time.sleep(2)
+                catchStandard = catchStandardDict[rarity]
                 if (getCatchChance() <= catchStandard) or (miscrit in targets):
                     playSound(pluck)
                     catchMode()
@@ -211,6 +239,15 @@ def encounterMode():
                 conclude()
     else:
         print(f"{Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} wants to fight.")
+        
+        if autoCatch:
+            catchStandard = catchStandardDict[rarity]
+            while LXVI_locateCenterOnScreen("run.png", 0.99) is None:
+                pass
+            if (getCatchChance() <= catchStandard) or (miscrit in targets):
+                playSound(pluck)
+                catchMode()
+                return
 
     while (toClick := LXVI_locateCenterOnScreen("run.png", 0.99)) is None:
         pass
@@ -309,13 +346,12 @@ def catchMode():
                 pyautogui.leftClick()
                 pyautogui.moveTo(toClick)
 
-    print(f"\033[A     {Fore.YELLOW}{miscrit}{Fore.WHITE} has been caught. Initial chance: {Fore.GREEN}{initialChance}%{Fore.LIGHTBLACK_EX}")
+    print(f"\033[A     {Fore.YELLOW}{miscrit}{Fore.WHITE} has been caught. {Fore.LIGHTBLACK_EX}Initial chance: {Fore.GREEN}{initialChance}%{Fore.LIGHTBLACK_EX}")
     click("catchSkip.png", 0.9, 2, 0)
     click("closebtn.png", 0.85, 2, 0)
 
 
 def summary():
-    global b
     trainable = False
 
     if not checkActive():
@@ -327,7 +363,6 @@ def summary():
     if LXVI_locateCenterOnScreen("trainable1.png", 0.675) is not None:
         trainable = True
 
-    b += 1
     click("closebtn.png", 0.8, 1, 0)
 
     if autoCatch:
@@ -349,11 +384,13 @@ def train():
             conclude()
         click("trainable.png", 0.6, 0.2, 0.1)
         click("train2.png", 0.8, 0.5, 0.1)
+        if bonusTrain:
+            click("bonustrain.png", 0.9, 0.4, 0.1)
         click("continuebtn.png", 0.9, 1, 0.1)
 
         click("continuebtn2.png", 0.75, 2, 0.1)
         click("continuebtn3.png", 0.75, 2, 0.1)
-        click("skipbtn.png", 0.75, 2.5, 0.1)
+        click("skipbtn.png", 0.75, 1, 0.1)
 
     click("x.png", 0.8, 0.2, 0)
 

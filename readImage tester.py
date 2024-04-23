@@ -23,7 +23,7 @@ def LXVI_readImage(region: tuple[int, int, int, int] | None = None):
 
     read = reader.recognize(
         numpy.array(img),
-        blocklist="-~() "
+        blocklist="-~() 0123456789"
         #,allowlist='0123456789'
     )
 
@@ -49,7 +49,7 @@ def LXVI_locateCenterOnScreen(
         return None
 
 
-def mpediaTest():
+def getMiscritName():
     miscrits_lore = LXVI_locateCenterOnScreen("miscrits_lore.png", 0.8)
     if isinstance(miscrits_lore, Point):
         miscrit = LXVI_readImage(
@@ -58,7 +58,16 @@ def mpediaTest():
     print(f"\n{miscrit}\n")
 
 
-def catchrateTest():
+def getMiscritRarity():
+    rarDict ={"com": "Common", "rar": "Rare", "epi": "Epic", "exo": "Exotic", "lag": "Legendary"}
+    miscrits_lore = LXVI_locateCenterOnScreen("miscrits_lore.png", 0.8)
+    if isinstance(miscrits_lore, Point):
+        rarity = LXVI_readImage([int(miscrits_lore.x) + -86, int(miscrits_lore.y) + 116, 60, 25])
+        rarity = rarity[:3].lower()
+    print(rarDict[rarity])
+
+
+def getCatchChance():
     catchButton = LXVI_locateCenterOnScreen("catchbtn.png", 0.75)
     if isinstance(catchButton, Point):
         chance = LXVI_readImage(
@@ -66,5 +75,4 @@ def catchrateTest():
         )
     print(chance)
 
-# catchrateTest()
-mpediaTest()
+getMiscritRarity()
