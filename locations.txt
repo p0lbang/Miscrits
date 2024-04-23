@@ -6,7 +6,7 @@ BlightedKiloray                 ["a2_blight", "a2_palm", "a2_tree", "a2_rock"]
 
 Tulipinny                       ["a3_magic", "a3_minis1", "a3_sun1", "a3_pink1"]
 DarkFlowerpiller                ["a3_minis2", "a3_palm", "a3_pink2", "a3_sun2"]
-BlightedFiender                 ["a3_blight", "a3_sun3", "a3_magic", "a3_fuchsia"]
+BlightedFender                  ["a3_blight", "a3_sun3", "a3_magic", "a3_fuchsia"]
 
 Blazebit                        ["a4_elder", "a4_bush1", "a4_sun", "a4_pool1"]
 DarkShelbee                     ["a4_pool2", "a4_shrub1", "a4_bush2", "a4_typha1"]

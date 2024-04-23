@@ -15,7 +15,7 @@ def LXVI_readImage(region: tuple[int, int, int, int] | None = None):
     img = pyautogui.screenshot(region=region)
 
     # old = img.copy()
-    # img = img.convert("L")
+    img = img.convert("L")
     # img = img.filter(PIL.ImageFilter.DETAIL)
     # img = img.filter(PIL.ImageFilter.SMOOTH)
     # img = img.filter(PIL.ImageFilter.EDGE_ENHANCE)
@@ -23,8 +23,8 @@ def LXVI_readImage(region: tuple[int, int, int, int] | None = None):
 
     read = reader.recognize(
         numpy.array(img),
-        blocklist="-~()",
-        # , allowlist='0123456789'
+        blocklist="-~() "
+        #,allowlist='0123456789'
     )
 
     (_, text, _) = read[0]
@@ -53,7 +53,7 @@ def mpediaTest():
     miscrits_lore = LXVI_locateCenterOnScreen("miscrits_lore.png", 0.8)
     if isinstance(miscrits_lore, Point):
         miscrit = LXVI_readImage(
-            region=(int(miscrits_lore.x) + -130, int(miscrits_lore.y) + 32, 238, 40)
+            region=(int(miscrits_lore.x) + -130, int(miscrits_lore.y) + 33, 238, 35)
         )
     print(f"\n{miscrit}\n")
 
@@ -66,4 +66,5 @@ def catchrateTest():
         )
     print(chance)
 
+# catchrateTest()
 mpediaTest()

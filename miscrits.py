@@ -1,16 +1,16 @@
 # -------[    C O N F I G    ]-------#
-sounds = True  # ....................# just True or False
+sounds = False  # ....................# just True or False
 autoSearch = True  # ................#
 searchInterval = 4  # ...............# interval for clicking between searches 
 autoTrain = True  # .................#
 miscritCheck = True  # ..............# set to True to get miscrit's name
 huntType = "battle"  # ..............# "battle" or "escape" the miscrits that are not the target
 autoCatch = True  # .................# try to catch miscrit if catch rate is greater than
-catchable = 85  # ...................# this catch percentage
+catchable = 94  # ...................# this catch percentage
 catchStandard = 28  # ...............# initial catch percentage to capture [msx is 42]
 WEAKNESS = "nature.png"  # ..........# choose element that is strong against main miscrit
 targetAll = True  # ................# set to True to make everyone a target for capture
-targets = ["BlightedFiender"]  # ....# miscrit names without space (pray for accuracy)
+targets = ["BlightedFender", "BlightedFiender"]  # miscrit names without space (pray for accuracy)
 searchSeq = ["a3_blight", "a3_sun3", "a3_magic", "a3_fuchsia"]
 
 import sys
@@ -20,9 +20,12 @@ import pyautogui
 import easyocr
 import easyocr.imgproc
 import easyocr.character
-import pygame
 from colorama import Fore
 from pyscreeze import Point
+from os import environ
+
+environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
+import pygame
 
 reader = easyocr.Reader(["en"], gpu=True, verbose=False)
 pygame.init()
@@ -42,16 +45,16 @@ if sys.platform.startswith("linux"):
 for s, search in enumerate(searchSeq):
     searchSeq[s] =".\\imgSources\\" + search + ".png"
 
+def playSound(sound: pygame.mixer.Sound) -> None:
+    if sounds:
+        sound.play()
+
+
 def checkActive():
     if LXVI_locateCenterOnScreen(APPNAMEPNG, 0.8, [0, 0, 1920, 100]) is not None:
         return True
     else:
         return False
-
-
-def playSound(sound: pygame.mixer.Sound) -> None:
-    if sounds:
-        sound.play()
 
 
 def LXVI_locateCenterOnScreen(
@@ -74,13 +77,13 @@ def LXVI_readImage(
 
     if numerical:
         read = reader.recognize(
-            numpy.array(img), allowlist="0123456789", blocklist="-~()"
+            numpy.array(img), allowlist="0123456789", blocklist="-~( ).,"
         )
     else:
-        read = reader.recognize(numpy.array(img), blocklist="-~()")
+        read = reader.recognize(numpy.array(img), blocklist="-~( ).,")
     (_, text, _) = read[0]
 
-    # img.save(f"testing.jpg")
+    img.save(f"errorer.jpg")
     return text
 
 
@@ -114,6 +117,23 @@ def cleanUp():
         click("potion1.png", 0.65, 0, 0)
 
 
+def getMiscritName():
+    miscrits_lore = LXVI_locateCenterOnScreen("miscrits_lore.png", 0.8)
+    if isinstance(miscrits_lore, Point):
+        return LXVI_readImage(region=(int(miscrits_lore.x) + -130, int(miscrits_lore.y) + 33, 238, 35))
+    else:
+        return None
+
+
+def getCatchChance():
+    catchButton = LXVI_locateCenterOnScreen("catchbtn.png", 0.75)
+    if isinstance(catchButton, Point):
+        chance = int(LXVI_readImage([int(catchButton.x) - 17, int(catchButton.y) + 13, 18, 22], True))
+        return chance
+    else:
+        return None
+
+
 def searchMode():
     while True:
         if not checkActive():
@@ -121,7 +141,6 @@ def searchMode():
             conclude()
 
         if LXVI_locateCenterOnScreen("battlebtns.png", 0.8) is not None:
-            time.sleep(1)
             encounterMode()
             summary()
         elif LXVI_locateCenterOnScreen("closebtn.png", 0.8) is not None:
@@ -136,9 +155,7 @@ def searchMode():
                     encounterMode()
                     summary()
                 
-                if (
-                    toClick := LXVI_locateCenterOnScreen(search, confidence=0.8)
-                ) is None:
+                if (toClick := LXVI_locateCenterOnScreen(search, confidence=0.8)) is None:
                     time.sleep(1)
                     continue
 
@@ -146,7 +163,6 @@ def searchMode():
                 pyautogui.moveTo(toClick, duration=0.1)
                 pyautogui.leftClick()
                 time.sleep(searchInterval)
-
 
             if not SearchSuccess:
                 print("Elements not found, concluding process...")
@@ -171,31 +187,18 @@ def encounterMode():
 
     if miscritCheck:
         click("miscripedia.png", 0.8, 0.555, 0)
-        miscrits_lore = LXVI_locateCenterOnScreen("miscrits_lore.png", 0.8)
-
-        if isinstance(miscrits_lore, Point):
-            miscrit = LXVI_readImage(
-                region=(int(miscrits_lore.x) + -130, int(miscrits_lore.y) + 33, 238, 40)
-            )
-
+        miscrit = getMiscritName()
         print(f"{Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} wants to fight.")
         click("mpedia_exit.png", 0.8, 0, 0)
         click("mpedia_exit.png", 0.8, 0, 0)
 
-        toCatch = False
-        catchButton = LXVI_locateCenterOnScreen("catchbtn.png", 0.75)
-
         if miscrit in targets or targetAll:
-            print(
-                f"\033[A{Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} found!{Fore.LIGHTBLACK_EX}"
-            )
+            print(f"\033[A{Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} found!{Fore.LIGHTBLACK_EX}")
             playSound(rizz)
 
             if autoCatch:
-                time.sleep(1)
-                if isinstance(catchButton, Point):
-                    toCatch = int(LXVI_readImage([int(catchButton.x) - 17,int(catchButton.y) + 13, 18, 22], True)) <= catchStandard
-                if toCatch or miscrit in targets:
+                time.sleep(2)
+                if (getCatchChance() <= catchStandard) or (miscrit in targets):
                     playSound(pluck)
                     catchMode()
                     return
@@ -213,18 +216,15 @@ def encounterMode():
         pass
 
     if not checkActive():
-        print(f"Minimized while in encounter mode, concluding process...")
+        print("Minimized while in encounter mode, concluding process...")
         conclude()
 
     if huntType != "battle":
         pyautogui.moveTo(toClick)
-        print(
-            f"\033[ASuccessfully escaped from {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}."
-        )
+        print(f"\033[ASuccessfully escaped from {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}.")
         pyautogui.leftClick()
     else:
         toClick = (toClick.x + 115, toClick.y + 80)
-
 
     while True:
         if action > 0:
@@ -238,17 +238,12 @@ def encounterMode():
             click("skillsetL.png", 0.75, 0, 0)
 
         if not checkActive():
-            print(f"Minimized while in encounter mode, concluding process...")
+            print("Minimized while in encounter mode, concluding process...")
             conclude()
 
         if LXVI_locateCenterOnScreen("closebtn.png", 0.85) is not None:
-            print(
-                f"\033[A{Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} was defeated.",
-                end=" ",
-            )
-            print(
-                f"Time: {Fore.CYAN}{round(time.time()-battle_start, 3)}s{Fore.LIGHTBLACK_EX}"
-            )
+            print(f"\033[A{Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} was defeated.", end=" ",)
+            print(f"Time: {Fore.CYAN}{round(time.time()-battle_start, 3)}s{Fore.LIGHTBLACK_EX}")
             return
 
 
@@ -257,28 +252,22 @@ def catchMode():
     action = 0
     caught = False
 
-    catchButton = LXVI_locateCenterOnScreen("catchbtn.png", 0.75)
+    initialChance = getCatchChance()
+    chance = initialChance
+    print(f"     {Fore.YELLOW}{miscrit}{Fore.LIGHTBLACK_EX}'s initial catch rate: {Fore.CYAN}{initialChance}%{Fore.LIGHTBLACK_EX}")
     while not caught:
         if not checkActive():
-            print(
-                f"\033[AMinimized while trying to catch {Fore.YELLOW}{miscrit}{Fore.LIGHTBLACK_EX}, concluding process..."
-            )
+            print(f"Minimized while trying to catch {Fore.YELLOW}{miscrit}{Fore.LIGHTBLACK_EX}, concluding process...")
             conclude()
 
         if LXVI_locateCenterOnScreen("miscripedia.png", confidence=0.8) is None:
             if LXVI_locateCenterOnScreen("closebtn.png", 0.85) is not None:
-                print(
-                    f"\033[A{Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} died. Failed to catch.{Fore.LIGHTBLACK_EX}"
-                )
+                print(f"\033[A     {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} died at {chance}% with initial catch rate: {Fore.RED}{initialChance}%.{Fore.LIGHTBLACK_EX}")
                 return
 
-        if (
-            toClick := LXVI_locateCenterOnScreen("run.png", confidence=0.99)
-        ) is not None:
+        if (toClick := LXVI_locateCenterOnScreen("run.png", confidence=0.99)) is not None:
             toClick = (toClick.x - 45, toClick.y + 80)
-
-            if isinstance(catchButton, Point):
-                chance = LXVI_readImage([int(catchButton.x) - 17, int(catchButton.y) + 13, 18, 22], True)
+            chance = getCatchChance()
 
             if int(chance) >= catchable:
                 if action != 4:
@@ -315,16 +304,12 @@ def catchMode():
                     action = 4
             elif action == 4:
                 pyautogui.moveTo(toClick)
-                print(
-                    f"\033[A{Fore.WHITE}Time to kill {Fore.YELLOW}{miscrit}{Fore.WHITE}, I guess.{Fore.LIGHTBLACK_EX}"
-                )
+                print(f"{Fore.LIGHTBLACK_EX}     Failed to catch {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} with {Fore.RED}{chance}%{Fore.LIGHTBLACK_EX}.")
                 pyautogui.moveRel(-45 + 160 * 1, 0)
                 pyautogui.leftClick()
                 pyautogui.moveTo(toClick)
 
-    print(
-        f"\033[A{Fore.YELLOW}{miscrit}{Fore.WHITE} has been caught.     {Fore.LIGHTBLACK_EX}"
-    )
+    print(f"\033[A     {Fore.YELLOW}{miscrit}{Fore.WHITE} has been caught. Initial chance: {Fore.GREEN}{initialChance}%{Fore.LIGHTBLACK_EX}")
     click("catchSkip.png", 0.9, 2, 0)
     click("closebtn.png", 0.85, 2, 0)
 
