@@ -4,7 +4,7 @@ autoSearch = True  # ....................#
 searchInterval = 4  # ...................# interval for clicking between searches [4 minimum for multiple]
 autoTrain = True  # .....................# set to True to automatically level up miscrits
 bonusTrain = False  # ...................# set to True if you want to spend platinum on your trainable miscrits
-miscritCheck = False  # .................# set to True to get miscrit's name
+miscritCheck = True  # ..................# set to True to get miscrit's name
 huntType = "battle"  # ..................# "battle" or "escape" the miscrits that are not the target
 autoCatch = True  # .....................# try to catch miscrit if catch rate is greater than
 catchable = 85  # .......................# this catch percentage
@@ -18,7 +18,7 @@ catchStandardDict = {"Common": 27,  # ...# 27-45%
 WEAKNESS = "nature.png"  # ..............# choose element that is strong against main miscrit
 targetAll = True  # .....................# set to True to make everyone a target for capture
 targets = []  # .........................# miscrit names without space (pray for accuracy)
-searchSeq = ["m1_stool", "m1_cage1", "m1_mirrors", "m1_cage2"]
+searchSeq = ["m2_statueflue", "m2_chairL", "m2_table", "m2_chairR"]
                                          # copy sequences from 'locations.txt'
 #----------------------------------------#
 
