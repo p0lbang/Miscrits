@@ -53,7 +53,7 @@ def getMiscritName():
     miscrits_lore = LXVI_locateCenterOnScreen("miscrits_lore.png", 0.8)
     if isinstance(miscrits_lore, Point):
         miscrit = LXVI_readImage(
-            region=(int(miscrits_lore.x) + -130, int(miscrits_lore.y) + 33, 238, 35)
+            region=(int(miscrits_lore.x) + -130, int(miscrits_lore.y) + 32, 238, 40)
         )
     print(f"\n{miscrit}\n")
 
@@ -75,4 +75,4 @@ def getCatchChance():
         )
     print(chance)
 
-getMiscritRarity()
+getMiscritName()

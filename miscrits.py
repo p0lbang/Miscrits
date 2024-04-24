@@ -180,7 +180,7 @@ def cleanUp():
 def getMiscritName():
     miscrits_lore = LXVI_locateCenterOnScreen("miscrits_lore.png", 0.8)
     if isinstance(miscrits_lore, Point):
-        name = LXVI_readImage([int(miscrits_lore.x) + -130, int(miscrits_lore.y) + 35, 238, 35])
+        name = LXVI_readImage([int(miscrits_lore.x) + -130, int(miscrits_lore.y) + 32, 238, 40])
         return name
     else:
         return "[unidentified]"
