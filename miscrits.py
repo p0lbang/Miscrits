@@ -352,7 +352,7 @@ def catchMode():
 
         if LXVI_locateCenterOnScreen("miscripedia.png", confidence=0.8) is None:
             if LXVI_locateCenterOnScreen("closebtn.png", 0.85) is not None:
-                print(f"\033[A     {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} died at {chance}% with initial catch rate: {Fore.RED}{initialChance}%.{Fore.LIGHTBLACK_EX}")
+                print(f"\033[A     {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} died at {Fore.RED}{chance}%{Fore.LIGHTBLACK_EX} catch rate.")
                 return
 
         if (toClick := LXVI_locateCenterOnScreen("run.png", confidence=0.99)) is not None:
