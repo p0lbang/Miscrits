@@ -1,7 +1,7 @@
 # ---------[    C O N F I G    ]---------#
 sounds = True  # ..... ..................# just True or False
 autoSearch = True  # ....................#
-searchInterval = 4  # ...................# interval for clicking between searches 
+searchInterval = 4  # ...................# interval for clicking between searches [4 minimum for multiple]
 autoTrain = True  # .....................# set to True to automatically level up miscrits
 bonusTrain = False  # ...................# set to True if you want to spend platinum on your trainable miscrits
 miscritCheck = True  # .................# set to True to get miscrit's name
@@ -15,7 +15,7 @@ catchStandardDict = {"Common": 27,  # ...# 27-45%
                      "Legendary": 10,  #.# ?-?
                      "Unidentified": 27  #
                      } # ................# initial catch percentage to capture for each rarity
-WEAKNESS = "potion1.png"  # ..............# choose element that is strong against main miscrit
+WEAKNESS = "wind.png"  # ................# choose element that is strong against main miscrit
 targetAll = True  # .....................# set to True to make everyone a target for capture
 targets = []  # .........................# miscrit names without space (pray for accuracy)
 searchSeq = ["a1_typha1", "a1_sapling", "a1_typha2", "a1_jagbush"]
@@ -168,7 +168,7 @@ def click(
 def cleanUp():
     while (
         LXVI_locateCenterOnScreen(
-            "gold.png", confidence=0.8, region=[0, 100, 1920, 980]
+            "gold.png", confidence=0.7, region=[0, 100, 1920, 980]
         )
         is not None
     ):
@@ -340,7 +340,7 @@ def encounterMode():
 
 def catchMode():
     global miscrit, caught
-    action = 0
+    action = 2
 
     initialChance = getCatchChance()
     chance = initialChance
@@ -368,7 +368,7 @@ def catchMode():
                 pyautogui.moveRel(-45 + 160 * 1, 0)
                 pyautogui.leftClick()
                 click("skillsetL.png", 0.75, 0, 0)
-                action = 2
+                action = 1
             elif action == 1:
                 click("skillsetR.png", 0.75, 0, 0)
                 LXVI_moveTo(toClick)
