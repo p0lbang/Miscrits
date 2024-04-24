@@ -1,26 +1,26 @@
-# -------[    C O N F I G    ]--------#
-sounds = False  # ....................# just True or False
-autoSearch = True  # .................#
-searchInterval = 4  # ................# interval for clicking between searches 
-autoTrain = True  # ..................# set to True to automatically level up miscrits
-bonusTrain = False  # .................# set to True if you want to spend platinum on your trainable miscrits
-miscritCheck = True  # ...............# set to True to get miscrit's name
-huntType = "battle"  # ...............# "battle" or "escape" the miscrits that are not the target
-autoCatch = True  # ..................# try to catch miscrit if catch rate is greater than
-catchable = 94  # ....................# this catch percentage
-catchStandardDict = {"Common": 27,    # 27-45%
-                     "Rare": 27,      # 17-35%
-                     "Epic": 25,      # 10-25%
-                     "Exotic": 25,    # ?-10%
-                     "Legendary": 25, # ?-?
-                     "Unidentified": 27
-                     } # .............# initial catch percentage to capture for each rarity
-WEAKNESS = "nature.png"  # ...........# choose element that is strong against main miscrit
-targetAll = True  # ..................# set to True to make everyone a target for capture
-targets = ["BlightedFender", "BlightedFiender"]  # miscrit names without space (pray for accuracy)
-searchSeq = ["a3_blight", "a3_sun3", "a3_magic", "a3_fuchsia"]
-
-#-------------------------------------#
+# ---------[    C O N F I G    ]---------#
+sounds = True  # ..... ..................# just True or False
+autoSearch = True  # ....................#
+searchInterval = 3  # ...................# interval for clicking between searches 
+autoTrain = True  # .....................# set to True to automatically level up miscrits
+bonusTrain = False  # ...................# set to True if you want to spend platinum on your trainable miscrits
+miscritCheck = False  # .................# set to True to get miscrit's name
+huntType = "battle"  # ..................# "battle" or "escape" the miscrits that are not the target
+autoCatch = True  # .....................# try to catch miscrit if catch rate is greater than
+catchable = 85  # .......................# this catch percentage
+catchStandardDict = {"Common": 27,  # ...# 27-45%
+                     "Rare": 20,  # .....# 17-35%
+                     "Epic": 25,  # .....# 10-25%
+                     "Exotic": 10,  # ...# ?-10%
+                     "Legendary": 10,  #.# ?-?
+                     "Unidentified": 27  #
+                     } # ................# initial catch percentage to capture for each rarity
+WEAKNESS = "nature.png"  # ..............# choose element that is strong against main miscrit
+targetAll = True  # .....................# set to True to make everyone a target for capture
+targets = []  # .........................# miscrit names without space (pray for accuracy)
+searchSeq = ["a1_typha1", "a1_sapling", "a1_typha2", "a1_jagbush"]
+                                         # copy sequences from 'locations.txt'
+#----------------------------------------#
 
 import sys
 import time
@@ -41,6 +41,7 @@ reader = easyocr.Reader(["en"], gpu=True, verbose=False)
 pygame.init()
 
 b = 0
+caught = False
 start = time.time()
 rizz = pygame.mixer.Sound("rizz.mp3")
 on = pygame.mixer.Sound("on.mp3")
@@ -53,7 +54,8 @@ if sys.platform.startswith("linux"):
     APPNAMEPNG = "appname_linux.png"
 
 for s, search in enumerate(searchSeq):
-    searchSeq[s] = pathlib.PurePath("imgSources",f"{search}.png")
+    searchSeq[s] = str(pathlib.PurePath("imgSources",f"{search}.png"))
+
 
 def playSound(sound: pygame.mixer.Sound) -> None:
     if sounds:
@@ -211,7 +213,7 @@ def encounterMode():
     while LXVI_locateCenterOnScreen("battlebtns.png", 0.8) is None:
         pass
 
-    if LXVI_locateCenterOnScreen(WEAKNESS, 0.85) is not None:
+    if LXVI_locateCenterOnScreen(WEAKNESS, 0.8) is not None:
         action = 0
 
     if miscritCheck:
@@ -288,9 +290,8 @@ def encounterMode():
 
 
 def catchMode():
-    global miscrit
+    global miscrit, caught
     action = 0
-    caught = False
 
     initialChance = getCatchChance()
     chance = initialChance
@@ -318,7 +319,7 @@ def catchMode():
                 pyautogui.moveRel(-45 + 160 * 1, 0)
                 pyautogui.leftClick()
                 click("skillsetL.png", 0.75, 0, 0)
-                action = 1
+                action = 2
             elif action == 1:
                 click("skillsetR.png", 0.75, 0, 0)
                 pyautogui.moveTo(toClick)
@@ -355,6 +356,7 @@ def catchMode():
 
 
 def summary():
+    global caught
     trainable = False
 
     if not checkActive():
@@ -363,14 +365,15 @@ def summary():
     
     # time.sleep(1)
 
-    if LXVI_locateCenterOnScreen("trainable1.png", 0.675) is not None:
+    if LXVI_locateCenterOnScreen("trainable1.png", 0.75) is not None:
         trainable = True
 
-    click("closebtn.png", 0.8, 1, 0)
+    click("closebtn.png", 0.8, 0.5, 0)
 
-    if autoCatch:
+    if caught:
         time.sleep(1.5)
         click("skipbtn.png", 0.75, 1, 0)
+        caught = False
 
     if trainable:
         click("train.png", 0.75, 0.5, 0)
