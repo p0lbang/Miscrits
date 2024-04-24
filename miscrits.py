@@ -21,6 +21,8 @@ autoSearch = True  # ....................#
 searchInterval = 4  # ...................# interval for clicking between searches [4 minimum for multiple]
 autoTrain = True  # .....................# set to True to automatically level up miscrits
 bonusTrain = False  # ...................# set to True if you want to spend platinum on your trainable miscrits
+autoSwitch = False  # ...................# set to True to automatically switch miscrits in team if their level is above
+switchLevel = 30  # .....................# this level
 miscritCheck = True  # ..................# set to True to get miscrit's name
 huntType = "battle"  # ..................# "battle" or "escape" the miscrits that are not the target
 autoCatch = True  # .....................# try to catch miscrit if catch rate is greater than
@@ -90,6 +92,14 @@ def LXVI_moveTo(p: Point, duration:float = 0):
         pyautogui.moveTo(int(p.x)+monitor["left"],int(p.y)+monitor["top"], duration=duration)
     except Exception:
         pyautogui.moveTo(int(p[0])+monitor["left"],int(p[1])+monitor["top"], duration=duration)
+
+
+def LXVI_dragTo(p: Point, duration:float = 0):
+    global monitor
+    try:
+        pyautogui.dragTo(int(p.x)+monitor["left"],int(p.y)+monitor["top"], duration=duration)
+    except Exception:
+        pyautogui.dragTo(int(p[0])+monitor["left"],int(p[1])+monitor["top"], duration=duration)
 
 
 def LXVI_locateCenterOnScreen(
@@ -207,6 +217,21 @@ def getCatchChance():
         return chance
     else:
         return None
+
+
+def getTeamLevel():
+    myMiscrits = LXVI_locateCenterOnScreen("myMiscrits.png", 0.9)
+    levels = []
+    if isinstance(myMiscrits, Point):
+        levelA = Point(x = myMiscrits.x - 8, y = myMiscrits.y + 73)
+        for x in range(3):
+            try:
+                levels.append(int(LXVI_readImage([int(levelA.x), int(levelA.y) + 50 + x * 50, 15, 15])))
+            except Exception:
+                levels.append(0)
+        return levels
+    else:
+        return [0,0,0]
 
 
 def searchMode():
@@ -442,8 +467,61 @@ def train():
         click("continuebtn.png", 0.75, 2, 0.1)
         click("skipbtn.png", 0.75, 1, 0.1)
 
-    click("x.png", 0.8, 0.2, 0)
+    if autoSwitch:
+        levelBCD = [0, 0, 0]
+        for l, level in enumerate(getTeamLevel()):
+            levelBCD[l] = (level >= switchLevel)
 
+    click("x.png", 0.8, 0.2, 0)
+    
+    if autoSwitch and (True in levelBCD):
+        switchTeam(levelBCD)
+
+
+def switchTeam(levelBCD):
+    while LXVI_locateCenterOnScreen("teambtn.png", 0.9) is None:
+        pass
+    click("teambtn.png", 0.9, 0.5, 0)
+
+    outCount = 0
+    exit = LXVI_locateCenterOnScreen("x.png", 0.9)
+    pointD = Point(int(exit.x) - 90, int(exit.y) + 200)
+    offset = Point(-180, 0)
+    for l, level in enumerate(reversed(levelBCD)):
+        if level:
+            outCount += 1
+            pointX = Point(pointD.x + l * offset.x, pointD.y + l * offset.y)
+            LXVI_moveTo(pointX)
+            pyautogui.dragRel((0,150))
+            time.sleep(0.1)
+
+    point0 = Point(exit.x -665, exit.y + 315)
+    pointZ = Point(point0.x - 30, point0.y - 30)
+    offset = Point(172, 84)
+
+    lastMiscrit = False
+    while not lastMiscrit:
+        for row in range(3):
+            for column in range(4):
+                pointN = Point(pointZ.x + column * offset.x, pointZ.y + row * offset.y)
+                pointM = Point(point0.x + column * offset.x, point0.y + row * offset.y)
+                if LXVI_locateCenterOnScreen("teamslotEmpty.png", 0.8, [pointN.x, pointN.y, 150, 65]) is None:
+                    level = int(LXVI_readImage([int(pointM.x), int(pointM.y), 16, 14]))
+                    if level < switchLevel:
+                        LXVI_moveTo(pointM)
+                        LXVI_dragTo(pointD, 0.2)
+                        outCount -= 1
+                        if outCount == 0:
+                            lastMiscrit = True
+                            break
+                else:
+                    lastMiscrit = True
+                    break
+            if lastMiscrit:
+                break
+        click("teamR.png", 0.8, 0, 0)
+    click("savebtn.png", 0.8, 0, 0)
+    
 
 def conclude():
     print(
