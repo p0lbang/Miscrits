@@ -1,28 +1,4 @@
 from typing import List, cast
-# ---------[    C O N F I G    ]---------#
-sounds = True  # ..... ..................# just True or False
-autoSearch = True  # ....................#
-searchInterval = 4  # ...................# interval for clicking between searches [4 minimum for multiple]
-autoTrain = True  # .....................# set to True to automatically level up miscrits
-bonusTrain = False  # ...................# set to True if you want to spend platinum on your trainable miscrits
-miscritCheck = True  # ..................# set to True to get miscrit's name
-huntType = "battle"  # ..................# "battle" or "escape" the miscrits that are not the target
-autoCatch = True  # .....................# try to catch miscrit if catch rate is greater than
-catchable = 85  # .......................# this catch percentage
-catchStandardDict = {"Common": 27,  # ...# 27-45%
-                     "Rare": 35,  # .....# 17-35%
-                     "Epic": 25,  # .....# 10-25%
-                     "Exotic": 10,  # ...# ?-10%
-                     "Legendary": 10,  #.# ?-?
-                     "Unidentified": 27  #
-                     } # ................# initial catch percentage to capture for each rarity
-WEAKNESS = "nature.png"  # ..............# choose element that is strong against main miscrit
-targetAll = True  # .....................# set to True to make everyone a target for capture
-targets: List[str]  = []  # .............# miscrit names without space (pray for accuracy)
-searchSeq = ["m2_statueflue", "m2_chairL", "m2_table", "m2_chairR"]
-                                         # copy sequences from 'locations.txt'
-#----------------------------------------#
-
 import sys
 import time
 import mss
@@ -34,10 +10,35 @@ import easyocr
 from colorama import Fore
 from pyscreeze import Point
 from os import environ
-
+import pathlib
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame
-import pathlib
+
+
+# ---------[    C O N F I G    ]---------#
+sounds = True  # ..... ..................# just True or False
+autoSearch = True  # ....................#
+searchInterval = 4  # ...................# interval for clicking between searches [4 minimum for multiple]
+autoTrain = True  # .....................# set to True to automatically level up miscrits
+bonusTrain = False  # ...................# set to True if you want to spend platinum on your trainable miscrits
+miscritCheck = True  # ..................# set to True to get miscrit's name
+huntType = "battle"  # ..................# "battle" or "escape" the miscrits that are not the target
+autoCatch = True  # .....................# try to catch miscrit if catch rate is greater than
+catchable = 85  # .......................# this catch percentage
+catchStandardDict = {"Common": 27,  # ...# 27-45%
+                     "Rare": 17,  # .....# 17-35%
+                     "Epic": 10,  # .....# 10-25%
+                     "Exotic": 10,  # ...# ?-10%
+                     "Legendary": 10,  #.# ?-?
+                     "Unidentified": 27  #
+                     } # ................# initial catch percentage to capture for each rarity
+WEAKNESS = "nature.png"  # ..............# choose element that is strong against main miscrit
+targetAll = True  # .....................# set to True to make everyone a target for capture
+targets: List[str]  = []  # .............# miscrit names without space (pray for accuracy)
+searchSeq = ["m2_statueflue", "m2_chairL", "m2_table", "m2_chairR"]
+                                         # copy sequences from 'locations.txt'
+#----------------------------------------#
+
 
 reader = easyocr.Reader(["en"], gpu=True, verbose=False)
 pygame.init()
@@ -71,8 +72,8 @@ with mss.mss() as sct:
         "height": mon["height"],
         "mon": monitor_number,
     }
-
 assert monitor is not None
+
 
 def playSound(sound: pygame.mixer.Sound) -> None:
     if sounds:
@@ -82,12 +83,14 @@ def playSound(sound: pygame.mixer.Sound) -> None:
 def checkActive():
     return LXVI_locateCenterOnScreen(APPNAMEPNG, 0.8) is not None
 
+
 def LXVI_moveTo(p: Point, duration:float = 0):
     global monitor
     try:
         pyautogui.moveTo(int(p.x)+monitor["left"],int(p.y)+monitor["top"], duration=duration)
     except Exception:
         pyautogui.moveTo(int(p[0])+monitor["left"],int(p[1])+monitor["top"], duration=duration)
+
 
 def LXVI_locateCenterOnScreen(
     imagename: str,
@@ -268,7 +271,6 @@ def encounterMode():
 
         if targetAll or miscrit in targets:
             print(f"\033[A{Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} found!{Fore.LIGHTBLACK_EX}")
-            playSound(rizz)
 
             if autoCatch:
                 catchStandard = catchStandardDict[rarity]
@@ -279,9 +281,8 @@ def encounterMode():
                     catchMode()
                     return
                 else:
-                    print(
-                        f"\033[A{Fore.WHITE}This {Fore.YELLOW}{miscrit}{Fore.WHITE} is trash. -p0lbang{Fore.LIGHTBLACK_EX}"
-                    )
+                    playSound(rizz)
+                    print(f"\033[A{Fore.WHITE}This {Fore.YELLOW}{miscrit}{Fore.WHITE} is trash. -p0lbang{Fore.LIGHTBLACK_EX}")
             else:
                 print("Ending process for manual catch.")
                 conclude()
@@ -346,7 +347,7 @@ def catchMode():
 
         if LXVI_locateCenterOnScreen("miscripedia.png", confidence=0.8) is None:
             if LXVI_locateCenterOnScreen("closebtn.png", 0.85) is not None:
-                print(f"\033[A     {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} died at {Fore.RED}{chance}%{Fore.LIGHTBLACK_EX} catch rate.")
+                print(f"\033[A     {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} died at {Fore.RED}{chance}%{Fore.LIGHTBLACK_EX} catch rate.    ")
                 return
 
         if (toClick := LXVI_locateCenterOnScreen("run.png", confidence=0.99)) is not None:
@@ -437,8 +438,8 @@ def train():
             click("bonustrain.png", 0.9, 0.4, 0.1)
         click("continuebtn.png", 0.9, 1, 0.1)
 
-        click("continuebtn2.png", 0.75, 2, 0.1)
-        click("continuebtn3.png", 0.75, 2, 0.1)
+        click("continuebtn.png", 0.75, 2, 0.1)
+        click("continuebtn.png", 0.75, 2, 0.1)
         click("skipbtn.png", 0.75, 1, 0.1)
 
     click("x.png", 0.8, 0.2, 0)
