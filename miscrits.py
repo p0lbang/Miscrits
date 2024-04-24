@@ -18,7 +18,7 @@ catchStandardDict = {"Common": 27,  # ...# 27-45%
                      } # ................# initial catch percentage to capture for each rarity
 WEAKNESS = "nature.png"  # ..............# choose element that is strong against main miscrit
 targetAll = True  # .....................# set to True to make everyone a target for capture
-targets: List[str]  = []  # .........................# miscrit names without space (pray for accuracy)
+targets: List[str]  = []  # .............# miscrit names without space (pray for accuracy)
 searchSeq = ["m2_statueflue", "m2_chairL", "m2_table", "m2_chairR"]
                                          # copy sequences from 'locations.txt'
 #----------------------------------------#
@@ -44,7 +44,7 @@ pygame.init()
 
 b = 0
 caught = False
-start = time.time()
+start = time.perf_counter()
 rizz = pygame.mixer.Sound("rizz.mp3")
 on = pygame.mixer.Sound("on.mp3")
 off = pygame.mixer.Sound("off.mp3")
@@ -80,12 +80,7 @@ def playSound(sound: pygame.mixer.Sound) -> None:
 
 
 def checkActive():
-    if LXVI_locateCenterOnScreen(APPNAMEPNG, 0.8, 
-                                #  [0, 0, 1920, 100]
-                                 ) is not None:
-        return True
-    else:
-        return False
+    return LXVI_locateCenterOnScreen(APPNAMEPNG, 0.8) is not None
 
 def LXVI_moveTo(p: Point, duration:float = 0):
     global monitor
@@ -254,7 +249,7 @@ def encounterMode():
     miscrit = "[redacted]"
     rarity = "Unidentified"
     action = 1
-    battle_start = time.time()
+    battle_start = time.perf_counter()
 
     while LXVI_locateCenterOnScreen("battlebtns.png", 0.8) is None:
         pass
@@ -333,7 +328,7 @@ def encounterMode():
 
         if LXVI_locateCenterOnScreen("closebtn.png", 0.85) is not None:
             print(f"\033[A{Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} was defeated.", end=" ",)
-            print(f"Time: {Fore.CYAN}{round(time.time()-battle_start, 3)}s{Fore.LIGHTBLACK_EX}")
+            print(f"Time: {Fore.CYAN}{round(time.perf_counter()-battle_start, 3)}s{Fore.LIGHTBLACK_EX}")
             return
 
 
@@ -453,7 +448,7 @@ def conclude():
     print(
         f"\nEnded process after {Fore.CYAN}{b}{Fore.LIGHTBLACK_EX} Miscrits encountered."
     )
-    print(f"Runtime: {Fore.CYAN}{time.time()-start}{Fore.LIGHTBLACK_EX}")
+    print(f"Runtime: {Fore.CYAN}{time.perf_counter()-start}{Fore.LIGHTBLACK_EX}")
     playSound(off)
     print(Fore.RESET)
     time.sleep(1)
