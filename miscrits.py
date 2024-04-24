@@ -4,18 +4,18 @@ autoSearch = True  # ....................#
 searchInterval = 4  # ...................# interval for clicking between searches [4 minimum for multiple]
 autoTrain = True  # .....................# set to True to automatically level up miscrits
 bonusTrain = False  # ...................# set to True if you want to spend platinum on your trainable miscrits
-miscritCheck = True  # .................# set to True to get miscrit's name
+miscritCheck = False  # .................# set to True to get miscrit's name
 huntType = "battle"  # ..................# "battle" or "escape" the miscrits that are not the target
 autoCatch = True  # .....................# try to catch miscrit if catch rate is greater than
 catchable = 85  # .......................# this catch percentage
 catchStandardDict = {"Common": 27,  # ...# 27-45%
-                     "Rare": 20,  # .....# 17-35%
+                     "Rare": 35,  # .....# 17-35%
                      "Epic": 25,  # .....# 10-25%
                      "Exotic": 10,  # ...# ?-10%
                      "Legendary": 10,  #.# ?-?
                      "Unidentified": 27  #
                      } # ................# initial catch percentage to capture for each rarity
-WEAKNESS = "wind.png"  # ................# choose element that is strong against main miscrit
+WEAKNESS = "nature.png"  # ..............# choose element that is strong against main miscrit
 targetAll = True  # .....................# set to True to make everyone a target for capture
 targets = []  # .........................# miscrit names without space (pray for accuracy)
 searchSeq = ["m1_stool", "m1_cage1", "m1_mirrors", "m1_cage2"]
@@ -172,7 +172,7 @@ def cleanUp():
         )
         is not None
     ):
-        click("gold.png", 0.8, 0, 0, [0, 100, 1920, 980])
+        click("gold.png", 0.7, 0, 0, [0, 100, 1920, 980])
     while LXVI_locateCenterOnScreen("potion1.png", confidence=0.65) is not None:
         click("potion1.png", 0.65, 0, 0)
 
@@ -180,7 +180,7 @@ def cleanUp():
 def getMiscritName():
     miscrits_lore = LXVI_locateCenterOnScreen("miscrits_lore.png", 0.8)
     if isinstance(miscrits_lore, Point):
-        name = LXVI_readImage([int(miscrits_lore.x) + -130, int(miscrits_lore.y) + 33, 238, 35])
+        name = LXVI_readImage([int(miscrits_lore.x) + -130, int(miscrits_lore.y) + 35, 238, 35])
         return name
     else:
         return "[unidentified]"
@@ -340,7 +340,7 @@ def encounterMode():
 
 def catchMode():
     global miscrit, caught
-    action = 2
+    action = 0
 
     initialChance = getCatchChance()
     chance = initialChance
