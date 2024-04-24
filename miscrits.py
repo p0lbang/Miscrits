@@ -1,7 +1,7 @@
 # ---------[    C O N F I G    ]---------#
 sounds = True  # ..... ..................# just True or False
 autoSearch = True  # ....................#
-searchInterval = 3  # ...................# interval for clicking between searches 
+searchInterval = 4  # ...................# interval for clicking between searches 
 autoTrain = True  # .....................# set to True to automatically level up miscrits
 bonusTrain = False  # ...................# set to True if you want to spend platinum on your trainable miscrits
 miscritCheck = True  # .................# set to True to get miscrit's name
@@ -15,7 +15,7 @@ catchStandardDict = {"Common": 27,  # ...# 27-45%
                      "Legendary": 10,  #.# ?-?
                      "Unidentified": 27  #
                      } # ................# initial catch percentage to capture for each rarity
-WEAKNESS = "nature.png"  # ..............# choose element that is strong against main miscrit
+WEAKNESS = "potion1.png"  # ..............# choose element that is strong against main miscrit
 targetAll = True  # .....................# set to True to make everyone a target for capture
 targets = []  # .........................# miscrit names without space (pray for accuracy)
 searchSeq = ["a1_typha1", "a1_sapling", "a1_typha2", "a1_jagbush"]
@@ -186,8 +186,9 @@ def getMiscritName():
         return "[unidentified]"
 
 
+rarDict ={"com": "Common", "rar": "Rare", "epi": "Epic", "exo": "Exotic", "lag": "Legendary"}
 def getMiscritRarity():
-    rarDict ={"com": "Common", "rar": "Rare", "epi": "Epic", "exo": "Exotic", "lag": "Legendary"}
+    global rarDict
     miscrits_lore = LXVI_locateCenterOnScreen("miscrits_lore.png", 0.8)
     if isinstance(miscrits_lore, Point):
         rarity = LXVI_readImage([int(miscrits_lore.x) + -86, int(miscrits_lore.y) + 116, 60, 25])
@@ -268,15 +269,17 @@ def encounterMode():
         rarity = getMiscritRarity()
         print(f"{Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} wants to fight.")
         click("mpedia_exit.png", 0.8, 0, 0)
-        click("mpedia_exit.png", 0.8, 0, 0)
+        pyautogui.leftClick()
+        # click("mpedia_exit.png", 0.8, 0, 0)
 
-        if miscrit in targets or targetAll:
+        if targetAll or miscrit in targets:
             print(f"\033[A{Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} found!{Fore.LIGHTBLACK_EX}")
             playSound(rizz)
 
             if autoCatch:
-                time.sleep(2)
                 catchStandard = catchStandardDict[rarity]
+                while (toClick := LXVI_locateCenterOnScreen("run.png", 0.99)) is None:
+                    pass
                 if (getCatchChance() <= catchStandard) or (miscrit in targets):
                     playSound(pluck)
                     catchMode()
