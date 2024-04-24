@@ -4,7 +4,7 @@ autoSearch = True  # ....................#
 searchInterval = 3  # ...................# interval for clicking between searches 
 autoTrain = True  # .....................# set to True to automatically level up miscrits
 bonusTrain = False  # ...................# set to True if you want to spend platinum on your trainable miscrits
-miscritCheck = False  # .................# set to True to get miscrit's name
+miscritCheck = True  # .................# set to True to get miscrit's name
 huntType = "battle"  # ..................# "battle" or "escape" the miscrits that are not the target
 autoCatch = True  # .....................# try to catch miscrit if catch rate is greater than
 catchable = 85  # .......................# this catch percentage
@@ -24,6 +24,9 @@ searchSeq = ["a1_typha1", "a1_sapling", "a1_typha2", "a1_jagbush"]
 
 import sys
 import time
+import mss
+import mss.tools
+from PIL import ImageGrab
 import numpy
 import pyautogui
 import easyocr
@@ -56,6 +59,21 @@ if sys.platform.startswith("linux"):
 for s, search in enumerate(searchSeq):
     searchSeq[s] = str(pathlib.PurePath("imgSources",f"{search}.png"))
 
+with mss.mss() as sct:
+    # Get information of monitor 2
+    monitor_number = 1
+    mon = sct.monitors[monitor_number]
+
+    # The screen part to capture
+    monitor = {
+        "top": mon["top"],
+        "left": mon["left"],
+        "width": mon["width"],
+        "height": mon["height"],
+        "mon": monitor_number,
+    }
+
+assert monitor is not None
 
 def playSound(sound: pygame.mixer.Sound) -> None:
     if sounds:
@@ -70,6 +88,12 @@ def checkActive():
     else:
         return False
 
+def LXVI_moveTo(p: Point, duration:float = 0):
+    global monitor
+    try:
+        pyautogui.moveTo(int(p.x)+monitor["left"],int(p.y)+monitor["top"], duration=duration)
+    except Exception:
+        pyautogui.moveTo(int(p[0])+monitor["left"],int(p[1])+monitor["top"], duration=duration)
 
 def LXVI_locateCenterOnScreen(
     imagename: str,
@@ -77,9 +101,12 @@ def LXVI_locateCenterOnScreen(
     region: tuple[int, int, int, int] | None = None,
 ) -> Point | None:
     try:
-        return pyautogui.locateCenterOnScreen(
-            imagename, confidence=confidence, region=region
-        )
+        screenshot = ImageGrab.grab(
+            bbox=(monitor["left"],monitor["top"],monitor["left"]+monitor["width"],monitor["top"]+monitor["height"]),
+            all_screens=True)
+
+        locateBox = pyautogui.locate(needleImage=imagename,haystackImage=screenshot,confidence=confidence,region=region)
+        return pyautogui.center(locateBox)
     except pyautogui.ImageNotFoundException:
         return None
 
@@ -87,8 +114,27 @@ def LXVI_locateCenterOnScreen(
 def LXVI_readImage(
     region: tuple[int, int, int, int] | None = None, numerical: bool = False
 ):
-    img = pyautogui.screenshot(region=region)
+    
+    # PIL library, bbox = (left,top,right,bottom)
+    # pyautogui library, region = (left,top,width,height)
 
+    # converts region to bbox
+    bbox_left = monitor["left"] + region[0]
+    bbox_top =  monitor["top"] +  region[1]
+    bbox_right = bbox_left + region[2]
+    bbox_bottom = bbox_top + region[3]
+
+    computedBbox = (
+                bbox_left,
+                bbox_top,
+                bbox_right,
+                bbox_bottom
+            )
+
+    img = ImageGrab.grab(
+            bbox=computedBbox,
+            all_screens=True
+        )
     if numerical:
         read = reader.recognize(
             numpy.array(img), allowlist="0123456789", blocklist="-~( ).,"
@@ -113,7 +159,7 @@ def click(
     if toClick is None:
         return False
 
-    pyautogui.moveTo(toClick, duration=duration)
+    LXVI_moveTo(toClick, duration=duration)
     pyautogui.leftClick()
     time.sleep(sleep)
     return True
@@ -189,7 +235,7 @@ def searchMode():
                     continue
 
                 SearchSuccess = True
-                pyautogui.moveTo(toClick, duration=0.1)
+                LXVI_moveTo(toClick, duration=0.1)
                 pyautogui.leftClick()
                 time.sleep(searchInterval)
 
@@ -262,7 +308,7 @@ def encounterMode():
         conclude()
 
     if huntType != "battle":
-        pyautogui.moveTo(toClick)
+        LXVI_moveTo(toClick)
         print(f"\033[ASuccessfully escaped from {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}.")
         pyautogui.leftClick()
     else:
@@ -270,11 +316,11 @@ def encounterMode():
 
     while True:
         if action > 0:
-            pyautogui.moveTo(toClick)
+            LXVI_moveTo(toClick)
             pyautogui.leftClick()
         else:
             click("skillsetR.png", 0.75, 0, 0)
-            pyautogui.moveTo(toClick)
+            LXVI_moveTo(toClick)
             pyautogui.leftClick()
             action = 1
             click("skillsetL.png", 0.75, 0, 0)
@@ -315,14 +361,14 @@ def catchMode():
                     action = 3
             if action == 0:
                 click("skillsetR.png", 0.75, 0, 0)
-                pyautogui.moveTo(toClick)
+                LXVI_moveTo(toClick)
                 pyautogui.moveRel(-45 + 160 * 1, 0)
                 pyautogui.leftClick()
                 click("skillsetL.png", 0.75, 0, 0)
                 action = 2
             elif action == 1:
                 click("skillsetR.png", 0.75, 0, 0)
-                pyautogui.moveTo(toClick)
+                LXVI_moveTo(toClick)
                 pyautogui.moveRel(-45 + 160 * 2, 0)
                 pyautogui.leftClick()
                 click("skillsetL.png", 0.75, 0, 0)
@@ -330,12 +376,12 @@ def catchMode():
             elif action == 2:
                 click("skillsetR.png", 0.75, 0, 0)
                 click("skillsetR.png", 0.75, 0, 0)
-                pyautogui.moveTo(toClick)
+                LXVI_moveTo(toClick)
                 pyautogui.moveRel(-45 + 160 * 2, 0)
                 pyautogui.leftClick()
                 click("skillsetL.png", 0.75, 0, 0)
                 click("skillsetL.png", 0.75, 0, 0)
-                pyautogui.moveTo(toClick)
+                LXVI_moveTo(toClick)
             elif action == 3:
                 click("catchbtn.png", 0.75, 6, 0)
                 if LXVI_locateCenterOnScreen("catchSuccess.png", 0.9) is not None:
@@ -344,11 +390,11 @@ def catchMode():
                 else:
                     action = 4
             elif action == 4:
-                pyautogui.moveTo(toClick)
+                LXVI_moveTo(toClick)
                 print(f"{Fore.LIGHTBLACK_EX}     Failed to catch {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} with {Fore.RED}{chance}%{Fore.LIGHTBLACK_EX}.")
                 pyautogui.moveRel(-45 + 160 * 1, 0)
                 pyautogui.leftClick()
-                pyautogui.moveTo(toClick)
+                LXVI_moveTo(toClick)
 
     print(f"\033[A     {Fore.YELLOW}{miscrit}{Fore.WHITE} has been caught. {Fore.LIGHTBLACK_EX}Initial chance: {Fore.GREEN}{initialChance}%{Fore.LIGHTBLACK_EX}")
     click("catchSkip.png", 0.9, 2, 0)
