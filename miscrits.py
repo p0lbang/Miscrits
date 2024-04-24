@@ -18,7 +18,7 @@ catchStandardDict = {"Common": 27,  # ...# 27-45%
 WEAKNESS = "wind.png"  # ................# choose element that is strong against main miscrit
 targetAll = True  # .....................# set to True to make everyone a target for capture
 targets = []  # .........................# miscrit names without space (pray for accuracy)
-searchSeq = ["a1_typha1", "a1_sapling", "a1_typha2", "a1_jagbush"]
+searchSeq = ["m1_stool", "m1_cage1", "m1_mirrors", "m1_cage2"]
                                          # copy sequences from 'locations.txt'
 #----------------------------------------#
 

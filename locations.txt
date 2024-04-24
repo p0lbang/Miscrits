@@ -16,6 +16,6 @@ Defilio                         ["a4_blight", "a4_typha4", "a4_minis", "a4_yello
 Treemur                         ["", "", "", ""]
 Thundercracker                  ["", "", "", ""]
 Rafiery                         ["", "", "", ""]
-Raldio                          ["", "", "", ""]
+Weevern                         ["m1_stool", "m1_cage1", "m1_mirrors", "m1_cage2"]
 Flutterpat                      ["", "", "", ""]
 Nanaslug                        
