@@ -1,3 +1,4 @@
+from typing import List, cast
 # ---------[    C O N F I G    ]---------#
 sounds = True  # ..... ..................# just True or False
 autoSearch = True  # ....................#
@@ -17,7 +18,7 @@ catchStandardDict = {"Common": 27,  # ...# 27-45%
                      } # ................# initial catch percentage to capture for each rarity
 WEAKNESS = "nature.png"  # ..............# choose element that is strong against main miscrit
 targetAll = True  # .....................# set to True to make everyone a target for capture
-targets = []  # .........................# miscrit names without space (pray for accuracy)
+targets: List[str]  = []  # .........................# miscrit names without space (pray for accuracy)
 searchSeq = ["m2_statueflue", "m2_chairL", "m2_table", "m2_chairR"]
                                          # copy sequences from 'locations.txt'
 #----------------------------------------#
@@ -30,8 +31,6 @@ from PIL import ImageGrab
 import numpy
 import pyautogui
 import easyocr
-import easyocr.imgproc
-import easyocr.character
 from colorama import Fore
 from pyscreeze import Point
 from os import environ
@@ -106,13 +105,15 @@ def LXVI_locateCenterOnScreen(
             all_screens=True)
 
         locateBox = pyautogui.locate(needleImage=imagename,haystackImage=screenshot,confidence=confidence,region=region)
-        return pyautogui.center(locateBox)
+        if locateBox is None:
+            return None
+        return pyautogui.center(cast(tuple[int,int,int,int],locateBox))
     except pyautogui.ImageNotFoundException:
         return None
 
 
 def LXVI_readImage(
-    region: tuple[int, int, int, int] | None = None, numerical: bool = False
+    region: tuple[int, int, int, int] = (0,0,0,0), numerical: bool = False
 ):
     
     # PIL library, bbox = (left,top,right,bottom)
@@ -227,12 +228,7 @@ def searchMode():
         if autoSearch:
             SearchSuccess = False
             for search in searchSeq:
-                if LXVI_locateCenterOnScreen("battlebtns.png", 0.8) is not None:
-                    encounterMode()
-                    summary()
-                
                 if (toClick := LXVI_locateCenterOnScreen(search, confidence=0.8)) is None:
-                    time.sleep(1)
                     continue
 
                 SearchSuccess = True
@@ -240,12 +236,15 @@ def searchMode():
                 pyautogui.leftClick()
                 time.sleep(searchInterval)
 
+                if LXVI_locateCenterOnScreen("battlebtns.png", 0.8) is not None:
+                    encounterMode()
+                    summary()
+
             if not SearchSuccess:
                 print("Elements not found, concluding process...")
                 conclude()
         else:
             time.sleep(0.5)
-            continue
 
 
 def encounterMode():
