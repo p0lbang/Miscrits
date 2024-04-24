@@ -4,7 +4,7 @@ autoSearch = True  # .................#
 searchInterval = 4  # ................# interval for clicking between searches 
 autoTrain = True  # ..................# set to True to automatically level up miscrits
 bonusTrain = False  # .................# set to True if you want to spend platinum on your trainable miscrits
-miscritCheck = False  # ...............# set to True to get miscrit's name
+miscritCheck = True  # ...............# set to True to get miscrit's name
 huntType = "battle"  # ...............# "battle" or "escape" the miscrits that are not the target
 autoCatch = True  # ..................# try to catch miscrit if catch rate is greater than
 catchable = 94  # ....................# this catch percentage
@@ -35,6 +35,7 @@ from os import environ
 
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame
+import pathlib
 
 reader = easyocr.Reader(["en"], gpu=True, verbose=False)
 pygame.init()
@@ -52,7 +53,7 @@ if sys.platform.startswith("linux"):
     APPNAMEPNG = "appname_linux.png"
 
 for s, search in enumerate(searchSeq):
-    searchSeq[s] =".\\imgSources\\" + search + ".png"
+    searchSeq[s] = pathlib.PurePath("imgSources",f"{search}.png")
 
 def playSound(sound: pygame.mixer.Sound) -> None:
     if sounds:
@@ -60,7 +61,9 @@ def playSound(sound: pygame.mixer.Sound) -> None:
 
 
 def checkActive():
-    if LXVI_locateCenterOnScreen(APPNAMEPNG, 0.8, [0, 0, 1920, 100]) is not None:
+    if LXVI_locateCenterOnScreen(APPNAMEPNG, 0.8, 
+                                #  [0, 0, 1920, 100]
+                                 ) is not None:
         return True
     else:
         return False
@@ -208,7 +211,7 @@ def encounterMode():
     while LXVI_locateCenterOnScreen("battlebtns.png", 0.8) is None:
         pass
 
-    if LXVI_locateCenterOnScreen(WEAKNESS, 0.9) is not None:
+    if LXVI_locateCenterOnScreen(WEAKNESS, 0.85) is not None:
         action = 0
 
     if miscritCheck:
