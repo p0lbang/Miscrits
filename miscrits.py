@@ -21,7 +21,7 @@ autoSearch = True  # ....................#
 searchInterval = 4  # ...................# interval for clicking between searches [4 minimum for multiple]
 autoTrain = True  # .....................# set to True to automatically level up miscrits
 bonusTrain = False  # ...................# set to True if you want to spend platinum on your trainable miscrits
-autoSwitch = True  # ...................# set to True to automatically switch miscrits in team if their level is above
+autoSwitch = True  # ....................# set to True to automatically switch miscrits in team if their level is above
 switchLevel = 30  # .....................# this level
 miscritCheck = True  # ..................# set to True to get miscrit's name
 huntType = "battle"  # ..................# "battle" or "escape" the miscrits that are not the target
@@ -37,8 +37,8 @@ catchStandardDict = {"Common": 27,  # ...# 27-45%
 WEAKNESS = "nature.png"  # ..............# choose element that is strong against main miscrit
 STRENGTH = "fire.png"  # ................# choose element that is weak against main miscrit
 targetAll = True  # .....................# set to True to make everyone a target for capture
-targets: List[str]  = []  # .............# miscrit names without space (pray for accuracy)
-searchSeq = ["a3_blight", "a3_sun3", "a3_magic", "a3_fuchsia"]
+targets: List[str]  = ["Flutterpat"]  # .# miscrit names without space (pray for accuracy)
+searchSeq = ["m2_relics", "m2_brush", "m2_potions", "m2_woodcage"]
                                          # copy sequences from 'locations.txt'
 #----------------------------------------#
 
@@ -240,14 +240,14 @@ def useSkill(toClick: Point, skillNo: int = 1):
             click("skillsetL.png", 0.75, 0, 0)
             onSkillPage -= 1
     
-    while (LXVI_locateCenterOnScreen("run.png", 0.9, [toClick.x-132, toClick.y-106, 36, 55]) is None):
+    while (LXVI_locateCenterOnScreen("run.png", 0.99, [toClick.x-132, toClick.y-106, 36, 55]) is None):
         if LXVI_locateCenterOnScreen("closebtn.png", 0.85) is not None or not checkActive():
             return
         pass
     
     LXVI_moveTo(skillClick)
     pyautogui.leftClick()
-    pyautogui.moveRel(0,45)
+    pyautogui.moveRel(0,40)
             
 
 def searchMode():
@@ -416,11 +416,8 @@ def catchMode():
                 else:
                     action = 4
             elif action == 4:
-                LXVI_moveTo(toClick)
                 print(f"{Fore.LIGHTBLACK_EX}     Failed to catch {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} with {Fore.RED}{chance}%{Fore.LIGHTBLACK_EX}.")
-                pyautogui.moveRel(-45 + 160 * 1, 0)
-                pyautogui.leftClick()
-                LXVI_moveTo(toClick)
+                useSkill(toClick, 1)
 
     print(f"\033[A     {Fore.YELLOW}{miscrit}{Fore.WHITE} has been caught. {Fore.LIGHTBLACK_EX}Initial chance: {Fore.GREEN}{initialChance}%{Fore.LIGHTBLACK_EX}")
     click("catchSkip.png", 0.9, 2, 0)
