@@ -20,14 +20,14 @@ sounds = True  # ..... ..................# just True or False
 autoSearch = True  # ....................#
 searchInterval = 4  # ...................# interval for clicking between searches [4 minimum for multiple]
 autoTrain = True  # .....................# set to True to automatically level up miscrits
-bonusTrain = True  # ....................# set to True if you want to spend platinum on your trainable miscrits
+bonusTrain = False  # ...................# set to True if you want to spend platinum on your trainable miscrits
 autoSwitch = False  # ...................# set to True to automatically switch miscrits in team if their level is above
 switchLevel = 30  # .....................# this level
 miscritCheck = True  # ..................# set to True to get miscrit's name
 huntType = "battle"  # ..................# "battle" or "escape" the miscrits that are not the target
 autoCatch = True  # .....................# try to catch miscrit if catch rate is greater than
 catchable = 90  # .......................# this catch percentage
-catchStandardDict = {"Common": 45,  # ...# 27-45%
+catchStandardDict = {"Common": 27,  # ...# 27-45%
                      "Rare": 17,  # .....# 17-35%
                      "Epic": 10,  # .....# 10-25%
                      "Exotic": 10,  # ...# ?-10%
@@ -35,9 +35,10 @@ catchStandardDict = {"Common": 45,  # ...# 27-45%
                      "Unidentified": 27  #
                      } # ................# initial catch percentage to capture for each rarity
 WEAKNESS = "nature.png"  # ..............# choose element that is strong against main miscrit
+STRENGTH = "fire.png"  # ................# choose element that is weak against main miscrit
 targetAll = True  # .....................# set to True to make everyone a target for capture
 targets: List[str]  = []  # .............# miscrit names without space (pray for accuracy)
-searchSeq = ["m2_statueflue", "m2_chairL", "m2_table", "m2_chairR"]
+searchSeq = ["a3_blight", "a3_sun3", "a3_magic", "a3_fuchsia"]
                                          # copy sequences from 'locations.txt'
 #----------------------------------------#
 
@@ -249,8 +250,6 @@ def useSkill(toClick: Point, skillNo: int = 1):
             click("skillsetL.png", 0.75, 0, 0)
             onSkillPage -= 1
     
-    img = pyautogui.screenshot(region=[int(toClick.x-132), int(toClick.y-106), 36, 55])
-    img.save(f"testing.jpg")
     while (LXVI_locateCenterOnScreen("run.png", 0.99, [toClick.x-132, toClick.y-106, 36, 55]) is None):
         if LXVI_locateCenterOnScreen("closebtn.png", 0.85) is not None:
             return
@@ -311,7 +310,9 @@ def encounterMode():
         pass
 
     if LXVI_locateCenterOnScreen(WEAKNESS, 0.8) is not None:
-        action = 0
+        action = 1
+    elif LXVI_locateCenterOnScreen(STRENGTH, 0.8) is not None:
+        action = -1
 
     if miscritCheck:
         click("miscripedia.png", 0.8, 0.555, 0)
@@ -334,9 +335,9 @@ def encounterMode():
                     catchMode()
                     return
                 else:
-                    playSound(rizz)
                     print(f"\033[A{Fore.WHITE}This {Fore.YELLOW}{miscrit}{Fore.WHITE} is trash. -p0lbang{Fore.LIGHTBLACK_EX}")
             else:
+                playSound(rizz)
                 print("Ending process for manual catch.")
                 conclude()
     else:
@@ -366,11 +367,13 @@ def encounterMode():
         toClick = Point(toClick.x + 115, toClick.y + 80)
 
     while True:
-        if action > 0:
+        if action == 0: # main attack to use
             useSkill(toClick, 1)
-        else:
+        elif action > 0: # negate element skill
             useSkill(toClick, 5)
-            action = 1
+            action = 0
+        else: # alternative attack to use for elements that are weak against you
+            useSkill(toClick, 1)
 
         if not checkActive():
             print("Minimized while in encounter mode, concluding process...")
@@ -384,7 +387,8 @@ def encounterMode():
 
 def catchMode():
     global miscrit, caught
-    action = 0
+    action = 1
+    negated = False
 
     initialChance = getCatchChance()
     chance = initialChance
@@ -403,12 +407,15 @@ def catchMode():
             toClick = Point(toClick.x + 115, toClick.y + 80)
             chance = getCatchChance()
 
-            time.sleep(2)
             if int(chance) >= catchable:
                 if action != 4:
                     action = 3
+            if not negated and LXVI_locateCenterOnScreen(WEAKNESS, 0.8) is not None:
+                action = 0
+            
             if action == 0:
                 useSkill(toClick, 5)
+                negated = True
                 action = 1
             elif action == 1:
                 useSkill(toClick, 3)
