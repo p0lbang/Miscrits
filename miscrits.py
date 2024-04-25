@@ -16,17 +16,33 @@ import pygame
 
 
 # ---------[    C O N F I G    ]---------#
-sounds = True  # ..... ..................# just True or False
+sounds = True  # ........................# false to mute sounds from the code
+
+fullAuto = False  # ......................# true to allow the three features below
+autoLogin = True  # .....................# logs you back in after daily server reset [UNDER DEVELOPMENT]
+autoDaily = True  # .....................# automatic daily spin for you [UNDER DEVELOPMENT]
+autoWalk = True  # ......................# automatically takes you back to wherever your search sequence is [UNDER DEVELOPMENT]
+
 autoSearch = True  # ....................#
-searchInterval = 4  # ...................# interval for clicking between searches [4 minimum for multiple]
+searchInterval = 4  # ...................# interval for clicking between searches (minimum value for multiple: 4)
+searchSeq = ["a4_blight", "a4_typha4", "a4_minis", "a4_yellow"]
+                                         # copy sequences from 'locations.txt'
+
 autoTrain = True  # .....................# set to True to automatically level up miscrits
 bonusTrain = False  # ...................# set to True if you want to spend platinum on your trainable miscrits
-autoSwitch = True  # ....................# set to True to automatically switch miscrits in team if their level is above
+
+autoSwitch = True  # ....................# set to True to automatically switch miscrits in team if their level is or above
 switchLevel = 30  # .....................# this level
+
 miscritCheck = True  # ..................# set to True to get miscrit's name
 huntType = "battle"  # ..................# "battle" or "escape" the miscrits that are not the target
+WEAKNESS = "nature.png"  # ..............# choose element that is strong against main miscrit
+STRENGTH = "fire.png"  # ................# choose element that is weak against main miscrit
+
 autoCatch = True  # .....................# try to catch miscrit if catch rate is greater than
 catchable = 90  # .......................# this catch percentage
+targetAll = True  # .....................# set to True to make everyone a target for capture
+targets: List[str]  = ["Treemur"]  # ....# miscrit names without space (pray for accuracy)
 catchStandardDict = {"Common": 27,  # ...# 27-45%
                      "Rare": 17,  # .....# 17-35%
                      "Epic": 10,  # .....# 10-25%
@@ -34,12 +50,12 @@ catchStandardDict = {"Common": 27,  # ...# 27-45%
                      "Legendary": 10,  #.# ?-?
                      "Unidentified": 27  #
                      } # ................# initial catch percentage to capture each rarity
-WEAKNESS = "nature.png"  # ..............# choose element that is strong against main miscrit
-STRENGTH = "fire.png"  # ................# choose element that is weak against main miscrit
-targetAll = True  # .....................# set to True to make everyone a target for capture
-targets: List[str]  = ["Flutterpat"]  # .# miscrit names without space (pray for accuracy)
-searchSeq = ["m2_relics", "m2_brush", "m2_potions", "m2_woodcage"]
-                                         # copy sequences from 'locations.txt'
+
+mainSkill = 1  # ........................# skill for killing enemies in general
+strongSkill = 2  # ......................# skill for miscrits weak against you
+negateSkill = 5  # ......................# skill to negate elemental weakness (if none, set as same with main skill)
+bigpokeSkill = 4  # .....................# skill to reduce miscrit health faster without killing them
+pokeSkill = 10  # .......................# skill to reduce miscrit health by a smaller amount
 #----------------------------------------#
 
 
@@ -354,11 +370,11 @@ def encounterMode():
 
     while True:
         if action == 0: # strongest attack
-            useSkill(toClick, 1)
+            useSkill(toClick, mainSkill)
         elif action < 0: # alternative attack to use for elements that are weak against you
-            useSkill(toClick, 1)
+            useSkill(toClick, strongSkill)
         else: # negate element skill
-            useSkill(toClick, 5)
+            useSkill(toClick, negateSkill)
             action = 0
 
         if not checkActive():
@@ -400,14 +416,14 @@ def catchMode():
                 action = 0
             
             if action == 0:
-                useSkill(toClick, 5)
+                useSkill(toClick, negateSkill)
                 negated = True
                 action = 1
             elif action == 1:
-                useSkill(toClick, 3)
+                useSkill(toClick, bigpokeSkill)
                 action = 2
             elif action == 2:
-                useSkill(toClick, 10)
+                useSkill(toClick, pokeSkill)
             elif action == 3:
                 click("catchbtn.png", 0.75, 6, 0)
                 if LXVI_locateCenterOnScreen("catchSuccess.png", 0.9) is not None:
@@ -417,7 +433,7 @@ def catchMode():
                     action = 4
             elif action == 4:
                 print(f"{Fore.LIGHTBLACK_EX}     Failed to catch {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} with {Fore.RED}{chance}%{Fore.LIGHTBLACK_EX}.")
-                useSkill(toClick, 1)
+                useSkill(toClick, mainSkill)
 
     print(f"\033[A     {Fore.YELLOW}{miscrit}{Fore.WHITE} has been caught. {Fore.LIGHTBLACK_EX}Initial chance: {Fore.GREEN}{initialChance}%{Fore.LIGHTBLACK_EX}")
     click("catchSkip.png", 0.9, 2, 0)
@@ -521,6 +537,31 @@ def switchTeam(levelBCD):
     click("savebtn.png", 0.8, 0, 0)
     
 
+def reLogin():
+    print("UNDER DEVELOPMENT")
+    # the code gets here if the time is before 8:00 AM
+    # it will wait until logged out by the server and log back in
+    if toClick:= LXVI_locateCenterOnScreen("loginbtn.png", 0.8) is not None:
+            if autoLogin:
+                LXVI_moveTo(toClick)
+                pyautogui.leftClick()
+            else:
+                print("Account logged out. Ending session.")
+                sys.exit()
+
+
+def dailySpin():
+    print("UNDER DEVELOPMENT")
+    # the code gets here after logging back in for the first time after daily reset
+    # it will press spin and accept the reward
+
+
+def walkOrSumtin():
+    print("UNDER DEVELOPMENT")
+    # if this is on, it should have an array of images to follow until it sees the
+    # current search sequence elements then proceed to autoSearching
+
+
 def conclude():
     print(
         f"\nEnded process after {Fore.CYAN}{b}{Fore.LIGHTBLACK_EX} Miscrits encountered."
@@ -535,9 +576,13 @@ def conclude():
 print(Fore.LIGHTBLACK_EX)
 playSound(on)
 time.sleep(1)
-if not checkActive():
-    print("Game not found on screen. Nothing happened.")
-    conclude()
-searchMode()
-playSound(off)
-time.sleep(1)
+while checkActive():
+    if fullAuto:
+        print("UNDER DEVELOPMENT")
+        reLogin()
+        dailySpin()
+        walkOrSumtin()
+        searchMode()
+    else:
+        searchMode()
+print("Game not found on screen. Nothing happened.")
