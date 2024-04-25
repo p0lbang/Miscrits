@@ -21,7 +21,7 @@ autoSearch = True  # ....................#
 searchInterval = 4  # ...................# interval for clicking between searches [4 minimum for multiple]
 autoTrain = True  # .....................# set to True to automatically level up miscrits
 bonusTrain = False  # ...................# set to True if you want to spend platinum on your trainable miscrits
-autoSwitch = False  # ...................# set to True to automatically switch miscrits in team if their level is above
+autoSwitch = True  # ...................# set to True to automatically switch miscrits in team if their level is above
 switchLevel = 30  # .....................# this level
 miscritCheck = True  # ..................# set to True to get miscrit's name
 huntType = "battle"  # ..................# "battle" or "escape" the miscrits that are not the target
@@ -33,7 +33,7 @@ catchStandardDict = {"Common": 27,  # ...# 27-45%
                      "Exotic": 10,  # ...# ?-10%
                      "Legendary": 10,  #.# ?-?
                      "Unidentified": 27  #
-                     } # ................# initial catch percentage to capture for each rarity
+                     } # ................# initial catch percentage to capture each rarity
 WEAKNESS = "nature.png"  # ..............# choose element that is strong against main miscrit
 STRENGTH = "fire.png"  # ................# choose element that is weak against main miscrit
 targetAll = True  # .....................# set to True to make everyone a target for capture
@@ -43,7 +43,7 @@ searchSeq = ["a3_blight", "a3_sun3", "a3_magic", "a3_fuchsia"]
 #----------------------------------------#
 
 
-reader = easyocr.Reader(["en"], gpu=True, verbose=False)
+reader = easyocr.Reader(["en"], gpu=True, verbose=True)
 pygame.init()
 
 b = 0
@@ -187,28 +187,18 @@ def cleanUp():
         click("potion1.png", 0.65, 0, 0)
 
 
-def getMiscritName():
-    miscrits_lore = LXVI_locateCenterOnScreen("miscrits_lore.png", 0.8)
-    if isinstance(miscrits_lore, Point):
-        name = LXVI_readImage([int(miscrits_lore.x) + -130, int(miscrits_lore.y) + 32, 238, 40])
-        return name
-    else:
-        return "[unidentified]"
-
-
 rarDict ={"com": "Common", "rar": "Rare", "epi": "Epic", "exo": "Exotic", "lag": "Legendary"}
-def getMiscritRarity():
-    global rarDict
+def getMiscritData():
+    global rarDict, miscrit, rarity
     miscrits_lore = LXVI_locateCenterOnScreen("miscrits_lore.png", 0.8)
     if isinstance(miscrits_lore, Point):
+        miscrit = LXVI_readImage([int(miscrits_lore.x) + -130, int(miscrits_lore.y) + 32, 238, 40])
         rarity = LXVI_readImage([int(miscrits_lore.x) + -86, int(miscrits_lore.y) + 116, 60, 25])
         rarity = rarity[:3].lower()
-        if rarity in rarDict:
-            return rarDict[rarity]
-        else:
-            return "Unidentified"
+        rarity = rarDict[rarity]
     else:
-        return "Unidentified"
+        miscrit = "[unidentified]"
+        rarity = "Unidentified"
 
 
 def getCatchChance():
@@ -250,8 +240,8 @@ def useSkill(toClick: Point, skillNo: int = 1):
             click("skillsetL.png", 0.75, 0, 0)
             onSkillPage -= 1
     
-    while (LXVI_locateCenterOnScreen("run.png", 0.99, [toClick.x-132, toClick.y-106, 36, 55]) is None):
-        if LXVI_locateCenterOnScreen("closebtn.png", 0.85) is not None:
+    while (LXVI_locateCenterOnScreen("run.png", 0.9, [toClick.x-132, toClick.y-106, 36, 55]) is None):
+        if LXVI_locateCenterOnScreen("closebtn.png", 0.85) is not None or not checkActive():
             return
         pass
     
@@ -297,27 +287,26 @@ def searchMode():
 
 
 def encounterMode():
-    global miscrit, b, onSkillPage
+    global miscrit, b, onSkillPage, rarity
     
     b += 1
     miscrit = "[redacted]"
     rarity = "Unidentified"
-    action = 1
+    action = 0
     onSkillPage = 1
     battle_start = time.perf_counter()
 
     while LXVI_locateCenterOnScreen("battlebtns.png", 0.8) is None:
         pass
 
-    if LXVI_locateCenterOnScreen(WEAKNESS, 0.8) is not None:
-        action = 1
-    elif LXVI_locateCenterOnScreen(STRENGTH, 0.8) is not None:
+    if LXVI_locateCenterOnScreen(STRENGTH, 0.95) is not None:
         action = -1
+    elif LXVI_locateCenterOnScreen(WEAKNESS, 0.95) is not None:
+        action = 1
 
     if miscritCheck:
         click("miscripedia.png", 0.8, 0.555, 0)
-        miscrit = getMiscritName()
-        rarity = getMiscritRarity()
+        getMiscritData()
         print(f"{Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} wants to fight.")
         click("mpedia_exit.png", 0.8, 0, 0)
         pyautogui.leftClick()
@@ -328,7 +317,7 @@ def encounterMode():
 
             if autoCatch:
                 catchStandard = catchStandardDict[rarity]
-                while (toClick := LXVI_locateCenterOnScreen("run.png", 0.99)) is None:
+                while LXVI_locateCenterOnScreen("run.png", 0.99) is None:
                     pass
                 if (getCatchChance() <= catchStandard) or (miscrit in targets):
                     playSound(pluck)
@@ -336,10 +325,7 @@ def encounterMode():
                     return
                 else:
                     print(f"\033[A{Fore.WHITE}This {Fore.YELLOW}{miscrit}{Fore.WHITE} is trash. -p0lbang{Fore.LIGHTBLACK_EX}")
-            else:
-                playSound(rizz)
-                print("Ending process for manual catch.")
-                conclude()
+
     else:
         print(f"{Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} wants to fight.")
         
@@ -352,28 +338,28 @@ def encounterMode():
                 catchMode()
                 return
 
-    while (toClick := LXVI_locateCenterOnScreen("run.png", 0.99)) is None:
-        pass
-
     if not checkActive():
         print("Minimized while in encounter mode, concluding process...")
         conclude()
 
-    if huntType != "battle":
-        LXVI_moveTo(toClick)
-        print(f"\033[ASuccessfully escaped from {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}.")
-        pyautogui.leftClick()
-    else:
+    if huntType == "battle":
+        toClick = LXVI_locateCenterOnScreen("run.png", 0.75)
         toClick = Point(toClick.x + 115, toClick.y + 80)
+    else:
+        while(toClick := LXVI_locateCenterOnScreen("run.png", 0.99)) is None:
+            pass
+        LXVI_moveTo(toClick)
+        pyautogui.leftClick()
+        print(f"\033[ASuccessfully escaped from {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}.")
 
     while True:
-        if action == 0: # main attack to use
+        if action == 0: # strongest attack
             useSkill(toClick, 1)
-        elif action > 0: # negate element skill
+        elif action < 0: # alternative attack to use for elements that are weak against you
+            useSkill(toClick, 1)
+        else: # negate element skill
             useSkill(toClick, 5)
             action = 0
-        else: # alternative attack to use for elements that are weak against you
-            useSkill(toClick, 1)
 
         if not checkActive():
             print("Minimized while in encounter mode, concluding process...")
@@ -410,7 +396,7 @@ def catchMode():
             if int(chance) >= catchable:
                 if action != 4:
                     action = 3
-            if not negated and LXVI_locateCenterOnScreen(WEAKNESS, 0.8) is not None:
+            if not negated and LXVI_locateCenterOnScreen(WEAKNESS, 0.95) is not None:
                 action = 0
             
             if action == 0:
@@ -449,8 +435,6 @@ def summary():
         print("Minimized after Miscrit encounter, concluding process...")
         conclude()
     
-    # time.sleep(1)
-
     if LXVI_locateCenterOnScreen("trainable1.png", 0.75) is not None:
         trainable = True
 
