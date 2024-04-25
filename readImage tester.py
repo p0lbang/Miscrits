@@ -139,6 +139,7 @@ def getCatchChance():
         )
     print(chance)
 
-switchLevel = 30
-getTeamLevelB()
+# switchLevel = 30
+# getTeamLevelB()
 
+print(11 % 4)

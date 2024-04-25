@@ -20,14 +20,14 @@ sounds = True  # ..... ..................# just True or False
 autoSearch = True  # ....................#
 searchInterval = 4  # ...................# interval for clicking between searches [4 minimum for multiple]
 autoTrain = True  # .....................# set to True to automatically level up miscrits
-bonusTrain = False  # ...................# set to True if you want to spend platinum on your trainable miscrits
+bonusTrain = True  # ....................# set to True if you want to spend platinum on your trainable miscrits
 autoSwitch = False  # ...................# set to True to automatically switch miscrits in team if their level is above
 switchLevel = 30  # .....................# this level
 miscritCheck = True  # ..................# set to True to get miscrit's name
 huntType = "battle"  # ..................# "battle" or "escape" the miscrits that are not the target
 autoCatch = True  # .....................# try to catch miscrit if catch rate is greater than
-catchable = 85  # .......................# this catch percentage
-catchStandardDict = {"Common": 27,  # ...# 27-45%
+catchable = 90  # .......................# this catch percentage
+catchStandardDict = {"Common": 45,  # ...# 27-45%
                      "Rare": 17,  # .....# 17-35%
                      "Epic": 10,  # .....# 10-25%
                      "Exotic": 10,  # ...# ?-10%
@@ -234,6 +234,33 @@ def getTeamLevel():
         return [0,0,0]
 
 
+def useSkill(toClick: Point, skillNo: int = 1):
+    global onSkillPage
+
+    page = int(skillNo/4) + 1
+    skill = ((skillNo-1) % 4)
+    skillClick = Point(toClick.x + 160*skill, toClick.y)
+
+    while onSkillPage != page:
+        if onSkillPage < page:
+            click("skillsetR.png", 0.75, 0, 0)
+            onSkillPage += 1
+        elif onSkillPage > page:
+            click("skillsetL.png", 0.75, 0, 0)
+            onSkillPage -= 1
+    
+    img = pyautogui.screenshot(region=[int(toClick.x-132), int(toClick.y-106), 36, 55])
+    img.save(f"testing.jpg")
+    while (LXVI_locateCenterOnScreen("run.png", 0.99, [toClick.x-132, toClick.y-106, 36, 55]) is None):
+        if LXVI_locateCenterOnScreen("closebtn.png", 0.85) is not None:
+            return
+        pass
+    
+    LXVI_moveTo(skillClick)
+    pyautogui.leftClick()
+    pyautogui.moveRel(0,45)
+            
+
 def searchMode():
     while True:
         if not checkActive():
@@ -271,12 +298,13 @@ def searchMode():
 
 
 def encounterMode():
-    global miscrit, b
+    global miscrit, b, onSkillPage
     
     b += 1
     miscrit = "[redacted]"
     rarity = "Unidentified"
     action = 1
+    onSkillPage = 1
     battle_start = time.perf_counter()
 
     while LXVI_locateCenterOnScreen("battlebtns.png", 0.8) is None:
@@ -335,18 +363,14 @@ def encounterMode():
         print(f"\033[ASuccessfully escaped from {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}.")
         pyautogui.leftClick()
     else:
-        toClick = (toClick.x + 115, toClick.y + 80)
+        toClick = Point(toClick.x + 115, toClick.y + 80)
 
     while True:
         if action > 0:
-            LXVI_moveTo(toClick)
-            pyautogui.leftClick()
+            useSkill(toClick, 1)
         else:
-            click("skillsetR.png", 0.75, 0, 0)
-            LXVI_moveTo(toClick)
-            pyautogui.leftClick()
+            useSkill(toClick, 5)
             action = 1
-            click("skillsetL.png", 0.75, 0, 0)
 
         if not checkActive():
             print("Minimized while in encounter mode, concluding process...")
@@ -376,35 +400,21 @@ def catchMode():
                 return
 
         if (toClick := LXVI_locateCenterOnScreen("run.png", confidence=0.99)) is not None:
-            toClick = (toClick.x - 45, toClick.y + 80)
+            toClick = Point(toClick.x + 115, toClick.y + 80)
             chance = getCatchChance()
 
+            time.sleep(2)
             if int(chance) >= catchable:
                 if action != 4:
                     action = 3
             if action == 0:
-                click("skillsetR.png", 0.75, 0, 0)
-                LXVI_moveTo(toClick)
-                pyautogui.moveRel(-45 + 160 * 1, 0)
-                pyautogui.leftClick()
-                click("skillsetL.png", 0.75, 0, 0)
+                useSkill(toClick, 5)
                 action = 1
             elif action == 1:
-                click("skillsetR.png", 0.75, 0, 0)
-                LXVI_moveTo(toClick)
-                pyautogui.moveRel(-45 + 160 * 2, 0)
-                pyautogui.leftClick()
-                click("skillsetL.png", 0.75, 0, 0)
+                useSkill(toClick, 3)
                 action = 2
             elif action == 2:
-                click("skillsetR.png", 0.75, 0, 0)
-                click("skillsetR.png", 0.75, 0, 0)
-                LXVI_moveTo(toClick)
-                pyautogui.moveRel(-45 + 160 * 2, 0)
-                pyautogui.leftClick()
-                click("skillsetL.png", 0.75, 0, 0)
-                click("skillsetL.png", 0.75, 0, 0)
-                LXVI_moveTo(toClick)
+                useSkill(toClick, 10)
             elif action == 3:
                 click("catchbtn.png", 0.75, 6, 0)
                 if LXVI_locateCenterOnScreen("catchSuccess.png", 0.9) is not None:
