@@ -41,9 +41,16 @@ APPNAMEPNG = "appname.png"
 if sys.platform.startswith("linux"):
     APPNAMEPNG = "appname_linux.png"
 
-searchSeq = CONFIG["search"]["searchSeq"][CONFIG["search"]["searchCode"]]
+searchCode = CONFIG["search"]["searchCode"]
+searchSeq = CONFIG["search"]["searchSeq"][searchCode]
 for s, search in enumerate(searchSeq):
     searchSeq[s] = str(pathlib.PurePath("searchImages", f"{search}.png"))
+
+walkRegion = searchCode[:2]
+walkSeq = CONFIG["walk"]["walkSeq"][walkRegion]
+for w, walk in enumerate(walkSeq):
+    walkSeq[w] = str(pathlib.PurePath("walkImages", f"{walk}.png"))
+
 
 with mss.mss() as sct:
     # Get information of monitor 2
@@ -189,8 +196,6 @@ rarDict = {
     "exo": "Exotic",
     "lag": "Legendary",
 }
-
-
 def getMiscritData():
     global rarDict, miscrit, rarity
     miscrits_lore = LXVI_locateCenterOnScreen(UIImage("miscrits_lore.png"), 0.8)
@@ -275,30 +280,60 @@ def useSkill(toClick: Point, skillNo: int = 1):
     pyautogui.moveRel(0, 40)
 
 
+def walkMode():
+    while True:
+        for search in searchSeq:
+            if (
+                LXVI_locateCenterOnScreen(search, 0.95)
+            ) is not None:
+                return
+        if CONFIG["walk"]["autoWalk"]:
+            WalkSuccess = False
+            for walk in walkSeq:
+                if (
+                    toClick := LXVI_locateCenterOnScreen(walk, 0.8)
+                ) is None:
+                    continue
+                
+                WalkSuccess = True
+                LXVI_moveTo(toClick, 0.1)
+                pyautogui.leftClick()
+                time.sleep(CONFIG["walk"]["walkInterval"])
+
+                SearchSuccess = False
+                for search in searchSeq:
+                    if (
+                        LXVI_locateCenterOnScreen(search, 0.95)
+                    ) is None:
+                        continue
+
+                    SearchSuccess = True
+
+                if SearchSuccess:
+                    time.sleep(0.5)
+                    return
+            
+            if not WalkSuccess:
+                print("Path not found, concluding process...")
+                conclude()
+        else:
+            return
+
+
 def searchMode():
     while True:
-        if not checkActive():
-            print("Game not found during search mode, concluding process...")
-            conclude()
-
-        if LXVI_locateCenterOnScreen(UIImage("battlebtns.png"), 0.8) is not None:
-            encounterMode()
-            summary()
-        elif LXVI_locateCenterOnScreen(UIImage("closebtn.png"), 0.8) is not None:
-            click(UIImage("closebtn.png"), 0.8, 1, 0)
-
         cleanUp()
 
         if CONFIG["search"]["autoSearch"]:
             SearchSuccess = False
             for search in searchSeq:
                 if (
-                    toClick := LXVI_locateCenterOnScreen(search, confidence=0.8)
+                    toClick := LXVI_locateCenterOnScreen(search, 0.8)
                 ) is None:
                     continue
 
                 SearchSuccess = True
-                LXVI_moveTo(toClick, duration=0.1)
+                LXVI_moveTo(toClick, 0.1)
                 pyautogui.leftClick()
                 time.sleep(CONFIG["search"]["searchInterval"])
 
@@ -310,8 +345,8 @@ def searchMode():
                     summary()
 
             if not SearchSuccess:
-                print("Elements not found, concluding process...")
                 conclude()
+                return
         else:
             time.sleep(0.5)
 
@@ -347,17 +382,17 @@ def encounterMode():
     click(UIImage("mpedia_exit.png"), 0.8, 0, 0)
     pyautogui.leftClick()
 
-    if CONFIG["wild"]["targetAll"] or miscrit in CONFIG["wild"]["targets"]:
+    if CONFIG["catch"]["targetAll"] or miscrit in CONFIG["catch"]["targets"]:
         print(
             f"\033[A{Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} found!{Fore.LIGHTBLACK_EX}"
         )
 
-        if CONFIG["wild"]["autoCatch"]:
-            catchStandard = CONFIG["wild"]["catchStandardDict"][rarity]
+        if CONFIG["catch"]["autoCatch"]:
+            catchStandard = CONFIG["catch"]["catchStandardDict"][rarity]
             while LXVI_locateCenterOnScreen(UIImage("run.png"), 0.99) is None:
                 pass
             if (getCatchChance() <= catchStandard) or (
-                miscrit in CONFIG["wild"]["targets"]
+                miscrit in CONFIG["catch"]["targets"]
             ):
                 playSound(pluck)
                 catchMode()
@@ -371,7 +406,7 @@ def encounterMode():
         print("Minimized while in encounter mode, concluding process...")
         conclude()
 
-    if CONFIG["wild"]["fightHunt"]:
+    if CONFIG["catch"]["fightHunt"]:
         toClick = LXVI_locateCenterOnScreen(UIImage("run.png"), 0.75)
         toClick = Point(toClick.x + 115, toClick.y + 80)
     else:
@@ -448,7 +483,7 @@ def catchMode():
             toClick = Point(toClick.x + 115, toClick.y + 80)
             chance = getCatchChance()
 
-            if int(chance) >= CONFIG["wild"]["catchablePercentage"]:
+            if int(chance) >= CONFIG["catch"]["catchablePercentage"]:
                 if action != 4:
                     action = 3
 
@@ -590,15 +625,21 @@ def switchTeam(levelBCD):
 
 def reLogin():
     print("UNDER DEVELOPMENT")
-    # the code gets here if the time is before 8:00 AM
+    # the code gets here if the time is before 8:00 AM or account 
     # it will wait until logged out by the server and log back in
+    wait = time.perf_counter()
     if toClick := LXVI_locateCenterOnScreen(UIImage("loginbtn.png"), 0.8) is not None:
-        if autoLogin:
-            LXVI_moveTo(toClick)
-            pyautogui.leftClick()
-        else:
-            print("Account logged out. Ending session.")
-            sys.exit()
+        print("Account was logged out, logging back in...")
+        LXVI_moveTo(toClick)
+        pyautogui.leftClick()
+    while LXVI_locateCenterOnScreen(UIImage("miscripedia.png"), 0.75) is not None:
+        if time.perf_counter()-wait >= 30:
+            print("Having trouble signing back in. Concluding process...")
+            conclude()
+        pass
+    print(f"\033[AAccount logged in. Resuming...")
+    dailySpin()
+
 
 
 def dailySpin():
@@ -607,13 +648,11 @@ def dailySpin():
     # it will press spin and accept the reward
 
 
-def walkOrSumtin():
-    print("UNDER DEVELOPMENT")
-    # if this is on, it should have an array of images to follow until it sees the
-    # current search sequence elements then proceed to autoSearching
-
-
 def conclude():
+    if LXVI_locateCenterOnScreen(UIImage("loginbtn.png"), 0.8):
+        reLogin()
+        return
+    
     print(
         f"\nEnded process after {Fore.CYAN}{b}{Fore.LIGHTBLACK_EX} Miscrits encountered."
     )
@@ -628,6 +667,17 @@ print(Fore.LIGHTBLACK_EX)
 playSound(on)
 time.sleep(1)
 while checkActive():
+    if not checkActive():
+        print("Game not found during search mode, concluding process...")
+        conclude()
+    if LXVI_locateCenterOnScreen(UIImage("battlebtns.png"), 0.8) is not None:
+        encounterMode()
+        summary()
+    else:
+        click(UIImage("closebtn.png"), 0.8, 1, 0)
+        click(UIImage("savebtn.png"), 0.8, 1, 0)
+        click(UIImage("x.png"), 0.8, 1, 0)
+    walkMode()
     searchMode()
 print("Game not found on screen. Nothing happened.")
 playSound(rizz)

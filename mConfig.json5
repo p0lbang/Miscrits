@@ -1,21 +1,32 @@
 {
     "audio": true, // false -> mute the code audios
+    "walk": {
+        "autoWalk": true, // ................ | walks until it finds your searching location
+        "walkInterval": 1,  // .............. | time before clicking next walking point
+        "walkSeq": {
+            "af": [],
+            "m0": ["m0_A", "m0_B", "m0_C", "m0_D", "m0_E", "m0_F", "m0_G", "m0_H", "m0_I"],
+            "m1": ["m1_A", "m1_B", "m1_C", "m1_D", "m1_E", "m1_F", "m1_G"],
+            "m2": ["m2_A", "m2_B", "m2_C", "m2_D", "m2_E", "m2_F", "m2_G"]
+        }
+    },
     "search": {
-        "autoSearch": true, // ..... | looks for miscrits in searchable spots for you
-        "autoWalk": true, // ....... | takes you back to your searching location
-        "searchInterval": 4, // .... | time before clicking the next location
-        "searchCode": "m1_thundercracker", //
-        "searchSeq": { // don't change the non-custom sequences pls don't no no 
-            "a1_waddles": ["a1_typha1", "a1_sapling", "a1_typha2", "a1_jagbush"],
-            "a2_dflue": ["a2_stump", "a2_cattail1", "a2_flower", "a2_cattail2"],
-            "a2_bkiloray": ["a2_blight", "a2_palm", "a2_tree", "a2_rock"],
-            "a3_tulipinny": ["a3_magic", "a3_minis1", "a3_sun1", "a3_pink1"],
-            "a3_dflowerpiller": ["a3_minis2", "a3_palm", "a3_pink2", "a3_sun2"],
-            "a3_bfiender": ["a3_blight", "a3_sun3", "a3_magic", "a3_fuchsia"],
-            "a4_blazebit": ["a4_elder", "a4_bush1", "a4_sun", "a4_pool1"],
-            "a4_dshelbee": ["a4_pool2", "a4_shrub1", "a4_bush2", "a4_typha1"],
-            "a4_dprawnja": ["a4_typha2", "a4_dead", "a4_shrub2", "a4_typha3"],
-            "a4_defilio": ["a4_blight", "a4_typha4", "a4_minis", "a4_yellow"],
+        "autoSearch": true, // .............. | looks for miscrits in searchable spots for you
+        "searchInterval": 4, // ............. | time before clicking the next location
+        "searchCode": "m2_flutterpat", // | search codes are below, ex: "a1_waddles" 
+        "searchSeq": { // ................... | don't change the non-custom sequences pls don't no no 
+            "af1_waddles": ["a1_typha1", "a1_sapling", "a1_typha2", "a1_jagbush"],
+            "af2_dflue": ["a2_stump", "a2_cattail1", "a2_flower", "a2_cattail2"],
+            "af2_bkiloray": ["a2_blight", "a2_palm", "a2_tree", "a2_rock"],
+            "af3_tulipinny": ["a3_magic", "a3_minis1", "a3_sun1", "a3_pink1"],
+            "af3_dflowerpiller": ["a3_minis2", "a3_palm", "a3_pink2", "a3_sun2"],
+            "af3_bfiender": ["a3_blight", "a3_sun3", "a3_magic", "a3_fuchsia"],
+            "af4_blazebit": ["a4_elder", "a4_bush1", "a4_sun", "a4_pool1"],
+            "af4_dshelbee": ["a4_pool2", "a4_shrub1", "a4_bush2", "a4_typha1"],
+            "af4_dprawnja": ["a4_typha2", "a4_dead", "a4_shrub2", "a4_typha3"],
+            "af4_defilio": ["a4_blight", "a4_typha4", "a4_minis", "a4_yellow"],
+            "m0_01": ["m0_sapling", "m0_rock1", "m0_rock2", "m0_stone1", "m0_grass", "m0_rock3"],
+            "m0_02": ["m0_axe", "m0_crate", "m0_chops", "m0_minis"],
             "m1_rafral": ["m1_stool", "m1_cage1", "m1_mirrors", "m1_cage2"],
             "m1_thundercracker": ["m1_globe", "m1_sofaL", "m1_candelabraR", "m1_sofaR"],
             "m2_flutterpat": ["m2_relics", "m2_brush", "m2_potions", "m2_woodcage"],
@@ -23,34 +34,34 @@
         }
     },
     "team": {
-        "autoTrain": true,
-        "bonusTrain": false,
-        "autoSwitch": true,
-        "switchLevel": 30
+        "autoTrain": true,  // .. | levels up your miscrits for you
+        "bonusTrain": false,  //  | true -> spend platinum for bonus stats when levelling up
+        "autoSwitch": true,  // . | switches miscrits on your team depending on the reached level
+        "switchLevel": 30,  // .. | the reached level in question
     },
-    "wild": {
-        "fightHunt": true,
-        "autoCatch": true,
-        "catchablePercentage": 90,
-        "targetAll": true,
-        "targets": [],
-        "blockTarget": [],
-        "catchStandardDict": {
+    "catch": {
+        "fightHunt": true,  // ....... | false -> flee from wild miscrits that are not tagged for capture
+        "autoCatch": true,  // ....... | catches miscrits for you
+        "catchablePercentage": 90,  // | makes the attempt to catch the miscrit when the rate is above this value
+        "targetAll": true,  // ....... | true -> every encountered miscrit is tagged for capture
+        "targets": [],  // ........... | miscrits added here are prioritized for capture regardless of their initial catch chance
+        "blocktargets": [],  // ...... | miscrits added here will be tagged to not catch
+        "catchStandardDict": {  // ... | set values as capture thresholds for each rarity
             "Common": 27, // ...# 27-45%
             "Rare": 17, // .....# 17-35%
             "Epic": 10, // .....# 10-25%
             "Exotic": 10,  // ...# ?-10%
             "Legendary": 10,  // .# ?-?
-            "Unidentified": 27,  //
+            "Unidentified": 27,  // -> if rarity identification fails
         },
     },
-    "mainMiscrit": {
+    "mainMiscrit": {  // | info of your first miscrit in the team, the hard carry
         "weakness": "nature.png",
         "strength": "fire.png",
-        "main": 1,
-        "strong": 1,
-        "negate": 5,
-        "bigpoke": 3,
-        "poke": 10,
+        "main": 1, // ... | skill to be used mainly for spamming
+        "strong": 1, // . | skill to be used for elements weak against your main miscrit
+        "negate": 5, // . | skill that negates weaknesses [set to same as main if none]
+        "bigpoke": 3,  // | skill that chips away at wild miscrit's HP without killing them
+        "poke": 10,  // . | skill that reduces wild miscrit's HP until they're catchable
     }
 }
