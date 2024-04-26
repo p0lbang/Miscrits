@@ -11,7 +11,8 @@ from colorama import Fore
 from pyscreeze import Point
 from os import environ
 import pathlib
-environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
+
+environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 import pygame
 
 
@@ -20,15 +21,19 @@ sounds = True  # ........................# false to mute sounds from the code
 
 fullAuto = False  # ......................# true to allow the three features below
 autoLogin = True  # .....................# logs you back in after daily server reset [UNDER DEVELOPMENT]
-autoDaily = True  # .....................# automatic daily spin for you [UNDER DEVELOPMENT]
+autoDaily = (
+    True  # .....................# automatic daily spin for you [UNDER DEVELOPMENT]
+)
 autoWalk = True  # ......................# automatically takes you back to wherever your search sequence is [UNDER DEVELOPMENT]
 
 autoSearch = True  # ....................#
 searchInterval = 4  # ...................# interval for clicking between searches (minimum value for multiple: 4)
 searchSeq = ["m2_relics", "m2_brush", "m2_potions", "m2_woodcage"]
-                                         # copy sequences from 'locations.txt'
+# copy sequences from 'locations.txt'
 
-autoTrain = True  # .....................# set to True to automatically level up miscrits
+autoTrain = (
+    True  # .....................# set to True to automatically level up miscrits
+)
 bonusTrain = False  # ...................# set to True if you want to spend platinum on your trainable miscrits
 
 autoSwitch = True  # ....................# set to True to automatically switch miscrits in team if their level is or above
@@ -36,27 +41,38 @@ switchLevel = 30  # .....................# this level
 
 miscritCheck = True  # ..................# set to True to get miscrit's name
 huntType = "battle"  # ..................# "battle" or "escape" the miscrits that are not the target
-WEAKNESS = "nature.png"  # ..............# choose element that is strong against main miscrit
-STRENGTH = "fire.png"  # ................# choose element that is weak against main miscrit
+WEAKNESS = (
+    "nature.png"  # ..............# choose element that is strong against main miscrit
+)
+STRENGTH = (
+    "fire.png"  # ................# choose element that is weak against main miscrit
+)
 
-autoCatch = True  # .....................# try to catch miscrit if catch rate is greater than
+autoCatch = (
+    True  # .....................# try to catch miscrit if catch rate is greater than
+)
 catchable = 90  # .......................# this catch percentage
-targetAll = True  # .....................# set to True to make everyone a target for capture
-targets: List[str]  = []  # ....# miscrit names without space (pray for accuracy)
-catchStandardDict = {"Common": 27,  # ...# 27-45%
-                     "Rare": 18,  # .....# 17-35%
-                     "Epic": 10,  # .....# 10-25%
-                     "Exotic": 10,  # ...# ?-10%
-                     "Legendary": 10,  #.# ?-?
-                     "Unidentified": 27  #
-                     } # ................# initial catch percentage to capture each rarity
+targetAll = (
+    True  # .....................# set to True to make everyone a target for capture
+)
+targets: List[str] = []  # ....# miscrit names without space (pray for accuracy)
+catchStandardDict = {
+    "Common": 27,  # ...# 27-45%
+    "Rare": 18,  # .....# 17-35%
+    "Epic": 10,  # .....# 10-25%
+    "Exotic": 10,  # ...# ?-10%
+    "Legendary": 10,  # .# ?-?
+    "Unidentified": 27,  #
+}  # ................# initial catch percentage to capture each rarity
 
 mainSkill = 1  # ........................# skill for killing enemies in general
 strongSkill = 1  # ......................# skill for miscrits weak against you
 negateSkill = 5  # ......................# skill to negate elemental weakness (if none, set as same with main skill)
 bigpokeSkill = 4  # .....................# skill to reduce miscrit health faster without killing them
-pokeSkill = 10  # .......................# skill to reduce miscrit health by a smaller amount
-#----------------------------------------#
+pokeSkill = (
+    10  # .......................# skill to reduce miscrit health by a smaller amount
+)
+# ----------------------------------------#
 
 CONFIG = {
     "sounds": True,
@@ -75,13 +91,14 @@ CONFIG = {
         "catchablePercentage": 90,
         "targetAll": True,
         "targets": [],
-        "catchStandardDict": {  "Common": 27,  # ...# 27-45%
-                                "Rare": 18,  # .....# 17-35%
-                                "Epic": 10,  # .....# 10-25%
-                                "Exotic": 10,  # ...# ?-10%
-                                "Legendary": 10,  #.# ?-?
-                                "Unidentified": 27  #
-                            },
+        "catchStandardDict": {
+            "Common": 27,  # ...# 27-45%
+            "Rare": 18,  # .....# 17-35%
+            "Epic": 10,  # .....# 10-25%
+            "Exotic": 10,  # ...# ?-10%
+            "Legendary": 10,  # .# ?-?
+            "Unidentified": 27,  #
+        },
     },
     "skills": {
         "weakness": "nature.png",
@@ -91,30 +108,32 @@ CONFIG = {
         "negate": 5,
         "bigpoke": 4,
         "poke": 10,
-    }
+    },
 }
 
 reader = easyocr.Reader(["en"], gpu=True, verbose=True)
 pygame.init()
 
+
 def UIImage(imagename: str) -> str:
-    return str(pathlib.PurePath("UI_images",imagename))
+    return str(pathlib.PurePath("UI_images", imagename))
+
 
 b = 0
 caught = False
 start = time.perf_counter()
-rizz = pygame.mixer.Sound(pathlib.PurePath("sounds","rizz.mp3"))
-on = pygame.mixer.Sound(pathlib.PurePath("sounds","on.mp3"))
-off = pygame.mixer.Sound(pathlib.PurePath("sounds","off.mp3"))
-pluck = pygame.mixer.Sound(pathlib.PurePath("sounds","pluck.mp3"))
-bend = pygame.mixer.Sound(pathlib.PurePath("sounds","bend.mp3"))
+rizz = pygame.mixer.Sound(pathlib.PurePath("sounds", "rizz.mp3"))
+on = pygame.mixer.Sound(pathlib.PurePath("sounds", "on.mp3"))
+off = pygame.mixer.Sound(pathlib.PurePath("sounds", "off.mp3"))
+pluck = pygame.mixer.Sound(pathlib.PurePath("sounds", "pluck.mp3"))
+bend = pygame.mixer.Sound(pathlib.PurePath("sounds", "bend.mp3"))
 
 APPNAMEPNG = "appname.png"
 if sys.platform.startswith("linux"):
     APPNAMEPNG = "appname_linux.png"
 
 for s, search in enumerate(searchSeq):
-    searchSeq[s] = str(pathlib.PurePath("imgSources",f"{search}.png"))
+    searchSeq[s] = str(pathlib.PurePath("imgSources", f"{search}.png"))
 
 with mss.mss() as sct:
     # Get information of monitor 2
@@ -141,20 +160,28 @@ def checkActive():
     return LXVI_locateCenterOnScreen(UIImage(APPNAMEPNG), 0.8) is not None
 
 
-def LXVI_moveTo(p: Point, duration:float = 0):
+def LXVI_moveTo(p: Point, duration: float = 0):
     global monitor
     try:
-        pyautogui.moveTo(int(p.x)+monitor["left"],int(p.y)+monitor["top"], duration=duration)
+        pyautogui.moveTo(
+            int(p.x) + monitor["left"], int(p.y) + monitor["top"], duration=duration
+        )
     except Exception:
-        pyautogui.moveTo(int(p[0])+monitor["left"],int(p[1])+monitor["top"], duration=duration)
+        pyautogui.moveTo(
+            int(p[0]) + monitor["left"], int(p[1]) + monitor["top"], duration=duration
+        )
 
 
-def LXVI_dragTo(p: Point, duration:float = 0):
+def LXVI_dragTo(p: Point, duration: float = 0):
     global monitor
     try:
-        pyautogui.dragTo(int(p.x)+monitor["left"],int(p.y)+monitor["top"], duration=duration)
+        pyautogui.dragTo(
+            int(p.x) + monitor["left"], int(p.y) + monitor["top"], duration=duration
+        )
     except Exception:
-        pyautogui.dragTo(int(p[0])+monitor["left"],int(p[1])+monitor["top"], duration=duration)
+        pyautogui.dragTo(
+            int(p[0]) + monitor["left"], int(p[1]) + monitor["top"], duration=duration
+        )
 
 
 def LXVI_locateCenterOnScreen(
@@ -164,41 +191,43 @@ def LXVI_locateCenterOnScreen(
 ) -> Point | None:
     try:
         screenshot = ImageGrab.grab(
-            bbox=(monitor["left"],monitor["top"],monitor["left"]+monitor["width"],monitor["top"]+monitor["height"]),
-            all_screens=True)
+            bbox=(
+                monitor["left"],
+                monitor["top"],
+                monitor["left"] + monitor["width"],
+                monitor["top"] + monitor["height"],
+            ),
+            all_screens=True,
+        )
 
-        locateBox = pyautogui.locate(needleImage=imagename,haystackImage=screenshot,confidence=confidence,region=region)
+        locateBox = pyautogui.locate(
+            needleImage=imagename,
+            haystackImage=screenshot,
+            confidence=confidence,
+            region=region,
+        )
         if locateBox is None:
             return None
-        return pyautogui.center(cast(tuple[int,int,int,int],locateBox))
+        return pyautogui.center(cast(tuple[int, int, int, int], locateBox))
     except pyautogui.ImageNotFoundException:
         return None
 
 
 def LXVI_readImage(
-    region: tuple[int, int, int, int] = (0,0,0,0), numerical: bool = False
+    region: tuple[int, int, int, int] = (0, 0, 0, 0), numerical: bool = False
 ):
-    
     # PIL library, bbox = (left,top,right,bottom)
     # pyautogui library, region = (left,top,width,height)
 
     # converts region to bbox
     bbox_left = monitor["left"] + region[0]
-    bbox_top =  monitor["top"] +  region[1]
+    bbox_top = monitor["top"] + region[1]
     bbox_right = bbox_left + region[2]
     bbox_bottom = bbox_top + region[3]
 
-    computedBbox = (
-                bbox_left,
-                bbox_top,
-                bbox_right,
-                bbox_bottom
-            )
+    computedBbox = (bbox_left, bbox_top, bbox_right, bbox_bottom)
 
-    img = ImageGrab.grab(
-            bbox=computedBbox,
-            all_screens=True
-        )
+    img = ImageGrab.grab(bbox=computedBbox, all_screens=True)
     if numerical:
         read = reader.recognize(
             numpy.array(img), allowlist="0123456789", blocklist="-~( ).,"
@@ -207,7 +236,7 @@ def LXVI_readImage(
         read = reader.recognize(numpy.array(img), blocklist="-~( ).,")
     (_, text, _) = read[0]
 
-    #img.save(f"errorer.jpg")
+    # img.save(f"errorer.jpg")
     return text
 
 
@@ -237,17 +266,31 @@ def cleanUp():
         is not None
     ):
         click(UIImage("gold.png"), 0.7, 0, 0, [0, 100, 1920, 980])
-    while LXVI_locateCenterOnScreen(UIImage("potion1.png"), confidence=0.65) is not None:
+    while (
+        LXVI_locateCenterOnScreen(UIImage("potion1.png"), confidence=0.65) is not None
+    ):
         click(UIImage("potion1.png"), 0.65, 0, 0)
 
 
-rarDict ={"com": "Common", "rar": "Rare", "epi": "Epic", "exo": "Exotic", "lag": "Legendary"}
+rarDict = {
+    "com": "Common",
+    "rar": "Rare",
+    "epi": "Epic",
+    "exo": "Exotic",
+    "lag": "Legendary",
+}
+
+
 def getMiscritData():
     global rarDict, miscrit, rarity
     miscrits_lore = LXVI_locateCenterOnScreen(UIImage("miscrits_lore.png"), 0.8)
     if isinstance(miscrits_lore, Point):
-        miscrit = LXVI_readImage([int(miscrits_lore.x) + -130, int(miscrits_lore.y) + 32, 238, 40])
-        rarity = LXVI_readImage([int(miscrits_lore.x) + -86, int(miscrits_lore.y) + 116, 60, 25])
+        miscrit = LXVI_readImage(
+            [int(miscrits_lore.x) + -130, int(miscrits_lore.y) + 32, 238, 40]
+        )
+        rarity = LXVI_readImage(
+            [int(miscrits_lore.x) + -86, int(miscrits_lore.y) + 116, 60, 25]
+        )
         rarity = rarity[:3].lower()
         rarity = rarDict[rarity]
     else:
@@ -258,7 +301,11 @@ def getMiscritData():
 def getCatchChance():
     catchButton = LXVI_locateCenterOnScreen(UIImage("catchbtn.png"), 0.75)
     if isinstance(catchButton, Point):
-        chance = int(LXVI_readImage([int(catchButton.x) - 17, int(catchButton.y) + 13, 18, 22], True))
+        chance = int(
+            LXVI_readImage(
+                [int(catchButton.x) - 17, int(catchButton.y) + 13, 18, 22], True
+            )
+        )
         return chance
     else:
         return None
@@ -268,23 +315,29 @@ def getTeamLevel():
     myMiscrits = LXVI_locateCenterOnScreen(UIImage("myMiscrits.png"), 0.9)
     levels = []
     if isinstance(myMiscrits, Point):
-        levelA = Point(x = myMiscrits.x - 8, y = myMiscrits.y + 73)
+        levelA = Point(x=myMiscrits.x - 8, y=myMiscrits.y + 73)
         for x in range(3):
             try:
-                levels.append(int(LXVI_readImage([int(levelA.x), int(levelA.y) + 50 + x * 50, 15, 15], True)))
+                levels.append(
+                    int(
+                        LXVI_readImage(
+                            [int(levelA.x), int(levelA.y) + 50 + x * 50, 15, 15], True
+                        )
+                    )
+                )
             except Exception:
                 levels.append(0)
         return levels
     else:
-        return [0,0,0]
+        return [0, 0, 0]
 
 
 def useSkill(toClick: Point, skillNo: int = 1):
     global onSkillPage
 
-    page = int(skillNo/4) + 1
-    skill = ((skillNo-1) % 4)
-    skillClick = Point(toClick.x + 160*skill, toClick.y)
+    page = int(skillNo / 4) + 1
+    skill = (skillNo - 1) % 4
+    skillClick = Point(toClick.x + 160 * skill, toClick.y)
 
     while onSkillPage != page:
         if onSkillPage < page:
@@ -293,16 +346,24 @@ def useSkill(toClick: Point, skillNo: int = 1):
         elif onSkillPage > page:
             click(UIImage("skillsetL.png"), 0.75, 0, 0)
             onSkillPage -= 1
-    
-    while (LXVI_locateCenterOnScreen(UIImage("run.png"), 0.99, [toClick.x-132, toClick.y-106, 36, 55]) is None):
-        if LXVI_locateCenterOnScreen(UIImage("closebtn.png"), 0.85) is not None or not checkActive():
+
+    while (
+        LXVI_locateCenterOnScreen(
+            UIImage("run.png"), 0.99, [toClick.x - 132, toClick.y - 106, 36, 55]
+        )
+        is None
+    ):
+        if (
+            LXVI_locateCenterOnScreen(UIImage("closebtn.png"), 0.85) is not None
+            or not checkActive()
+        ):
             return
         pass
-    
+
     LXVI_moveTo(skillClick)
     pyautogui.leftClick()
-    pyautogui.moveRel(0,40)
-            
+    pyautogui.moveRel(0, 40)
+
 
 def searchMode():
     while True:
@@ -321,7 +382,9 @@ def searchMode():
         if autoSearch:
             SearchSuccess = False
             for search in searchSeq:
-                if (toClick := LXVI_locateCenterOnScreen(search, confidence=0.8)) is None:
+                if (
+                    toClick := LXVI_locateCenterOnScreen(search, confidence=0.8)
+                ) is None:
                     continue
 
                 SearchSuccess = True
@@ -329,7 +392,10 @@ def searchMode():
                 pyautogui.leftClick()
                 time.sleep(searchInterval)
 
-                if LXVI_locateCenterOnScreen(UIImage("battlebtns.png"), 0.8) is not None:
+                if (
+                    LXVI_locateCenterOnScreen(UIImage("battlebtns.png"), 0.8)
+                    is not None
+                ):
                     encounterMode()
                     summary()
 
@@ -342,7 +408,7 @@ def searchMode():
 
 def encounterMode():
     global miscrit, b, onSkillPage, rarity
-    
+
     b += 1
     miscrit = "[redacted]"
     rarity = "Unidentified"
@@ -366,7 +432,9 @@ def encounterMode():
     pyautogui.leftClick()
 
     if targetAll or miscrit in targets:
-        print(f"\033[A{Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} found!{Fore.LIGHTBLACK_EX}")
+        print(
+            f"\033[A{Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} found!{Fore.LIGHTBLACK_EX}"
+        )
 
         if autoCatch:
             catchStandard = catchStandardDict[rarity]
@@ -377,7 +445,9 @@ def encounterMode():
                 catchMode()
                 return
             else:
-                print(f"\033[A{Fore.WHITE}This {Fore.YELLOW}{miscrit}{Fore.WHITE} is trash. -p0lbang{Fore.LIGHTBLACK_EX}")
+                print(
+                    f"\033[A{Fore.WHITE}This {Fore.YELLOW}{miscrit}{Fore.WHITE} is trash. -p0lbang{Fore.LIGHTBLACK_EX}"
+                )
 
     if not checkActive():
         print("Minimized while in encounter mode, concluding process...")
@@ -387,18 +457,22 @@ def encounterMode():
         toClick = LXVI_locateCenterOnScreen(UIImage("run.png"), 0.75)
         toClick = Point(toClick.x + 115, toClick.y + 80)
     else:
-        while(toClick := LXVI_locateCenterOnScreen(UIImage("run.png"), 0.99)) is None:
+        while (toClick := LXVI_locateCenterOnScreen(UIImage("run.png"), 0.99)) is None:
             pass
         LXVI_moveTo(toClick)
         pyautogui.leftClick()
-        print(f"\033[ASuccessfully escaped from {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}.")
+        print(
+            f"\033[ASuccessfully escaped from {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}."
+        )
 
     while True:
-        if action == 0: # strongest attack
+        if action == 0:  # strongest attack
             useSkill(toClick, mainSkill)
-        elif action < 0: # alternative attack to use for elements that are weak against you
+        elif (
+            action < 0
+        ):  # alternative attack to use for elements that are weak against you
             useSkill(toClick, strongSkill)
-        else: # negate element skill
+        else:  # negate element skill
             useSkill(toClick, negateSkill)
             action = 0
 
@@ -407,8 +481,13 @@ def encounterMode():
             conclude()
 
         if LXVI_locateCenterOnScreen(UIImage("closebtn.png"), 0.85) is not None:
-            print(f"\033[A{Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} was defeated.", end=" ",)
-            print(f"Time: {Fore.CYAN}{round(time.perf_counter()-battle_start, 3)}s{Fore.LIGHTBLACK_EX}")
+            print(
+                f"\033[A{Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} was defeated.",
+                end=" ",
+            )
+            print(
+                f"Time: {Fore.CYAN}{round(time.perf_counter()-battle_start, 3)}s{Fore.LIGHTBLACK_EX}"
+            )
             return
 
 
@@ -418,29 +497,40 @@ def catchMode():
 
     initialChance = getCatchChance()
     chance = initialChance
-    print(f"     {Fore.YELLOW}{miscrit}{Fore.LIGHTBLACK_EX}'s initial catch rate: {Fore.CYAN}{initialChance}%{Fore.LIGHTBLACK_EX}")
-    
+    print(
+        f"     {Fore.YELLOW}{miscrit}{Fore.LIGHTBLACK_EX}'s initial catch rate: {Fore.CYAN}{initialChance}%{Fore.LIGHTBLACK_EX}"
+    )
+
     if LXVI_locateCenterOnScreen(UIImage(WEAKNESS), 0.95) is not None:
         action = 0
-    
+
     while not caught:
         if not checkActive():
-            print(f"Minimized while trying to catch {Fore.YELLOW}{miscrit}{Fore.LIGHTBLACK_EX}, concluding process...")
+            print(
+                f"Minimized while trying to catch {Fore.YELLOW}{miscrit}{Fore.LIGHTBLACK_EX}, concluding process..."
+            )
             conclude()
 
-        if LXVI_locateCenterOnScreen(UIImage("miscripedia.png"), confidence=0.8) is None:
+        if (
+            LXVI_locateCenterOnScreen(UIImage("miscripedia.png"), confidence=0.8)
+            is None
+        ):
             if LXVI_locateCenterOnScreen(UIImage("closebtn.png"), 0.85) is not None:
-                print(f"\033[A     {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} died at {Fore.RED}{chance}%{Fore.LIGHTBLACK_EX} catch rate.    ")
+                print(
+                    f"\033[A     {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} died at {Fore.RED}{chance}%{Fore.LIGHTBLACK_EX} catch rate.    "
+                )
                 return
 
-        if (toClick := LXVI_locateCenterOnScreen(UIImage("run.png"), confidence=0.99)) is not None:
+        if (
+            toClick := LXVI_locateCenterOnScreen(UIImage("run.png"), confidence=0.99)
+        ) is not None:
             toClick = Point(toClick.x + 115, toClick.y + 80)
             chance = getCatchChance()
 
             if int(chance) >= catchable:
                 if action != 4:
                     action = 3
-            
+
             if action == 0:
                 useSkill(toClick, negateSkill)
                 action = 1
@@ -451,16 +541,23 @@ def catchMode():
                 useSkill(toClick, pokeSkill)
             elif action == 3:
                 click(UIImage("catchbtn.png"), 0.75, 6, 0)
-                if LXVI_locateCenterOnScreen(UIImage("catchSuccess.png"), 0.9) is not None:
+                if (
+                    LXVI_locateCenterOnScreen(UIImage("catchSuccess.png"), 0.9)
+                    is not None
+                ):
                     playSound(bend)
                     caught = True
                 else:
                     action = 4
             elif action == 4:
-                print(f"{Fore.LIGHTBLACK_EX}     Failed to catch {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} with {Fore.RED}{chance}%{Fore.LIGHTBLACK_EX}.")
+                print(
+                    f"{Fore.LIGHTBLACK_EX}     Failed to catch {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} with {Fore.RED}{chance}%{Fore.LIGHTBLACK_EX}."
+                )
                 useSkill(toClick, mainSkill)
 
-    print(f"\033[A     {Fore.YELLOW}{miscrit}{Fore.WHITE} has been caught. {Fore.LIGHTBLACK_EX}Initial chance: {Fore.GREEN}{initialChance}%{Fore.LIGHTBLACK_EX}")
+    print(
+        f"\033[A     {Fore.YELLOW}{miscrit}{Fore.WHITE} has been caught. {Fore.LIGHTBLACK_EX}Initial chance: {Fore.GREEN}{initialChance}%{Fore.LIGHTBLACK_EX}"
+    )
     click(UIImage("catchSkip.png"), 0.9, 2, 0)
     click(UIImage("closebtn.png"), 0.85, 2, 0)
 
@@ -472,7 +569,7 @@ def summary():
     if not checkActive():
         print("Minimized after Miscrit encounter, concluding process...")
         conclude()
-    
+
     if LXVI_locateCenterOnScreen(UIImage("trainable1.png"), 0.75) is not None:
         trainable = True
 
@@ -510,7 +607,7 @@ def train():
         levelBCD = [level >= switchLevel for level in getTeamLevel()]
 
     click(UIImage("x.png"), 0.8, 0.2, 0)
-    
+
     if autoSwitch and (True in levelBCD):
         switchTeam(levelBCD)
 
@@ -529,10 +626,10 @@ def switchTeam(levelBCD):
             outCount += 1
             pointX = Point(pointD.x + l * offset.x, pointD.y + l * offset.y)
             LXVI_moveTo(pointX)
-            pyautogui.dragRel((0,150))
+            pyautogui.dragRel((0, 150))
             time.sleep(0.1)
 
-    point0 = Point(exit.x -665, exit.y + 315)
+    point0 = Point(exit.x - 665, exit.y + 315)
     pointZ = Point(point0.x - 30, point0.y - 30)
     offset = Point(172, 84)
 
@@ -545,12 +642,19 @@ def switchTeam(levelBCD):
             for column in range(4):
                 pointN = Point(pointZ.x + column * offset.x, pointZ.y + row * offset.y)
                 pointM = Point(point0.x + column * offset.x, point0.y + row * offset.y)
-                
-                if LXVI_locateCenterOnScreen(UIImage("teamslotEmpty.png"), 0.8, [pointN.x, pointN.y, 150, 65]) is not None:
+
+                if (
+                    LXVI_locateCenterOnScreen(
+                        UIImage("teamslotEmpty.png"), 0.8, [pointN.x, pointN.y, 150, 65]
+                    )
+                    is not None
+                ):
                     lastMiscrit = True
                     break
 
-                level = int(LXVI_readImage([int(pointM.x), int(pointM.y), 16, 14], True))
+                level = int(
+                    LXVI_readImage([int(pointM.x), int(pointM.y), 16, 14], True)
+                )
                 if level < switchLevel:
                     LXVI_moveTo(pointM)
                     LXVI_dragTo(pointD, 0.2)
@@ -558,22 +662,22 @@ def switchTeam(levelBCD):
                     if outCount == 0:
                         lastMiscrit = True
                         break
-            
+
         click(UIImage("teamR.png"), 0.8, 0, 0)
     click(UIImage("savebtn.png"), 0.8, 0, 0)
-    
+
 
 def reLogin():
     print("UNDER DEVELOPMENT")
     # the code gets here if the time is before 8:00 AM
     # it will wait until logged out by the server and log back in
-    if toClick:= LXVI_locateCenterOnScreen(UIImage("loginbtn.png"), 0.8) is not None:
-            if autoLogin:
-                LXVI_moveTo(toClick)
-                pyautogui.leftClick()
-            else:
-                print("Account logged out. Ending session.")
-                sys.exit()
+    if toClick := LXVI_locateCenterOnScreen(UIImage("loginbtn.png"), 0.8) is not None:
+        if autoLogin:
+            LXVI_moveTo(toClick)
+            pyautogui.leftClick()
+        else:
+            print("Account logged out. Ending session.")
+            sys.exit()
 
 
 def dailySpin():
