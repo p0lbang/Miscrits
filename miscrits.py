@@ -42,9 +42,9 @@ STRENGTH = "fire.png"  # ................# choose element that is weak against m
 autoCatch = True  # .....................# try to catch miscrit if catch rate is greater than
 catchable = 90  # .......................# this catch percentage
 targetAll = True  # .....................# set to True to make everyone a target for capture
-targets: List[str]  = ["Treemur"]  # ....# miscrit names without space (pray for accuracy)
+targets: List[str]  = []  # ....# miscrit names without space (pray for accuracy)
 catchStandardDict = {"Common": 27,  # ...# 27-45%
-                     "Rare": 17,  # .....# 17-35%
+                     "Rare": 18,  # .....# 17-35%
                      "Epic": 10,  # .....# 10-25%
                      "Exotic": 10,  # ...# ?-10%
                      "Legendary": 10,  #.# ?-?
@@ -58,6 +58,41 @@ bigpokeSkill = 4  # .....................# skill to reduce miscrit health faster
 pokeSkill = 10  # .......................# skill to reduce miscrit health by a smaller amount
 #----------------------------------------#
 
+CONFIG = {
+    "sounds": True,
+    "fullAuto": False,
+    "autoLogin": True,
+    "autoDaily": True,
+    "autoWalk": True,
+    "autoTrain": True,
+    "bonusTrain": False,
+    "autoSwitch": True,
+    "switchLevel": 30,
+    "miscritCheck": True,
+    "huntType": "battle",
+    "catch": {
+        "autoCatch": True,
+        "catchablePercentage": 90,
+        "targetAll": True,
+        "targets": [],
+        "catchStandardDict": {  "Common": 27,  # ...# 27-45%
+                                "Rare": 18,  # .....# 17-35%
+                                "Epic": 10,  # .....# 10-25%
+                                "Exotic": 10,  # ...# ?-10%
+                                "Legendary": 10,  #.# ?-?
+                                "Unidentified": 27  #
+                            },
+    },
+    "skills": {
+        "weakness": "nature.png",
+        "strength": "fire.png",
+        "main": 1,
+        "strong": 2,
+        "negate": 5,
+        "bigpoke": 4,
+        "poke": 10,
+    }
+}
 
 reader = easyocr.Reader(["en"], gpu=True, verbose=True)
 pygame.init()
@@ -95,7 +130,7 @@ assert monitor is not None
 
 
 def playSound(sound: pygame.mixer.Sound) -> None:
-    if sounds:
+    if CONFIG["sounds"]:
         sound.play()
 
 
@@ -320,31 +355,16 @@ def encounterMode():
     elif LXVI_locateCenterOnScreen(WEAKNESS, 0.95) is not None:
         action = 1
 
-    if miscritCheck:
-        click("miscripedia.png", 0.8, 0.555, 0)
-        getMiscritData()
-        print(f"{Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} wants to fight.")
-        click("mpedia_exit.png", 0.8, 0, 0)
-        pyautogui.leftClick()
-        # click("mpedia_exit.png", 0.8, 0, 0)
+    # miscritsCheck info
+    click("miscripedia.png", 0.8, 0.555, 0)
+    getMiscritData()
+    print(f"{Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} wants to fight.")
+    click("mpedia_exit.png", 0.8, 0, 0)
+    pyautogui.leftClick()
 
-        if targetAll or miscrit in targets:
-            print(f"\033[A{Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} found!{Fore.LIGHTBLACK_EX}")
+    if targetAll or miscrit in targets:
+        print(f"\033[A{Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} found!{Fore.LIGHTBLACK_EX}")
 
-            if autoCatch:
-                catchStandard = catchStandardDict[rarity]
-                while LXVI_locateCenterOnScreen("run.png", 0.99) is None:
-                    pass
-                if (getCatchChance() <= catchStandard) or (miscrit in targets):
-                    playSound(pluck)
-                    catchMode()
-                    return
-                else:
-                    print(f"\033[A{Fore.WHITE}This {Fore.YELLOW}{miscrit}{Fore.WHITE} is trash. -p0lbang{Fore.LIGHTBLACK_EX}")
-
-    else:
-        print(f"{Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} wants to fight.")
-        
         if autoCatch:
             catchStandard = catchStandardDict[rarity]
             while LXVI_locateCenterOnScreen("run.png", 0.99) is None:
@@ -353,6 +373,8 @@ def encounterMode():
                 playSound(pluck)
                 catchMode()
                 return
+            else:
+                print(f"\033[A{Fore.WHITE}This {Fore.YELLOW}{miscrit}{Fore.WHITE} is trash. -p0lbang{Fore.LIGHTBLACK_EX}")
 
     if not checkActive():
         print("Minimized while in encounter mode, concluding process...")
@@ -390,11 +412,14 @@ def encounterMode():
 def catchMode():
     global miscrit, caught
     action = 1
-    negated = False
 
     initialChance = getCatchChance()
     chance = initialChance
     print(f"     {Fore.YELLOW}{miscrit}{Fore.LIGHTBLACK_EX}'s initial catch rate: {Fore.CYAN}{initialChance}%{Fore.LIGHTBLACK_EX}")
+    
+    if LXVI_locateCenterOnScreen(WEAKNESS, 0.95) is not None:
+        action = 0
+    
     while not caught:
         if not checkActive():
             print(f"Minimized while trying to catch {Fore.YELLOW}{miscrit}{Fore.LIGHTBLACK_EX}, concluding process...")
@@ -412,12 +437,9 @@ def catchMode():
             if int(chance) >= catchable:
                 if action != 4:
                     action = 3
-            if not negated and LXVI_locateCenterOnScreen(WEAKNESS, 0.95) is not None:
-                action = 0
             
             if action == 0:
                 useSkill(toClick, negateSkill)
-                negated = True
                 action = 1
             elif action == 1:
                 useSkill(toClick, bigpokeSkill)
@@ -482,9 +504,7 @@ def train():
         click("skipbtn.png", 0.75, 1, 0.1)
 
     if autoSwitch:
-        levelBCD = [0, 0, 0]
-        for l, level in enumerate(getTeamLevel()):
-            levelBCD[l] = (level >= switchLevel)
+        levelBCD = [level >= switchLevel for level in getTeamLevel()]
 
     click("x.png", 0.8, 0.2, 0)
     
@@ -516,23 +536,26 @@ def switchTeam(levelBCD):
     lastMiscrit = False
     while not lastMiscrit:
         for row in range(3):
+            if lastMiscrit:
+                break
+
             for column in range(4):
                 pointN = Point(pointZ.x + column * offset.x, pointZ.y + row * offset.y)
                 pointM = Point(point0.x + column * offset.x, point0.y + row * offset.y)
-                if LXVI_locateCenterOnScreen("teamslotEmpty.png", 0.8, [pointN.x, pointN.y, 150, 65]) is None:
-                    level = int(LXVI_readImage([int(pointM.x), int(pointM.y), 16, 14]))
-                    if level < switchLevel:
-                        LXVI_moveTo(pointM)
-                        LXVI_dragTo(pointD, 0.2)
-                        outCount -= 1
-                        if outCount == 0:
-                            lastMiscrit = True
-                            break
-                else:
+                
+                if LXVI_locateCenterOnScreen("teamslotEmpty.png", 0.8, [pointN.x, pointN.y, 150, 65]) is not None:
                     lastMiscrit = True
                     break
-            if lastMiscrit:
-                break
+
+                level = int(LXVI_readImage([int(pointM.x), int(pointM.y), 16, 14]))
+                if level < switchLevel:
+                    LXVI_moveTo(pointM)
+                    LXVI_dragTo(pointD, 0.2)
+                    outCount -= 1
+                    if outCount == 0:
+                        lastMiscrit = True
+                        break
+            
         click("teamR.png", 0.8, 0, 0)
     click("savebtn.png", 0.8, 0, 0)
     
