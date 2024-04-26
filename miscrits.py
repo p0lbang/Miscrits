@@ -12,6 +12,7 @@ from pyscreeze import Point
 from os import environ
 import pathlib
 import pyjson5
+
 environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 import pygame
 
@@ -50,7 +51,6 @@ walkRegion = searchCode[:2]
 walkSeq = CONFIG["walk"]["walkSeq"][walkRegion]
 for w, walk in enumerate(walkSeq):
     walkSeq[w] = str(pathlib.PurePath("walkImages", f"{walk}.png"))
-
 
 
 with mss.mss() as sct:
@@ -163,8 +163,9 @@ def click(
     confidence: float = 0.9,
     sleep: float = 0.2,
     duration: float = 0.1,
+    region: tuple[int, int, int, int] | None = None,
 ) -> bool:
-    toClick = LXVI_locateCenterOnScreen(imagename, confidence=confidence)
+    toClick = LXVI_locateCenterOnScreen(imagename, confidence=confidence, region=region)
 
     if toClick is None:
         return False
@@ -177,9 +178,7 @@ def click(
 
 def cleanUp():
     while (
-        LXVI_locateCenterOnScreen(
-            UIImage("gold.png"), confidence=0.7, region=[0, 100, 1920, 980]
-        )
+        LXVI_locateCenterOnScreen(UIImage("gold.png"), 0.7, [0, 100, 1920, 980])
         is not None
     ):
         click(UIImage("gold.png"), 0.7, 0, 0, [0, 100, 1920, 980])
@@ -196,6 +195,8 @@ rarDict = {
     "exo": "Exotic",
     "lag": "Legendary",
 }
+
+
 def getMiscritData():
     global rarDict, miscrit, rarity
     miscrits_lore = LXVI_locateCenterOnScreen(UIImage("miscrits_lore.png"), 0.8)
@@ -286,17 +287,16 @@ def walkMode():
         walkGoal = str(pathlib.PurePath("walkImages", f"{searchCode}.png"))
         if LXVI_locateCenterOnScreen(walkGoal, 0.8) is not None:
             return
-        
+
         if CONFIG["walk"]["autoWalk"]:
             if LXVI_locateCenterOnScreen(walkStart, 0.975) is None:
                 return
 
             WalkSuccess = False
             for walk in walkSeq:
-                
                 if (toClick := LXVI_locateCenterOnScreen(walk, 0.9)) is None:
                     continue
-                
+
                 WalkSuccess = True
                 LXVI_moveTo(toClick, 0.1)
                 pyautogui.mouseDown()
@@ -323,9 +323,7 @@ def searchMode():
         if CONFIG["search"]["autoSearch"]:
             SearchSuccess = False
             for search in searchSeq:
-                if (
-                    toClick := LXVI_locateCenterOnScreen(search, 0.8)
-                ) is None:
+                if (toClick := LXVI_locateCenterOnScreen(search, 0.8)) is None:
                     continue
 
                 SearchSuccess = True
@@ -626,7 +624,7 @@ def login():
         LXVI_moveTo(toClick)
         pyautogui.leftClick()
     while LXVI_locateCenterOnScreen(UIImage("miscripedia.png"), 0.75) is not None:
-        if time.perf_counter()-wait >= 30:
+        if time.perf_counter() - wait >= 30:
             print("Having trouble signing back in. Concluding process...")
             conclude()
         pass
@@ -647,7 +645,7 @@ def conclude():
     if LXVI_locateCenterOnScreen(UIImage("loginbtn.png"), 0.8):
         login()
         return
-    
+
     print(
         f"\nEnded process after {Fore.CYAN}{b}{Fore.LIGHTBLACK_EX} Miscrits encountered."
     )
