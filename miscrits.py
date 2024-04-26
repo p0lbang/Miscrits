@@ -1,4 +1,4 @@
-from typing import List, cast
+from typing import cast
 import sys
 import time
 import mss
@@ -382,12 +382,12 @@ def encounterMode():
     click(UIImage("mpedia_exit.png"), 0.8, 0, 0)
     pyautogui.leftClick()
 
-    if CONFIG["catch"]["targetAll"] or miscrit in CONFIG["catch"]["targets"]:
-        print(
-            f"\033[A{Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} found!{Fore.LIGHTBLACK_EX}"
-        )
+    if CONFIG["catch"]["autoCatch"] and miscrit not in CONFIG["catch"]["blocked"]:
+        if CONFIG["catch"]["targetAll"] or miscrit in CONFIG["catch"]["targets"]:
+            print(
+                f"\033[A{Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} found!{Fore.LIGHTBLACK_EX}"
+            )
 
-        if CONFIG["catch"]["autoCatch"]:
             catchStandard = CONFIG["catch"]["catchStandardDict"][rarity]
             while LXVI_locateCenterOnScreen(UIImage("run.png"), 0.99) is None:
                 pass

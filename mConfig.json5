@@ -45,13 +45,13 @@
         "catchablePercentage": 90,  // | makes the attempt to catch the miscrit when the rate is above this value
         "targetAll": true,  // ....... | true -> every encountered miscrit is tagged for capture
         "targets": [],  // ........... | miscrits added here are prioritized for capture regardless of their initial catch chance
-        "blocktargets": [],  // ...... | miscrits added here will be tagged to not catch
+        "blocked": ["Twiggum", "Cubsprout","Elefauna", "Quirk", "Nessy"],  // ...... | miscrits added here will be tagged to not catch
         "catchStandardDict": {  // ... | set values as capture thresholds for each rarity
-            "Common": 27, // ...# 27-45%
-            "Rare": 17, // .....# 17-35%
-            "Epic": 10, // .....# 10-25%
-            "Exotic": 10,  // ...# ?-10%
-            "Legendary": 10,  // .# ?-?
+            "Common": 27, // ....# 27-45%
+            "Rare": 18, // ......# 17-35%
+            "Epic": 10, // ......# 10-25%
+            "Exotic": 10, // ....# ?-10%
+            "Legendary": 10, // .# ?-?
             "Unidentified": 27,  // -> if rarity identification fails
         },
     },
