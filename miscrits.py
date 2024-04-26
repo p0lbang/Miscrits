@@ -11,105 +11,14 @@ from colorama import Fore
 from pyscreeze import Point
 from os import environ
 import pathlib
-
+import pyjson5
 environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 import pygame
 
 
-# ---------[    C O N F I G    ]---------#
-sounds = True  # ........................# false to mute sounds from the code
-
-fullAuto = False  # ......................# true to allow the three features below
-autoLogin = True  # .....................# logs you back in after daily server reset [UNDER DEVELOPMENT]
-autoDaily = (
-    True  # .....................# automatic daily spin for you [UNDER DEVELOPMENT]
-)
-autoWalk = True  # ......................# automatically takes you back to wherever your search sequence is [UNDER DEVELOPMENT]
-
-autoSearch = True  # ....................#
-searchInterval = 4  # ...................# interval for clicking between searches (minimum value for multiple: 4)
-searchSeq = ["m2_relics", "m2_brush", "m2_potions", "m2_woodcage"]
-# copy sequences from 'locations.txt'
-
-autoTrain = (
-    True  # .....................# set to True to automatically level up miscrits
-)
-bonusTrain = False  # ...................# set to True if you want to spend platinum on your trainable miscrits
-
-autoSwitch = True  # ....................# set to True to automatically switch miscrits in team if their level is or above
-switchLevel = 30  # .....................# this level
-
-miscritCheck = True  # ..................# set to True to get miscrit's name
-huntType = "battle"  # ..................# "battle" or "escape" the miscrits that are not the target
-WEAKNESS = (
-    "nature.png"  # ..............# choose element that is strong against main miscrit
-)
-STRENGTH = (
-    "fire.png"  # ................# choose element that is weak against main miscrit
-)
-
-autoCatch = (
-    True  # .....................# try to catch miscrit if catch rate is greater than
-)
-catchable = 90  # .......................# this catch percentage
-targetAll = (
-    True  # .....................# set to True to make everyone a target for capture
-)
-targets: List[str] = []  # ....# miscrit names without space (pray for accuracy)
-catchStandardDict = {
-    "Common": 27,  # ...# 27-45%
-    "Rare": 18,  # .....# 17-35%
-    "Epic": 10,  # .....# 10-25%
-    "Exotic": 10,  # ...# ?-10%
-    "Legendary": 10,  # .# ?-?
-    "Unidentified": 27,  #
-}  # ................# initial catch percentage to capture each rarity
-
-mainSkill = 1  # ........................# skill for killing enemies in general
-strongSkill = 1  # ......................# skill for miscrits weak against you
-negateSkill = 5  # ......................# skill to negate elemental weakness (if none, set as same with main skill)
-bigpokeSkill = 4  # .....................# skill to reduce miscrit health faster without killing them
-pokeSkill = (
-    10  # .......................# skill to reduce miscrit health by a smaller amount
-)
-# ----------------------------------------#
-
-CONFIG = {
-    "sounds": True,
-    "fullAuto": False,
-    "autoLogin": True,
-    "autoDaily": True,
-    "autoWalk": True,
-    "autoTrain": True,
-    "bonusTrain": False,
-    "autoSwitch": True,
-    "switchLevel": 30,
-    "miscritCheck": True,
-    "huntType": "battle",
-    "catch": {
-        "autoCatch": True,
-        "catchablePercentage": 90,
-        "targetAll": True,
-        "targets": [],
-        "catchStandardDict": {
-            "Common": 27,  # ...# 27-45%
-            "Rare": 18,  # .....# 17-35%
-            "Epic": 10,  # .....# 10-25%
-            "Exotic": 10,  # ...# ?-10%
-            "Legendary": 10,  # .# ?-?
-            "Unidentified": 27,  #
-        },
-    },
-    "skills": {
-        "weakness": "nature.png",
-        "strength": "fire.png",
-        "main": 1,
-        "strong": 2,
-        "negate": 5,
-        "bigpoke": 4,
-        "poke": 10,
-    },
-}
+CONFIG = {}
+with open("mConfig.json5", "r") as file:
+    CONFIG = pyjson5.loads(file.read())
 
 reader = easyocr.Reader(["en"], gpu=True, verbose=True)
 pygame.init()
@@ -122,16 +31,17 @@ def UIImage(imagename: str) -> str:
 b = 0
 caught = False
 start = time.perf_counter()
-rizz = pygame.mixer.Sound(pathlib.PurePath("sounds", "rizz.mp3"))
-on = pygame.mixer.Sound(pathlib.PurePath("sounds", "on.mp3"))
-off = pygame.mixer.Sound(pathlib.PurePath("sounds", "off.mp3"))
-pluck = pygame.mixer.Sound(pathlib.PurePath("sounds", "pluck.mp3"))
-bend = pygame.mixer.Sound(pathlib.PurePath("sounds", "bend.mp3"))
+rizz = pygame.mixer.Sound(pathlib.PurePath("audio", "rizz.mp3"))
+on = pygame.mixer.Sound(pathlib.PurePath("audio", "on.mp3"))
+off = pygame.mixer.Sound(pathlib.PurePath("audio", "off.mp3"))
+pluck = pygame.mixer.Sound(pathlib.PurePath("audio", "pluck.mp3"))
+bend = pygame.mixer.Sound(pathlib.PurePath("audio", "bend.mp3"))
 
 APPNAMEPNG = "appname.png"
 if sys.platform.startswith("linux"):
     APPNAMEPNG = "appname_linux.png"
 
+searchSeq = CONFIG["search"]["searchSeq"][CONFIG["search"]["searchCode"]]
 for s, search in enumerate(searchSeq):
     searchSeq[s] = str(pathlib.PurePath("imgSources", f"{search}.png"))
 
@@ -151,9 +61,9 @@ with mss.mss() as sct:
 assert monitor is not None
 
 
-def playSound(sound: pygame.mixer.Sound) -> None:
-    if CONFIG["sounds"]:
-        sound.play()
+def playSound(audio: pygame.mixer.Sound) -> None:
+    if CONFIG["audio"]:
+        audio.play()
 
 
 def checkActive():
@@ -379,7 +289,7 @@ def searchMode():
 
         cleanUp()
 
-        if autoSearch:
+        if CONFIG["search"]["autoSearch"]:
             SearchSuccess = False
             for search in searchSeq:
                 if (
@@ -390,7 +300,7 @@ def searchMode():
                 SearchSuccess = True
                 LXVI_moveTo(toClick, duration=0.1)
                 pyautogui.leftClick()
-                time.sleep(searchInterval)
+                time.sleep(CONFIG["search"]["searchInterval"])
 
                 if (
                     LXVI_locateCenterOnScreen(UIImage("battlebtns.png"), 0.8)
@@ -419,9 +329,15 @@ def encounterMode():
     while LXVI_locateCenterOnScreen(UIImage("battlebtns.png"), 0.8) is None:
         pass
 
-    if LXVI_locateCenterOnScreen(UIImage(STRENGTH), 0.95) is not None:
+    if (
+        LXVI_locateCenterOnScreen(UIImage(CONFIG["mainMiscrit"]["strength"]), 0.95)
+        is not None
+    ):
         action = -1
-    elif LXVI_locateCenterOnScreen(UIImage(WEAKNESS), 0.95) is not None:
+    elif (
+        LXVI_locateCenterOnScreen(UIImage(CONFIG["mainMiscrit"]["weakness"]), 0.95)
+        is not None
+    ):
         action = 1
 
     # miscritsCheck info
@@ -431,16 +347,18 @@ def encounterMode():
     click(UIImage("mpedia_exit.png"), 0.8, 0, 0)
     pyautogui.leftClick()
 
-    if targetAll or miscrit in targets:
+    if CONFIG["wild"]["targetAll"] or miscrit in CONFIG["wild"]["targets"]:
         print(
             f"\033[A{Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} found!{Fore.LIGHTBLACK_EX}"
         )
 
-        if autoCatch:
-            catchStandard = catchStandardDict[rarity]
+        if CONFIG["wild"]["autoCatch"]:
+            catchStandard = CONFIG["wild"]["catchStandardDict"][rarity]
             while LXVI_locateCenterOnScreen(UIImage("run.png"), 0.99) is None:
                 pass
-            if (getCatchChance() <= catchStandard) or (miscrit in targets):
+            if (getCatchChance() <= catchStandard) or (
+                miscrit in CONFIG["wild"]["targets"]
+            ):
                 playSound(pluck)
                 catchMode()
                 return
@@ -453,7 +371,7 @@ def encounterMode():
         print("Minimized while in encounter mode, concluding process...")
         conclude()
 
-    if huntType == "battle":
+    if CONFIG["wild"]["fightHunt"]:
         toClick = LXVI_locateCenterOnScreen(UIImage("run.png"), 0.75)
         toClick = Point(toClick.x + 115, toClick.y + 80)
     else:
@@ -467,13 +385,13 @@ def encounterMode():
 
     while True:
         if action == 0:  # strongest attack
-            useSkill(toClick, mainSkill)
+            useSkill(toClick, CONFIG["mainMiscrit"]["main"])
         elif (
             action < 0
         ):  # alternative attack to use for elements that are weak against you
-            useSkill(toClick, strongSkill)
+            useSkill(toClick, CONFIG["mainMiscrit"]["strong"])
         else:  # negate element skill
-            useSkill(toClick, negateSkill)
+            useSkill(toClick, CONFIG["mainMiscrit"]["negate"])
             action = 0
 
         if not checkActive():
@@ -501,7 +419,10 @@ def catchMode():
         f"     {Fore.YELLOW}{miscrit}{Fore.LIGHTBLACK_EX}'s initial catch rate: {Fore.CYAN}{initialChance}%{Fore.LIGHTBLACK_EX}"
     )
 
-    if LXVI_locateCenterOnScreen(UIImage(WEAKNESS), 0.95) is not None:
+    if (
+        LXVI_locateCenterOnScreen(UIImage(CONFIG["mainMiscrit"]["weakness"]), 0.95)
+        is not None
+    ):
         action = 0
 
     while not caught:
@@ -527,18 +448,18 @@ def catchMode():
             toClick = Point(toClick.x + 115, toClick.y + 80)
             chance = getCatchChance()
 
-            if int(chance) >= catchable:
+            if int(chance) >= CONFIG["wild"]["catchablePercentage"]:
                 if action != 4:
                     action = 3
 
             if action == 0:
-                useSkill(toClick, negateSkill)
+                useSkill(toClick, CONFIG["mainMiscrit"]["negate"])
                 action = 1
             elif action == 1:
-                useSkill(toClick, bigpokeSkill)
+                useSkill(toClick, CONFIG["mainMiscrit"]["bigpoke"])
                 action = 2
             elif action == 2:
-                useSkill(toClick, pokeSkill)
+                useSkill(toClick, CONFIG["mainMiscrit"]["poke"])
             elif action == 3:
                 click(UIImage("catchbtn.png"), 0.75, 6, 0)
                 if (
@@ -553,7 +474,7 @@ def catchMode():
                 print(
                     f"{Fore.LIGHTBLACK_EX}     Failed to catch {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} with {Fore.RED}{chance}%{Fore.LIGHTBLACK_EX}."
                 )
-                useSkill(toClick, mainSkill)
+                useSkill(toClick, CONFIG["mainMiscrit"]["main"])
 
     print(
         f"\033[A     {Fore.YELLOW}{miscrit}{Fore.WHITE} has been caught. {Fore.LIGHTBLACK_EX}Initial chance: {Fore.GREEN}{initialChance}%{Fore.LIGHTBLACK_EX}"
@@ -590,12 +511,12 @@ def train():
         if not checkActive():
             print("Minimized while training Miscrits, concluding process...")
             conclude()
-        if not autoTrain:
+        if not CONFIG["team"]["autoTrain"]:
             print("You have trainable Miscrits, concluding process...")
             conclude()
         click(UIImage("trainable.png"), 0.6, 0.2, 0.1)
         click(UIImage("train2.png"), 0.8, 0.5, 0.1)
-        if bonusTrain:
+        if CONFIG["team"]["bonusTrain"]:
             click(UIImage("bonustrain.png"), 0.9, 0.4, 0.1)
         click(UIImage("continuebtn.png"), 0.9, 1, 0.1)
 
@@ -603,12 +524,12 @@ def train():
         click(UIImage("continuebtn.png"), 0.75, 2, 0.1)
         click(UIImage("skipbtn.png"), 0.75, 1, 0.1)
 
-    if autoSwitch:
-        levelBCD = [level >= switchLevel for level in getTeamLevel()]
+    if CONFIG["team"]["autoSwitch"]:
+        levelBCD = [level >= CONFIG["team"]["switchLevel"] for level in getTeamLevel()]
 
     click(UIImage("x.png"), 0.8, 0.2, 0)
 
-    if autoSwitch and (True in levelBCD):
+    if CONFIG["team"]["autoSwitch"] and (True in levelBCD):
         switchTeam(levelBCD)
 
 
@@ -655,7 +576,7 @@ def switchTeam(levelBCD):
                 level = int(
                     LXVI_readImage([int(pointM.x), int(pointM.y), 16, 14], True)
                 )
-                if level < switchLevel:
+                if level < CONFIG["team"]["switchLevel"]:
                     LXVI_moveTo(pointM)
                     LXVI_dragTo(pointD, 0.2)
                     outCount -= 1
@@ -697,6 +618,7 @@ def conclude():
         f"\nEnded process after {Fore.CYAN}{b}{Fore.LIGHTBLACK_EX} Miscrits encountered."
     )
     print(f"Runtime: {Fore.CYAN}{time.perf_counter()-start}{Fore.LIGHTBLACK_EX}")
+    playSound(rizz)
     playSound(off)
     print(Fore.RESET)
     time.sleep(1)
@@ -707,12 +629,5 @@ print(Fore.LIGHTBLACK_EX)
 playSound(on)
 time.sleep(1)
 while checkActive():
-    if fullAuto:
-        print("UNDER DEVELOPMENT")
-        reLogin()
-        dailySpin()
-        walkOrSumtin()
-        searchMode()
-    else:
-        searchMode()
+    searchMode()
 print("Game not found on screen. Nothing happened.")

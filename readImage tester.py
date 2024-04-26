@@ -23,9 +23,9 @@ def LXVI_readImage(region: tuple[int, int, int, int] | None = None):
     # img = img.filter(PIL.ImageFilter.DETAIL)
 
     read = reader.recognize(
-        numpy.array(img)
-        #,blocklist="-~() "
-        ,allowlist='0123456789'
+        numpy.array(img),
+        # ,blocklist="-~() "
+        allowlist="0123456789",
     )
 
     (_, text, _) = read[0]
@@ -78,10 +78,18 @@ def getMiscritName():
 
 
 def getMiscritRarity():
-    rarDict ={"com": "Common", "rar": "Rare", "epi": "Epic", "exo": "Exotic", "lag": "Legendary"}
+    rarDict = {
+        "com": "Common",
+        "rar": "Rare",
+        "epi": "Epic",
+        "exo": "Exotic",
+        "lag": "Legendary",
+    }
     miscrits_lore = LXVI_locateCenterOnScreen("miscrits_lore.png", 0.8)
     if isinstance(miscrits_lore, Point):
-        rarity = LXVI_readImage([int(miscrits_lore.x) + -86, int(miscrits_lore.y) + 116, 60, 25])
+        rarity = LXVI_readImage(
+            [int(miscrits_lore.x) + -86, int(miscrits_lore.y) + 116, 60, 25]
+        )
         rarity = rarity[:3].lower()
     print(rarDict[rarity])
 
@@ -89,23 +97,24 @@ def getMiscritRarity():
 def getTeamLevelA():
     myMiscrits = LXVI_locateCenterOnScreen("myMiscrits.png", 0.9)
     if isinstance(myMiscrits, Point):
-        levelA = Point(x = myMiscrits.x - 8, y = myMiscrits.y + 73)
+        levelA = Point(x=myMiscrits.x - 8, y=myMiscrits.y + 73)
         levelB = int(LXVI_readImage([int(levelA.x), int(levelA.y) + 50, 15, 15]))
         levelC = int(LXVI_readImage([int(levelA.x), int(levelA.y) + 100, 15, 15]))
         levelD = int(LXVI_readImage([int(levelA.x), int(levelA.y) + 150, 15, 15]))
     print(f"{levelB} {levelC} {levelD}")
     return [int(levelB), int(levelC), int(levelD)]
 
+
 # -665, 315 | 170, 82
 # -695, 283
 def getTeamLevelB():
     exit = LXVI_locateCenterOnScreen("x.png", 0.9)
-    pointD = Point(x = int(exit.x) - 90, y = int(exit.y) + 200)
+    pointD = Point(x=int(exit.x) - 90, y=int(exit.y) + 200)
     offset = Point(-665, 315)
     point0 = Point(exit.x + offset.x, exit.y + offset.y)
     pointZ = Point(point0.x - 30, point0.y - 30)
     offset = Point(172, 84)
-    
+
     page = 0
     number = 1
     lastMiscrit = False
@@ -114,7 +123,12 @@ def getTeamLevelB():
             for column in range(4):
                 pointN = Point(pointZ.x + column * offset.x, pointZ.y + row * offset.y)
                 pointM = Point(point0.x + column * offset.x, point0.y + row * offset.y)
-                if LXVI_locateCenterOnScreen("teamslotEmpty.png", 0.8, [pointN.x, pointN.y, 150, 65]) is None:
+                if (
+                    LXVI_locateCenterOnScreen(
+                        "teamslotEmpty.png", 0.8, [pointN.x, pointN.y, 150, 65]
+                    )
+                    is None
+                ):
                     level = int(LXVI_readImage([int(pointM.x), int(pointM.y), 16, 14]))
                     print(f"{number:02d}: {level:02d}", end="  |  ")
                     number += 1
@@ -128,7 +142,6 @@ def getTeamLevelB():
         page += 1
         click("teamR.png", 0.8, 0, 0)
     return
-    
 
 
 def getCatchChance():
@@ -138,6 +151,7 @@ def getCatchChance():
             region=(int(catchButton.x) - 17, int(catchButton.y) + 13, 18, 22)
         )
     print(chance)
+
 
 # switchLevel = 30
 # getTeamLevelB()

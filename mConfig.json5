@@ -1,0 +1,55 @@
+{
+    "audio": true,
+    "search": {
+        "autoSearch": true,
+        "autoWalk": true,
+        "searchInterval": 4,
+        "searchCode": "a1_waddles",
+        "searchSeq": { // don't change no no no
+            "a1_waddles": ["a1_typha1", "a1_sapling", "a1_typha2", "a1_jagbush"],
+            "a2_dflue": ["a2_stump", "a2_cattail1", "a2_flower", "a2_cattail2"],
+            "a2_bkiloray": ["a2_blight", "a2_palm", "a2_tree", "a2_rock"],
+            "a3_tulipinny": ["a3_magic", "a3_minis1", "a3_sun1", "a3_pink1"],
+            "a3_dflowerpiller": ["a3_minis2", "a3_palm", "a3_pink2", "a3_sun2"],
+            "a3_bfiender": ["a3_blight", "a3_sun3", "a3_magic", "a3_fuchsia"],
+            "a4_blazebit": ["a4_elder", "a4_bush1", "a4_sun", "a4_pool1"],
+            "a4_dshelbee": ["a4_pool2", "a4_shrub1", "a4_bush2", "a4_typha1"],
+            "a4_dprawnja": ["a4_typha2", "a4_dead", "a4_shrub2", "a4_typha3"],
+            "a4_defilio": ["a4_blight", "a4_typha4", "a4_minis", "a4_yellow"],
+            "m1_rafral": ["m1_stool", "m1_cage1", "m1_mirrors", "m1_cage2"],
+            "m2_flutterpat": ["m2_relics", "m2_brush", "m2_potions", "m2_woodcage"],
+            "m2_nanaslug": ["m2_statueflue", "m2_chairL", "m2_table", "m2_chairR"]
+        }
+    },
+    "team": {
+        "autoTrain": true,
+        "bonusTrain": false,
+        "autoSwitch": true,
+        "switchLevel": 30
+    },
+    "wild": {
+        "fightHunt": true,
+        "autoCatch": true,
+        "catchablePercentage": 90,
+        "targetAll": true,
+        "targets": [],
+        "blockTarget": [],
+        "catchStandardDict": {
+            "Common": 27, // ...# 27-45%
+            "Rare": 17, // .....# 17-35%
+            "Epic": 10, // .....# 10-25%
+            "Exotic": 10,  // ...# ?-10%
+            "Legendary": 10,  // .# ?-?
+            "Unidentified": 27,  //
+        },
+    },
+    "mainMiscrit": {
+        "weakness": "nature.png",
+        "strength": "fire.png",
+        "main": 1,
+        "strong": 1,
+        "negate": 5,
+        "bigpoke": 3,
+        "poke": 10,
+    }
+}
