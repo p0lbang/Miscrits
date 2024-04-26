@@ -2,3 +2,4 @@ env/*
 .ruff_cache
 .vscode/*
 mFiles/*
+try walk.py

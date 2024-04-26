@@ -2,33 +2,31 @@
     "audio": true, // false -> mute the code audios
     "walk": {
         "autoWalk": true, // ................ | walks until it finds your searching location
-        "walkInterval": 1,  // .............. | time before clicking next walking point
-        "walkSeq": {
-            "af": [],
-            "m0": ["m0_A", "m0_B", "m0_C", "m0_D", "m0_E", "m0_F", "m0_G", "m0_H", "m0_I"],
-            "m1": ["m1_A", "m1_B", "m1_C", "m1_D", "m1_E", "m1_F", "m1_G"],
-            "m2": ["m2_A", "m2_B", "m2_C", "m2_D", "m2_E", "m2_F", "m2_G"]
+        "walkInterval": 3,  // .............. | time before clicking next walking point (min: 3)
+        "walkSeq": {  // .....................| NEVER MOVE YOUR MOUSE WHILE autoWalking
+            "af": ["af1", "af2", "af3", "af4", "af5", "af6", "af7", "af8", "af9", "af10", "af11", "af12", "af13"],
+            "m0": ["m01", "m02", "m03", "m04"],
+            "m1": ["m11", "m12"],
+            "m2": ["m21", "m22", "m23"],
         }
     },
     "search": {
         "autoSearch": true, // .............. | looks for miscrits in searchable spots for you
         "searchInterval": 4, // ............. | time before clicking the next location
-        "searchCode": "m2_flutterpat", // | search codes are below, ex: "a1_waddles" 
-        "searchSeq": { // ................... | don't change the non-custom sequences pls don't no no 
-            "af1_waddles": ["a1_typha1", "a1_sapling", "a1_typha2", "a1_jagbush"],
-            "af2_dflue": ["a2_stump", "a2_cattail1", "a2_flower", "a2_cattail2"],
-            "af2_bkiloray": ["a2_blight", "a2_palm", "a2_tree", "a2_rock"],
-            "af3_tulipinny": ["a3_magic", "a3_minis1", "a3_sun1", "a3_pink1"],
-            "af3_dflowerpiller": ["a3_minis2", "a3_palm", "a3_pink2", "a3_sun2"],
-            "af3_bfiender": ["a3_blight", "a3_sun3", "a3_magic", "a3_fuchsia"],
-            "af4_blazebit": ["a4_elder", "a4_bush1", "a4_sun", "a4_pool1"],
-            "af4_dshelbee": ["a4_pool2", "a4_shrub1", "a4_bush2", "a4_typha1"],
-            "af4_dprawnja": ["a4_typha2", "a4_dead", "a4_shrub2", "a4_typha3"],
-            "af4_defilio": ["a4_blight", "a4_typha4", "a4_minis", "a4_yellow"],
-            "m0_01": ["m0_sapling", "m0_rock1", "m0_rock2", "m0_stone1", "m0_grass", "m0_rock3"],
-            "m0_02": ["m0_axe", "m0_crate", "m0_chops", "m0_minis"],
-            "m1_rafral": ["m1_stool", "m1_cage1", "m1_mirrors", "m1_cage2"],
-            "m1_thundercracker": ["m1_globe", "m1_sofaL", "m1_candelabraR", "m1_sofaR"],
+        "searchCode": "af_dflue_bkiloray", // ...... | search codes are below, ex: "a1_waddles" 
+        "searchSeq": { // ................... | don't change the existing sequences pls don't no no 
+            "af_waddles": ["a1_typha1", "a1_sapling", "a1_typha2", "a1_jagbush"],
+            "af_dflue_bkiloray": ["a2_blight", "a2_palm", "a2_tree", "a2_rock"],
+            "af_tulipinny_dflowerpiller_bfiender": ["a3_blight", "a3_sun", "a3_magic", "a3_fuchsia"],
+            "af_blazebit": ["a4_elder", "a4_bush1", "a4_sun", "a4_pool1"],
+            "af_dshelbee": ["a4_pool2", "a4_shrub1", "a4_bush2", "a4_typha1"],
+            "af_dprawnja": ["a4_typha2", "a4_dead", "a4_shrub2", "a4_typha3"],
+            "af_defilio": ["a4_blight", "a4_typha4", "a4_minis", "a4_yellow"],
+            "m0_A": ["m0_sapling", "m0_rock1", "m0_rock2", "m0_stone1", "m0_grass", "m0_rock3"],
+            "m0_B": ["m0_axe", "m0_crate", "m0_chops", "m0_minis"],
+            "m1_A": ["m1_globeB", "m1_potions", "m1_table", "m1_caged"],
+            "m1_rafiery_raldio": ["m1_stool", "m1_cage1", "m1_mirrors", "m1_cage2"],
+            "m1_thundercracker": ["m1_globeY", "m1_sofaL", "m1_candelabraR", "m1_sofaR"],
             "m2_flutterpat": ["m2_relics", "m2_brush", "m2_potions", "m2_woodcage"],
             "m2_nanaslug": ["m2_statueflue", "m2_chairL", "m2_table", "m2_chairR"]
         }
@@ -45,10 +43,12 @@
         "catchablePercentage": 90,  // | makes the attempt to catch the miscrit when the rate is above this value
         "targetAll": true,  // ....... | true -> every encountered miscrit is tagged for capture
         "targets": [],  // ........... | miscrits added here are prioritized for capture regardless of their initial catch chance
-        "blocked": ["Twiggum", "Cubsprout","Elefauna", "Quirk", "Nessy"],  // ...... | miscrits added here will be tagged to not catch
+        "blocked": ["Frostmite", "Flameling", "Sparkupine", "Hotfoot", "Rafiery", "Nessy", "Snatcher", "Twiggum", "Nanaslug", "Steamguin", "Croaky",
+                    "Slithero", "DarkFlowerpiller", "Humbug", "Shellbee", "Squibee"],  
+        // ........................... | miscrits added here will be tagged to not catch
         "catchStandardDict": {  // ... | set values as capture thresholds for each rarity
             "Common": 27, // ....# 27-45%
-            "Rare": 18, // ......# 17-35%
+            "Rare": 17, // ......# 17-35%
             "Epic": 10, // ......# 10-25%
             "Exotic": 10, // ....# ?-10%
             "Legendary": 10, // .# ?-?

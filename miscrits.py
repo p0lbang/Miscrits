@@ -52,6 +52,7 @@ for w, walk in enumerate(walkSeq):
     walkSeq[w] = str(pathlib.PurePath("walkImages", f"{walk}.png"))
 
 
+
 with mss.mss() as sct:
     # Get information of monitor 2
     monitor_number = 1
@@ -162,7 +163,6 @@ def click(
     confidence: float = 0.9,
     sleep: float = 0.2,
     duration: float = 0.1,
-    region: tuple[int, int, int, int] | None = None,
 ) -> bool:
     toClick = LXVI_locateCenterOnScreen(imagename, confidence=confidence)
 
@@ -282,42 +282,38 @@ def useSkill(toClick: Point, skillNo: int = 1):
 
 def walkMode():
     while True:
-        for search in searchSeq:
-            if (
-                LXVI_locateCenterOnScreen(search, 0.95)
-            ) is not None:
-                return
+        walkStart = str(pathlib.PurePath("walkImages", f"{searchCode[:2]}.png"))
+        walkGoal = str(pathlib.PurePath("walkImages", f"{searchCode}.png"))
+        if LXVI_locateCenterOnScreen(walkGoal, 0.8) is not None:
+            return
+        
         if CONFIG["walk"]["autoWalk"]:
+            if LXVI_locateCenterOnScreen(walkStart, 0.975) is None:
+                return
+
             WalkSuccess = False
             for walk in walkSeq:
-                if (
-                    toClick := LXVI_locateCenterOnScreen(walk, 0.8)
-                ) is None:
+                
+                if (toClick := LXVI_locateCenterOnScreen(walk, 0.9)) is None:
                     continue
                 
                 WalkSuccess = True
                 LXVI_moveTo(toClick, 0.1)
-                pyautogui.leftClick()
+                pyautogui.mouseDown()
+                time.sleep(2)
+                pyautogui.mouseUp()
                 time.sleep(CONFIG["walk"]["walkInterval"])
 
-                SearchSuccess = False
-                for search in searchSeq:
-                    if (
-                        LXVI_locateCenterOnScreen(search, 0.95)
-                    ) is None:
-                        continue
-
-                    SearchSuccess = True
-
-                if SearchSuccess:
-                    time.sleep(0.5)
+                if LXVI_locateCenterOnScreen(walkGoal, 0.9) is not None:
                     return
-            
+
             if not WalkSuccess:
                 print("Path not found, concluding process...")
                 conclude()
+                return
         else:
             return
+        return
 
 
 def searchMode():
@@ -623,13 +619,10 @@ def switchTeam(levelBCD):
     click(UIImage("savebtn.png"), 0.8, 0, 0)
 
 
-def reLogin():
-    print("UNDER DEVELOPMENT")
-    # the code gets here if the time is before 8:00 AM or account 
-    # it will wait until logged out by the server and log back in
+def login():
     wait = time.perf_counter()
-    if toClick := LXVI_locateCenterOnScreen(UIImage("loginbtn.png"), 0.8) is not None:
-        print("Account was logged out, logging back in...")
+    if (toClick := LXVI_locateCenterOnScreen(UIImage("loginbtn.png"), 0.8)) is not None:
+        print("\nAccount was logged out, logging back in...")
         LXVI_moveTo(toClick)
         pyautogui.leftClick()
     while LXVI_locateCenterOnScreen(UIImage("miscripedia.png"), 0.75) is not None:
@@ -637,20 +630,22 @@ def reLogin():
             print("Having trouble signing back in. Concluding process...")
             conclude()
         pass
-    print(f"\033[AAccount logged in. Resuming...")
+    print(f"\033[AAccount logged back in. Resuming...       ")
+    time.sleep(5)
     dailySpin()
 
 
-
 def dailySpin():
-    print("UNDER DEVELOPMENT")
-    # the code gets here after logging back in for the first time after daily reset
-    # it will press spin and accept the reward
+    if LXVI_locateCenterOnScreen(UIImage("spinbtn.png"), 0.8):
+        click(UIImage("spinbtn.png"), 0.8)
+        while LXVI_locateCenterOnScreen(UIImage("spindonebtn.png"), 0.8) is not None:
+            pass
+        click(UIImage("spindonebtn.png"), 0.8, 1)
 
 
 def conclude():
     if LXVI_locateCenterOnScreen(UIImage("loginbtn.png"), 0.8):
-        reLogin()
+        login()
         return
     
     print(
@@ -665,6 +660,7 @@ def conclude():
 
 print(Fore.LIGHTBLACK_EX)
 playSound(on)
+print("Initiating code... process started.")
 time.sleep(1)
 while checkActive():
     if not checkActive():
@@ -682,4 +678,3 @@ while checkActive():
 print("Game not found on screen. Nothing happened.")
 playSound(rizz)
 time.sleep(1)
-
