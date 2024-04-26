@@ -43,7 +43,7 @@ if sys.platform.startswith("linux"):
 
 searchSeq = CONFIG["search"]["searchSeq"][CONFIG["search"]["searchCode"]]
 for s, search in enumerate(searchSeq):
-    searchSeq[s] = str(pathlib.PurePath("imgSources", f"{search}.png"))
+    searchSeq[s] = str(pathlib.PurePath("searchImages", f"{search}.png"))
 
 with mss.mss() as sct:
     # Get information of monitor 2
@@ -618,7 +618,6 @@ def conclude():
         f"\nEnded process after {Fore.CYAN}{b}{Fore.LIGHTBLACK_EX} Miscrits encountered."
     )
     print(f"Runtime: {Fore.CYAN}{time.perf_counter()-start}{Fore.LIGHTBLACK_EX}")
-    playSound(rizz)
     playSound(off)
     print(Fore.RESET)
     time.sleep(1)
@@ -631,3 +630,6 @@ time.sleep(1)
 while checkActive():
     searchMode()
 print("Game not found on screen. Nothing happened.")
+playSound(rizz)
+time.sleep(1)
+

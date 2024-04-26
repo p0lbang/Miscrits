@@ -1,11 +1,11 @@
 {
-    "audio": true,
+    "audio": true, // false -> mute the code audios
     "search": {
-        "autoSearch": true,
-        "autoWalk": true,
-        "searchInterval": 4,
-        "searchCode": "a1_waddles",
-        "searchSeq": { // don't change no no no
+        "autoSearch": true, // ..... | looks for miscrits in searchable spots for you
+        "autoWalk": true, // ....... | takes you back to your searching location
+        "searchInterval": 4, // .... | time before clicking the next location
+        "searchCode": "m1_thundercracker", //
+        "searchSeq": { // don't change the non-custom sequences pls don't no no 
             "a1_waddles": ["a1_typha1", "a1_sapling", "a1_typha2", "a1_jagbush"],
             "a2_dflue": ["a2_stump", "a2_cattail1", "a2_flower", "a2_cattail2"],
             "a2_bkiloray": ["a2_blight", "a2_palm", "a2_tree", "a2_rock"],
@@ -17,6 +17,7 @@
             "a4_dprawnja": ["a4_typha2", "a4_dead", "a4_shrub2", "a4_typha3"],
             "a4_defilio": ["a4_blight", "a4_typha4", "a4_minis", "a4_yellow"],
             "m1_rafral": ["m1_stool", "m1_cage1", "m1_mirrors", "m1_cage2"],
+            "m1_thundercracker": ["m1_globe", "m1_sofaL", "m1_candelabraR", "m1_sofaR"],
             "m2_flutterpat": ["m2_relics", "m2_brush", "m2_potions", "m2_woodcage"],
             "m2_nanaslug": ["m2_statueflue", "m2_chairL", "m2_table", "m2_chairR"]
         }

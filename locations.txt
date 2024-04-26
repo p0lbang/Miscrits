@@ -14,7 +14,7 @@ a4_dprawnja         DarkPrawnja                     ["a4_typha2", "a4_dead", "a4
 a4_defilio          Defilio                         ["a4_blight", "a4_typha4", "a4_minis", "a4_yellow"]
 
                     Treemur                         ["", "", "", ""]
-                    Thundercracker                  ["", "", "", ""]
+m1_thundercracker   Thundercracker                  ["m1_globe", "m1_sofaL", "m1_candelabraR", "m1_sofaR"]
 m1_rafral           Rafiery, Raldio                 ["m1_stool", "m1_cage1", "m1_mirrors", "m1_cage2"]
 m2_flutterpat       Flutterpat                      ["m2_relics", "m2_brush", "m2_potions", "m2_woodcage"]
 m2_nanaslug         Nanaslug                        ["m2_statueflue", "m2_chairL", "m2_table", "m2_chairR"]
