@@ -426,7 +426,10 @@ def encounterMode():
         ):  # alternative attack to use for elements that are weak against you
             useSkill(toClick, CONFIG["mainMiscrit"]["strong"])
         else:  # negate element skill
-            useSkill(toClick, CONFIG["mainMiscrit"]["negate"])
+            if not CONFIG["mainMiscrit"]["ignoreWeakness"]:
+                useSkill(toClick, CONFIG["mainMiscrit"]["negate"])
+            else:
+                useSkill(toClick, CONFIG["mainMiscrit"]["main"])    
             action = 0
 
         if not checkActive():
@@ -468,7 +471,7 @@ def catchMode():
         ):
             if LXVI_locateCenterOnScreen(UIImage("closebtn.png"), 0.85) is not None:
                 print(
-                f"\033[A{Fore.Red}{initialChance}%{Fore.LIGHTBLACK_EX} | {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} died at {Fore.RED}{chance}%{Fore.LIGHTBLACK_EX} catch rate."
+                f"\033[A{Fore.RED}{initialChance}%{Fore.LIGHTBLACK_EX} | {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} died at {Fore.RED}{chance}%{Fore.LIGHTBLACK_EX} catch rate."
                 )
                 return
 

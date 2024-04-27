@@ -13,7 +13,7 @@
     "search": {
         "autoSearch": true, // .............. | looks for miscrits in searchable spots for you
         "searchInterval": 4, // ............. | time before clicking the next location
-        "searchCode": "af_dflue_bkiloray", // ...... | search codes are below, ex: "a1_waddles" 
+        "searchCode": "af_waddles", // ...... | search codes are below, ex: "a1_waddles" 
         "searchSeq": { // ................... | don't change the existing sequences pls don't no no 
             "af_waddles": ["a1_typha1", "a1_sapling", "a1_typha2", "a1_jagbush"],
             "af_dflue_bkiloray": ["a2_blight", "a2_palm", "a2_tree", "a2_rock"],
@@ -43,8 +43,13 @@
         "catchablePercentage": 90,  // | makes the attempt to catch the miscrit when the rate is above this value
         "targetAll": true,  // ....... | true -> every encountered miscrit is tagged for capture
         "targets": ["DarkFlue", "BlightedKiloray"],  // ........... | miscrits added here are prioritized for capture regardless of their initial catch chance
-        "blocked": ["Frostmite", "Flameling", "Sparkupine", "Hotfoot", "Rafiery", "Nessy", "Snatcher", "Twiggum", "Nanaslug", "Steamguin", "Croaky",
-                    "Slithero", "DarkFlowerpiller", "Humbug", "Shellbee", "Squibee", "Quirk"],  
+        "blocked": [
+            "Cubsprout", "Sparkupine", // forest 1
+            "Quirk", "Flameling", // forest 2
+            "Snatcher", "Hotfoot", "DarkFlowerpiller", // forest 3
+            "Twiggum", "Shellbee", "Squibee", "Steamguin", // forest 4
+            "Frostmite", "Slithero", "Croaky", "Rafiery", // mansion 1
+            "Humbug", "Nanaslug"], // mansion 2
         // ........................... | miscrits added here will be tagged to not catch
         "catchStandardDict": {  // ... | set values as capture thresholds for each rarity
             "Common": 27, // ....# 27-45%
@@ -56,12 +61,13 @@
         },
     },
     "mainMiscrit": {  // | info of your first miscrit in the team, the hard carry
-        "weakness": "nature.png",
         "strength": "fire.png",
+        "weakness": "nature.png",
+        "ignoreWeakness": true,
         "main": 1, // ... | skill to be used mainly for spamming
-        "strong": 1, // . | skill to be used for elements weak against your main miscrit
+        "strong": 2, // . | skill to be used for elements weak against your main miscrit
         "negate": 5, // . | skill that negates weaknesses [set to same as main if none]
-        "bigpoke": 6,  // | skill that chips away at wild miscrit's HP without killing them
-        "poke": 10,  // . | skill that reduces wild miscrit's HP until they're catchable
+        "bigpoke": 8,  // | skill that chips away at wild miscrit's HP without killing them
+        "poke": 12,  // . | skill that reduces wild miscrit's HP until they're catchable
     }
 }
