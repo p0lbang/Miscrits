@@ -505,7 +505,7 @@ def catchMode():
                 print(f"     {Fore.LIGHTBLACK_EX}Failed to catch {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}.")
                 useSkill(toClick, CONFIG["mainMiscrit"]["main"])
                 
-    print(f"\033A{Fore.GREEN}{initialChance}%{Fore.LIGHTBLACK_EX}")
+    print(f"\033[A{Fore.GREEN}{initialChance}%{Fore.LIGHTBLACK_EX}")
     print(f"     {Fore.YELLOW}{miscrit}{Fore.WHITE} has been caught. {Fore.LIGHTBLACK_EX}")
     click(UIImage("catchSkip.png"), 0.9, 2, 0)
     click(UIImage("closebtn.png"), 0.85, 2, 0)
