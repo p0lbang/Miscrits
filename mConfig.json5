@@ -4,16 +4,16 @@
         "autoWalk": true, // ................ | walks until it finds your searching location
         "walkInterval": 3,  // .............. | time before clicking next walking point (min: 3)
         "walkSeq": {  // .....................| NEVER MOVE YOUR MOUSE WHILE autoWalking
-            "af": ["af1", "af2", "af3", "af4", "af5", "af6", "af7", "af8", "af9", "af10", "af11", "af12", "af13"],
-            "m0": ["m01", "m02", "m03", "m04"],
-            "m1": ["m11", "m12"],
-            "m2": ["m21", "m22", "m23"],
+            "af": [0, -45, 45, 0, 0, -30, -30, -150, -150, -150, 135, 135, -135, 180, 150],
+            "m0": [180, 155, 155, 180, -155],
+            "m1": [-90, 155, 155],
+            "m2": [120, 0, 0, -75, -75],
         }
     },
     "search": {
         "autoSearch": true, // .............. | looks for miscrits in searchable spots for you
         "searchInterval": 5, // ............. | time before clicking the next location (min: 5)
-        "searchCode": "af_dsteamguin", // ...... | search codes are below, ex: "a1_waddles" 
+        "searchCode": "af_blazebit", // ...... | search codes are below, ex: "a1_waddles" 
         "searchSeq": { // ................... | don't change the existing sequences pls don't no no 
             "af_waddles": ["a1_typha1", "a1_sapling", "a1_typha2", "a1_jagbush"],
             "af_dflue_bkiloray": ["a2_blight", "a2_palm", "a2_tree", "a2_rock1"],

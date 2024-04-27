@@ -12,6 +12,7 @@ from pyscreeze import Point
 from os import environ
 import pathlib
 import pyjson5
+import math
 
 environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 import pygame
@@ -50,7 +51,7 @@ for s, search in enumerate(searchSeq):
 walkRegion = searchCode[:2]
 walkSeq = CONFIG["walk"]["walkSeq"][walkRegion]
 for w, walk in enumerate(walkSeq):
-    walkSeq[w] = str(pathlib.PurePath("walkImages", f"{walk}.png"))
+    walkSeq[w] = Point(int(200*math.cos(math.radians(walkSeq[w]))),int(200*math.sin(math.radians(walkSeq[w]))))
 
 
 with mss.mss() as sct:
@@ -283,43 +284,32 @@ def useSkill(toClick: Point, skillNo: int = 1):
 
 
 def walkMode():
-    print("In AutoWalk mode.")
-    while True:
-        walkStart = str(pathlib.PurePath("walkImages", f"{searchCode[:2]}.png"))
+    (chatX, chatY) = LXVI_locateCenterOnScreen(UIImage("chatbtn.png"), 0.9)
+    (settX, settY) = LXVI_locateCenterOnScreen(UIImage("settingsbtn.png"), 0.9)
+    center = Point(int((chatX+settX)/2), int((chatY+settY)/2))
+    LXVI_moveTo(center)
+    time.sleep(3)
+    while checkActive:
         walkGoal = str(pathlib.PurePath("walkImages", f"{searchCode}.png"))
-        if LXVI_locateCenterOnScreen(walkGoal, 0.8) is not None:
+        if LXVI_locateCenterOnScreen(walkGoal, 0.95) is not None:
             return
 
         if CONFIG["walk"]["autoWalk"]:
-            if LXVI_locateCenterOnScreen(walkStart, 0.975) is None:
-                return
-
-            WalkSuccess = False
             for walk in walkSeq:
-                if (toClick := LXVI_locateCenterOnScreen(walk, 0.9)) is None:
-                    continue
-
-                WalkSuccess = True
-                LXVI_moveTo(toClick, 0.1)
+                toWalk = Point(center.x + walk.x, center.y + walk.y)
+                LXVI_moveTo(toWalk, 0.2)
                 pyautogui.mouseDown()
-                time.sleep(2)
-                pyautogui.mouseUp()
                 time.sleep(CONFIG["walk"]["walkInterval"])
 
-                if LXVI_locateCenterOnScreen(walkGoal, 0.9) is not None:
+                if LXVI_locateCenterOnScreen(walkGoal, 0.85) is not None:
+                    pyautogui.mouseUp()
                     return
-
-            if not WalkSuccess:
-                print("Path not found, concluding process...")
-                conclude()
-                return
-        else:
+            pyautogui.mouseUp()
             return
-        return
+    
 
 
 def searchMode():
-    print("In AutoSearch mode.")
     while True:
         cleanUp()
 
@@ -624,7 +614,7 @@ def switchTeam(levelBCD):
 def login():
     wait = time.perf_counter()
     if (toClick := LXVI_locateCenterOnScreen(UIImage("loginbtn.png"), 0.8)) is not None:
-        print("\nAccount was logged out, logging back in...")
+        print("\nAccount logged out, logging back in...")
         LXVI_moveTo(toClick)
         pyautogui.leftClick()
     while LXVI_locateCenterOnScreen(UIImage("miscripedia.png"), 0.75) is not None:
@@ -632,7 +622,7 @@ def login():
             print("Having trouble signing back in. Concluding process...")
             conclude()
         pass
-    print(f"\033[AAccount logged back in. Resuming...       ")
+    print(f"\033[AAccount logged back in. Resuming...   ")
     time.sleep(5)
     dailySpin()
 
@@ -675,7 +665,8 @@ while checkActive():
         click(UIImage("closebtn.png"), 0.8, 1, 0)
         click(UIImage("savebtn.png"), 0.8, 1, 0)
         click(UIImage("x.png"), 0.8, 1, 0)
-    walkMode()
+    if CONFIG["walk"]["autoWalk"]:
+        walkMode()
     searchMode()
 print("Game not found on screen. Nothing happened.")
 playSound(rizz)
