@@ -42,9 +42,9 @@
         "autoCatch": true,  // ....... | catches miscrits for you
         "catchablePercentage": 90,  // | makes the attempt to catch the miscrit when the rate is above this value
         "targetAll": true,  // ....... | true -> every encountered miscrit is tagged for capture
-        "targets": [],  // ........... | miscrits added here are prioritized for capture regardless of their initial catch chance
+        "targets": ["DarkFlue", "BlightedKiloray"],  // ........... | miscrits added here are prioritized for capture regardless of their initial catch chance
         "blocked": ["Frostmite", "Flameling", "Sparkupine", "Hotfoot", "Rafiery", "Nessy", "Snatcher", "Twiggum", "Nanaslug", "Steamguin", "Croaky",
-                    "Slithero", "DarkFlowerpiller", "Humbug", "Shellbee", "Squibee"],  
+                    "Slithero", "DarkFlowerpiller", "Humbug", "Shellbee", "Squibee", "Quirk"],  
         // ........................... | miscrits added here will be tagged to not catch
         "catchStandardDict": {  // ... | set values as capture thresholds for each rarity
             "Common": 27, // ....# 27-45%

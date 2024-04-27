@@ -346,7 +346,7 @@ def searchMode():
 
 
 def encounterMode():
-    global miscrit, b, onSkillPage, rarity
+    global miscrit, b, onSkillPage, rarity, initialChance
 
     b += 1
     miscrit = "[redacted]"
@@ -372,29 +372,35 @@ def encounterMode():
     # miscritsCheck info
     click(UIImage("miscripedia.png"), 0.8, 0.555, 0)
     getMiscritData()
-    print(f"{Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} wants to fight.")
+    print(f"    | {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} wants to fight.")
     click(UIImage("mpedia_exit.png"), 0.8, 0, 0)
     pyautogui.leftClick()
 
     if CONFIG["catch"]["autoCatch"] and miscrit not in CONFIG["catch"]["blocked"]:
         if CONFIG["catch"]["targetAll"] or miscrit in CONFIG["catch"]["targets"]:
             print(
-                f"\033[A{Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} found!{Fore.LIGHTBLACK_EX}"
+                f"\033[A    | {Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} found!{Fore.LIGHTBLACK_EX}"
             )
 
             catchStandard = CONFIG["catch"]["catchStandardDict"][rarity]
             while LXVI_locateCenterOnScreen(UIImage("run.png"), 0.99) is None:
                 pass
-            if (getCatchChance() <= catchStandard) or (
+            if ((initialChance := getCatchChance()) <= catchStandard) or (
                 miscrit in CONFIG["catch"]["targets"]
             ):
+                print(f"\033[A{Fore.WHITE}{initialChance}%{Fore.LIGHTBLACK_EX}")
                 playSound(pluck)
                 catchMode()
                 return
             else:
                 print(
-                    f"\033[A{Fore.WHITE}This {Fore.YELLOW}{miscrit}{Fore.WHITE} is trash. -p0lbang{Fore.LIGHTBLACK_EX}"
+                    f"\033[A{initialChance}% | {Fore.WHITE}This {Fore.YELLOW}{miscrit}{Fore.WHITE} is trash. -p0lbang{Fore.LIGHTBLACK_EX}"
                 )
+    else:
+        while LXVI_locateCenterOnScreen(UIImage("run.png"), 0.99) is None:
+            pass
+        initialChance = getCatchChance()
+        print(f"\033[A{initialChance}%")
 
     if not checkActive():
         print("Minimized while in encounter mode, concluding process...")
@@ -409,7 +415,7 @@ def encounterMode():
         LXVI_moveTo(toClick)
         pyautogui.leftClick()
         print(
-            f"\033[ASuccessfully escaped from {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}."
+            f"\033[A{initialChance}% | Successfully escaped from {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}."
         )
 
     while True:
@@ -429,7 +435,7 @@ def encounterMode():
 
         if LXVI_locateCenterOnScreen(UIImage("closebtn.png"), 0.85) is not None:
             print(
-                f"\033[A{Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} was defeated.",
+                f"\033[A{initialChance}% | {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} was defeated.",
                 end=" ",
             )
             print(
@@ -442,12 +448,7 @@ def catchMode():
     global miscrit, caught
     action = 1
 
-    initialChance = getCatchChance()
     chance = initialChance
-    print(
-        f"     {Fore.YELLOW}{miscrit}{Fore.LIGHTBLACK_EX}'s initial catch rate: {Fore.CYAN}{initialChance}%{Fore.LIGHTBLACK_EX}"
-    )
-
     if (
         LXVI_locateCenterOnScreen(UIImage(CONFIG["mainMiscrit"]["weakness"]), 0.95)
         is not None
@@ -467,7 +468,7 @@ def catchMode():
         ):
             if LXVI_locateCenterOnScreen(UIImage("closebtn.png"), 0.85) is not None:
                 print(
-                    f"\033[A     {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} died at {Fore.RED}{chance}%{Fore.LIGHTBLACK_EX} catch rate.    "
+                    f"     {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} died at {Fore.RED}{chance}%{Fore.LIGHTBLACK_EX} catch rate."
                 )
                 return
 
@@ -500,14 +501,12 @@ def catchMode():
                 else:
                     action = 4
             elif action == 4:
-                print(
-                    f"{Fore.LIGHTBLACK_EX}     Failed to catch {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} with {Fore.RED}{chance}%{Fore.LIGHTBLACK_EX}."
-                )
+                print(f"\033[A{Fore.Red}{initialChance}%{Fore.LIGHTBLACK_EX}")
+                print(f"     {Fore.LIGHTBLACK_EX}Failed to catch {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}.")
                 useSkill(toClick, CONFIG["mainMiscrit"]["main"])
-
-    print(
-        f"\033[A     {Fore.YELLOW}{miscrit}{Fore.WHITE} has been caught. {Fore.LIGHTBLACK_EX}Initial chance: {Fore.GREEN}{initialChance}%{Fore.LIGHTBLACK_EX}"
-    )
+                
+    print(f"\033A{Fore.GREEN}{initialChance}%{Fore.LIGHTBLACK_EX}")
+    print(f"     {Fore.YELLOW}{miscrit}{Fore.WHITE} has been caught. {Fore.LIGHTBLACK_EX}")
     click(UIImage("catchSkip.png"), 0.9, 2, 0)
     click(UIImage("closebtn.png"), 0.85, 2, 0)
 
@@ -636,7 +635,7 @@ def login():
 def dailySpin():
     if LXVI_locateCenterOnScreen(UIImage("spinbtn.png"), 0.8):
         click(UIImage("spinbtn.png"), 0.8)
-        while LXVI_locateCenterOnScreen(UIImage("spindonebtn.png"), 0.8) is not None:
+        while LXVI_locateCenterOnScreen(UIImage("spindonebtn.png"), 0.8) is None:
             pass
         click(UIImage("spindonebtn.png"), 0.8, 1)
 
