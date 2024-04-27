@@ -12,12 +12,12 @@
     },
     "search": {
         "autoSearch": true, // .............. | looks for miscrits in searchable spots for you
-        "searchInterval": 4, // ............. | time before clicking the next location
+        "searchInterval": 4, // ............. | time before clicking the next location (min: 5)
         "searchCode": "af_dlumera", // ...... | search codes are below, ex: "a1_waddles" 
         "searchSeq": { // ................... | don't change the existing sequences pls don't no no 
             "af_waddles": ["a1_typha1", "a1_sapling", "a1_typha2", "a1_jagbush"],
-            "af_dflue_bkiloray": ["a2_blight", "a2_palm", "a2_tree", "a2_rock"],
-            "af_dlumera": ["a2_axe", "a2_chops1", "a2_chops2", "a2_stump"],
+            "af_dflue_bkiloray": ["a2_blight", "a2_palm", "a2_tree", "a2_rock1"],
+            "af_dlumera": ["a2_chops2", "a2_axe", "a2_chops1", "a2_rock2"],
             "af_tulipinny_dflowerpiller_bfiender": ["a3_blight", "a3_sun", "a3_magic", "a3_fuchsia"],
             "af_blazebit": ["a4_elder", "a4_bush1", "a4_sun", "a4_pool1"],
             "af_dshelbee": ["a4_pool2", "a4_shrub1", "a4_bush2", "a4_typha1"],
