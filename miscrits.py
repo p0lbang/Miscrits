@@ -207,6 +207,7 @@ def getMiscritData():
         rarity = LXVI_readImage(
             [int(miscrits_lore.x) + -86, int(miscrits_lore.y) + 116, 60, 25]
         )
+        miscrit = miscrit[0].upper() + miscrit[1:]
         rarity = rarity[:3].lower()
         rarity = rarDict[rarity]
     else:
@@ -222,7 +223,7 @@ def getCatchChance():
                 [int(catchButton.x) - 17, int(catchButton.y) + 13, 18, 22], True
             )
         )
-        return max(chance,100)
+        return min(chance,100)
     else:
         return None
 
@@ -282,6 +283,7 @@ def useSkill(toClick: Point, skillNo: int = 1):
 
 
 def walkMode():
+    print("In AutoWalk mode.")
     while True:
         walkStart = str(pathlib.PurePath("walkImages", f"{searchCode[:2]}.png"))
         walkGoal = str(pathlib.PurePath("walkImages", f"{searchCode}.png"))
@@ -317,13 +319,14 @@ def walkMode():
 
 
 def searchMode():
+    print("In AutoSearch mode.")
     while True:
         cleanUp()
 
         if CONFIG["search"]["autoSearch"]:
             SearchSuccess = False
             for search in searchSeq:
-                if (toClick := LXVI_locateCenterOnScreen(search, 0.8)) is None:
+                if (toClick := LXVI_locateCenterOnScreen(search, 0.9)) is None:
                     continue
 
                 SearchSuccess = True
