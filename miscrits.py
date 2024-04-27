@@ -222,7 +222,7 @@ def getCatchChance():
                 [int(catchButton.x) - 17, int(catchButton.y) + 13, 18, 22], True
             )
         )
-        return chance
+        return max(chance,100)
     else:
         return None
 
