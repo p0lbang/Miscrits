@@ -425,12 +425,13 @@ def encounterMode():
             action < 0
         ):  # alternative attack to use for elements that are weak against you
             useSkill(toClick, CONFIG["mainMiscrit"]["strong"])
-        else:  # negate element skill
+        else:  # skill for weakness element
             if not CONFIG["mainMiscrit"]["ignoreWeakness"]:
-                useSkill(toClick, CONFIG["mainMiscrit"]["negate"])
+                useSkill(toClick, CONFIG["mainMiscrit"]["weak"])
             else:
                 useSkill(toClick, CONFIG["mainMiscrit"]["main"])    
-            action = 0
+            if CONFIG["mainMiscrit"]["hasNegate"]:
+                action = 0
 
         if not checkActive():
             print("Minimized while in encounter mode, concluding process...")

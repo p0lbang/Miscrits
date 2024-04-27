@@ -66,6 +66,7 @@
         "strength": "nature.png",
         "weakness": "water.png",
         "ignoreWeakness": true,
+        "hasNegate": false,
         "main": 1, // ... | skill to be used mainly for spamming
         "strong": 1, // . | skill to be used for elements weak against you
         "weak": 1, // . | skill to be used for your weakness element
