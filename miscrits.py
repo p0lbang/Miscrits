@@ -468,7 +468,7 @@ def catchMode():
         ):
             if LXVI_locateCenterOnScreen(UIImage("closebtn.png"), 0.85) is not None:
                 print(
-                    f"     {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} died at {Fore.RED}{chance}%{Fore.LIGHTBLACK_EX} catch rate."
+                f"\033[A{Fore.Red}{initialChance}%{Fore.LIGHTBLACK_EX} | {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} died at {Fore.RED}{chance}%{Fore.LIGHTBLACK_EX} catch rate."
                 )
                 return
 
@@ -501,12 +501,10 @@ def catchMode():
                 else:
                     action = 4
             elif action == 4:
-                print(f"\033[A{Fore.Red}{initialChance}%{Fore.LIGHTBLACK_EX}")
-                print(f"     {Fore.LIGHTBLACK_EX}Failed to catch {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}.")
+                print(f"\033[A{Fore.Red}{initialChance}%{Fore.LIGHTBLACK_EX} | Failed to catch {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}.")
                 useSkill(toClick, CONFIG["mainMiscrit"]["main"])
                 
-    print(f"\033[A{Fore.GREEN}{initialChance}%{Fore.LIGHTBLACK_EX}")
-    print(f"     {Fore.YELLOW}{miscrit}{Fore.WHITE} has been caught. {Fore.LIGHTBLACK_EX}")
+    print(f"\033[A{Fore.GREEN}{initialChance}% | {Fore.YELLOW}{miscrit}{Fore.WHITE} has been caught at{Fore.GREEN}{chance}%. {Fore.LIGHTBLACK_EX}")
     click(UIImage("catchSkip.png"), 0.9, 2, 0)
     click(UIImage("closebtn.png"), 0.85, 2, 0)
 

@@ -61,7 +61,7 @@
         "main": 1, // ... | skill to be used mainly for spamming
         "strong": 1, // . | skill to be used for elements weak against your main miscrit
         "negate": 5, // . | skill that negates weaknesses [set to same as main if none]
-        "bigpoke": 3,  // | skill that chips away at wild miscrit's HP without killing them
+        "bigpoke": 6,  // | skill that chips away at wild miscrit's HP without killing them
         "poke": 10,  // . | skill that reduces wild miscrit's HP until they're catchable
     }
 }
