@@ -67,14 +67,14 @@
     "mainMiscrit": {  // | info of your first miscrit in the team, the hard carry
         "strength": "water.png",
         "weakness": "fire.png",
-        "ignoreWeakness": true,
+        "ignoreWeakness": false,
         "hasNegate": false,
         "hasHeal": true,
         "healCD": 2,
         "main": 1, // ... | skill to be used mainly for spamming
         "strong": 1, // . | skill to be used for elements weak against you
         "weak": 2, // . | skill to be used for your weakness element
-        "heal": 8,
+        "heal": 1,
         "bigpoke": 2,  // | skill that chips away at wild miscrit's HP without killing them
         "poke": 10,  // . | skill that reduces wild miscrit's HP until they're catchable
     },
