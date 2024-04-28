@@ -13,7 +13,7 @@
     "search": {
         "autoSearch": true, // .............. | looks for miscrits in searchable spots for you
         "searchInterval": 5, // ............. | time before clicking the next location (min: 5)
-        "searchCode": "af_blazebit", // ..... | search codes are below, ex: "a1_waddles" 
+        "searchCode": "af_blazebit", // ..... | paste from search codes below, ex: "a1_waddles" 
         "searchSeq": { // ................... | don't change the existing sequences pls don't no no 
             "af_waddles": ["a1_typha1", "a1_sapling", "a1_typha2", "a1_jagbush"],
             "af_dflue_bkiloray": ["a2_blight", "a2_palm", "a2_tree", "a2_rock1"],
@@ -30,13 +30,14 @@
             "m1_rafiery_raldio": ["m1_stool", "m1_cage1", "m1_mirrors", "m1_cage2"],
             "m1_thundercracker": ["m1_globeY", "m1_sofaL", "m1_candelabraR", "m1_sofaR"],
             "m2_flutterpat": ["m2_relics", "m2_brush", "m2_potions", "m2_woodcage"],
-            "m2_nanaslug": ["m2_statueflue", "m2_chairL", "m2_table", "m2_chairR"]
-        }
+            "m2_nanaslug": ["m2_statueflue", "m2_chairL", "m2_table", "m2_chairR"],
+        },
     },
     "team": {
         "autoTrain": true,  // .. | levels up your miscrits for you
         "bonusTrain": false,  //  | true -> spend platinum for bonus stats when levelling up
         "autoSwitch": true,  // . | switches miscrits on your team depending on the reached level
+        "switchMain": false,  // . | false if miscrit 1 is excluded from switching
         "switchLevel": 30,  // .. | the reached level in question
     },
     "catch": {
@@ -50,13 +51,13 @@
             "Cubsprout", "Sparkupine", // forest 1
             "Quirk", "Flameling", // forest 2
             "Snatcher", "Hotfoot", "DarkFlowerpiller", // forest 3
-            "Twiggum", "Shellbee", "Squibee", "Steamguin", // forest 4
+            "Twiggum", "Shellbee", "Squibee", "Steamguin", "Crickin", // forest 4
             "Frostmite", "Slithero", "Croaky", "Rafiery", // mansion 1
             "Humbug", "Nanaslug"], // mansion 2
         // ........................... | miscrits added above will be tagged to not catch
         "catchStandardDict": {  // ... | set values as capture thresholds for each rarity
             "Common": 27, // ....# 27-45%
-            "Rare": 20, // ......# 17-35%
+            "Rare": 17, // ......# 17-35%
             "Epic": 10, // ......# 10-25%
             "Exotic": 10, // ....# ?-10%
             "Legendary": 10, // .# ?-?
@@ -64,14 +65,17 @@
         },
     },
     "mainMiscrit": {  // | info of your first miscrit in the team, the hard carry
-        "strength": "nature.png",
-        "weakness": "water.png",
+        "strength": "water.png",
+        "weakness": "fire.png",
         "ignoreWeakness": true,
         "hasNegate": false,
+        "hasHeal": true,
+        "healCD": 2,
         "main": 1, // ... | skill to be used mainly for spamming
         "strong": 1, // . | skill to be used for elements weak against you
-        "weak": 2, // . | skill to be used for your weakness element
-        "bigpoke": 6,  // | skill that chips away at wild miscrit's HP without killing them
+        "weak": 3, // . | skill to be used for your weakness element
+        "heal": 1,
+        "bigpoke": 3,  // | skill that chips away at wild miscrit's HP without killing them
         "poke": 10,  // . | skill that reduces wild miscrit's HP until they're catchable
-    }
+    },
 }

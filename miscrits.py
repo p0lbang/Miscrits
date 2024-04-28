@@ -32,6 +32,7 @@ def UIImage(imagename: str) -> str:
 
 b = 0
 caught = False
+autoSwitch = CONFIG["team"]["autoSwitch"]
 start = time.perf_counter()
 rizz = pygame.mixer.Sound(pathlib.PurePath("audio", "rizz.mp3"))
 on = pygame.mixer.Sound(pathlib.PurePath("audio", "on.mp3"))
@@ -52,7 +53,7 @@ walkRegion = searchCode[:2]
 walkSeq = CONFIG["walk"]["walkSeq"][walkRegion]
 for w, walk in enumerate(walkSeq):
     walkSeq[w] = Point(int(200*math.cos(math.radians(walkSeq[w]))),int(200*math.sin(math.radians(walkSeq[w]))))
-
+walkRegion = str(pathlib.PurePath("walkImages", f"{walkRegion}.png"))
 
 with mss.mss() as sct:
     # Get information of monitor 2
@@ -234,12 +235,12 @@ def getTeamLevel():
     levels = []
     if isinstance(myMiscrits, Point):
         levelA = Point(x=myMiscrits.x - 8, y=myMiscrits.y + 73)
-        for x in range(3):
+        for x in range(4):
             try:
                 levels.append(
                     int(
                         LXVI_readImage(
-                            [int(levelA.x), int(levelA.y) + 50 + x * 50, 15, 15], True
+                            [int(levelA.x), int(levelA.y) + x * 50, 15, 15], True
                         )
                     )
                 )
@@ -247,7 +248,7 @@ def getTeamLevel():
                 levels.append(0)
         return levels
     else:
-        return [0, 0, 0]
+        return [0, 0, 0, 0]
 
 
 def useSkill(toClick: Point, skillNo: int = 1):
@@ -301,8 +302,10 @@ def walkMode():
                 pyautogui.mouseDown()
                 time.sleep(CONFIG["walk"]["walkInterval"])
 
-                if LXVI_locateCenterOnScreen(walkGoal, 0.85) is not None:
+                if (toClick := LXVI_locateCenterOnScreen(walkGoal, 0.85)) is not None:
+                    LXVI_moveTo(toClick)
                     pyautogui.mouseUp()
+                    time.sleep(1)
                     return
             pyautogui.mouseUp()
             return
@@ -411,20 +414,26 @@ def encounterMode():
             f"\033[A{initialChance}% | Successfully escaped from {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}."
         )
 
+    r = 0
     while True:
+        r += 1
+        if CONFIG["mainMiscrit"]["hasHeal"] and  r % int(CONFIG["mainMiscrit"]["healCD"] + 1) == 2:
+            lastAction = action
+            action = 2
         if action == 0:  # strongest attack
             useSkill(toClick, CONFIG["mainMiscrit"]["main"])
-        elif (
-            action < 0
-        ):  # alternative attack to use for elements that are weak against you
+        elif action == -1:  # alternative attack to use for elements that are weak against you
             useSkill(toClick, CONFIG["mainMiscrit"]["strong"])
-        else:  # skill for weakness element
+        elif action == 1:  # skill for weakness element
             if not CONFIG["mainMiscrit"]["ignoreWeakness"]:
                 useSkill(toClick, CONFIG["mainMiscrit"]["weak"])
             else:
                 useSkill(toClick, CONFIG["mainMiscrit"]["main"])    
             if CONFIG["mainMiscrit"]["hasNegate"]:
                 action = 0
+        elif action == 2:
+            useSkill(toClick, CONFIG["mainMiscrit"]["heal"])
+            action = lastAction
 
         if not checkActive():
             print("Minimized while in encounter mode, concluding process...")
@@ -547,16 +556,20 @@ def train():
         click(UIImage("continuebtn.png"), 0.75, 2, 0.1)
         click(UIImage("skipbtn.png"), 0.75, 1, 0.1)
 
-    if CONFIG["team"]["autoSwitch"]:
-        levelBCD = [level >= CONFIG["team"]["switchLevel"] for level in getTeamLevel()]
+    if autoSwitch:
+        levelABCD = [level >= CONFIG["team"]["switchLevel"] for level in getTeamLevel()]
+    if not CONFIG["team"]["switchMain"]:
+        levelABCD[0] = False
 
     click(UIImage("x.png"), 0.8, 0.2, 0)
 
-    if CONFIG["team"]["autoSwitch"] and (True in levelBCD):
-        switchTeam(levelBCD)
+    if autoSwitch and (True in levelABCD):
+        switchTeam(levelABCD)
 
 
-def switchTeam(levelBCD):
+def switchTeam(levelABCD):
+    global autoSwitch
+
     while LXVI_locateCenterOnScreen(UIImage("teambtn.png"), 0.9) is None:
         pass
     click(UIImage("teambtn.png"), 0.9, 0.5, 0)
@@ -565,7 +578,7 @@ def switchTeam(levelBCD):
     exit = LXVI_locateCenterOnScreen(UIImage("x.png"), 0.9)
     pointD = Point(int(exit.x) - 90, int(exit.y) + 200)
     offset = Point(-180, 0)
-    for l, level in enumerate(reversed(levelBCD)):
+    for l, level in enumerate(reversed(levelABCD)):
         if level:
             outCount += 1
             pointX = Point(pointD.x + l * offset.x, pointD.y + l * offset.y)
@@ -606,9 +619,11 @@ def switchTeam(levelBCD):
                     if outCount == 0:
                         lastMiscrit = True
                         break
-
+                
         click(UIImage("teamR.png"), 0.8, 0, 0)
     click(UIImage("savebtn.png"), 0.8, 0, 0)
+    if outCount != 0:
+        autoSwitch = False
 
 
 def login():
@@ -666,12 +681,16 @@ while checkActive():
     elif LXVI_locateCenterOnScreen(UIImage("loginbtn.png"), 0.8) is not None:
         login()
     else:
-        click(UIImage("closebtn.png"), 0.8, 1, 0)
-        click(UIImage("savebtn.png"), 0.8, 1, 0)
-        click(UIImage("x.png"), 0.8, 1, 0)
-    if CONFIG["walk"]["autoWalk"]:
-        walkMode()
+        click(UIImage("closebtn.png"), 0.9, 1, 0)
+        click(UIImage("savebtn.png"), 0.95, 1, 0)
+        click(UIImage("x.png"), 0.95, 1, 0)
+    if CONFIG["walk"]["autoWalk"] and (LXVI_locateCenterOnScreen(walkRegion, 0.9) is not None):
+        walkGoal = str(pathlib.PurePath("walkImages", f"{searchCode}.png"))
+        if (toClick := LXVI_locateCenterOnScreen(walkGoal, 0.85)) is not None:
+            walkMode()
+    else:
+        print("Wrong region for autoWalk.")
     searchMode()
-print("Game not found on screen. Nothing happened.")
+print("Game not found on screen.")
 playSound(rizz)
 time.sleep(1)
