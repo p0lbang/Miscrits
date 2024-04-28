@@ -13,7 +13,7 @@
     "search": {
         "autoSearch": true, // .............. | looks for miscrits in searchable spots for you
         "searchInterval": 5, // ............. | time before clicking the next location (min: 5)
-        "searchCode": "af_blazebit", // ..... | paste from search codes below, ex: "a1_waddles" 
+        "searchCode": "m1_A", // ..... | paste from search codes below, ex: "a1_waddles" 
         "searchSeq": { // ................... | don't change the existing sequences pls don't no no 
             "af_waddles": ["a1_typha1", "a1_sapling", "a1_typha2", "a1_jagbush"],
             "af_dflue_bkiloray": ["a2_blight", "a2_palm", "a2_tree", "a2_rock1"],
@@ -65,8 +65,8 @@
         },
     },
     "mainMiscrit": {  // | info of your first miscrit in the team, the hard carry
-        "strength": "water.png",
-        "weakness": "fire.png",
+        "strength": "nature.png",
+        "weakness": "water.png",
         "ignoreWeakness": false,
         "hasNegate": false,
         "hasHeal": true,

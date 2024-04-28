@@ -686,7 +686,7 @@ while checkActive():
         click(UIImage("x.png"), 0.95, 1, 0)
     if CONFIG["walk"]["autoWalk"] and (LXVI_locateCenterOnScreen(walkRegion, 0.9) is not None):
         walkGoal = str(pathlib.PurePath("walkImages", f"{searchCode}.png"))
-        if (toClick := LXVI_locateCenterOnScreen(walkGoal, 0.85)) is not None:
+        if (toClick := LXVI_locateCenterOnScreen(walkGoal, 0.85)) is None:
             walkMode()
     else:
         print("Wrong region for autoWalk.")
