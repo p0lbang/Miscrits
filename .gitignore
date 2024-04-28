@@ -3,3 +3,4 @@ env/*
 .vscode/*
 mFiles/*
 try walk.py
+mConfig.json5

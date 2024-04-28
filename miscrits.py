@@ -616,6 +616,7 @@ def login():
     if (toClick := LXVI_locateCenterOnScreen(UIImage("loginbtn.png"), 0.8)) is not None:
         print("\nAccount logged out, logging back in...")
         LXVI_moveTo(toClick)
+        time.sleep(3)
         pyautogui.leftClick()
     while LXVI_locateCenterOnScreen(UIImage("miscripedia.png"), 0.75) is not None:
         if time.perf_counter() - wait >= 30:
@@ -632,6 +633,7 @@ def dailySpin():
         click(UIImage("spinbtn.png"), 0.8)
         while LXVI_locateCenterOnScreen(UIImage("spindonebtn.png"), 0.8) is None:
             pass
+        time.sleep(1)
         click(UIImage("spindonebtn.png"), 0.8, 1)
 
 
@@ -661,6 +663,8 @@ while checkActive():
     if LXVI_locateCenterOnScreen(UIImage("battlebtns.png"), 0.8) is not None:
         encounterMode()
         summary()
+    elif LXVI_locateCenterOnScreen(UIImage("loginbtn.png"), 0.8) is not None:
+        login()
     else:
         click(UIImage("closebtn.png"), 0.8, 1, 0)
         click(UIImage("savebtn.png"), 0.8, 1, 0)
