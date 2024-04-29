@@ -13,9 +13,27 @@ from os import environ
 import pathlib
 import pyjson5
 import math
+from pynput.keyboard import Key, KeyCode, Listener
+import threading
 
 environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 import pygame
+
+CATCHRATE = {}
+
+try:
+    with open("catchrate.json5", "r") as file:
+        catchratetext = file.read()
+        if catchratetext != "":
+            tempcatchrate = pyjson5.loads(catchratetext)
+            CATCHRATE = {}
+            for key, value in tempcatchrate.items():
+                CATCHRATE[key] = dict(sorted(tempcatchrate[key].items()))
+            
+            CATCHRATE = dict(sorted(CATCHRATE.items()))
+except IOError:  # FileNotFoundError in Python 3
+    with open("catchrate.json5", "w") as file:
+        file.write(str(pyjson5.dumps({})))
 
 
 CONFIG = {}
@@ -69,6 +87,10 @@ with mss.mss() as sct:
         "mon": monitor_number,
     }
 assert monitor is not None
+
+stop_event= threading.Event()
+configupdate_event = threading.Event()
+
 
 
 def playSound(audio: pygame.mixer.Sound) -> None:
@@ -314,18 +336,17 @@ def walkMode():
 
 def searchMode():
     while True:
+        if not checkActive():
+            conclude()
+        
         cleanUp()
 
         if CONFIG["search"]["autoSearch"]:
-            SearchSuccess = False
             for search in searchSeq:
-                if (toClick := LXVI_locateCenterOnScreen(search, 0.9)) is None:
-                    continue
-
-                SearchSuccess = True
-                LXVI_moveTo(toClick, 0.1)
-                pyautogui.leftClick()
-                time.sleep(CONFIG["search"]["searchInterval"])
+                if (toClick := LXVI_locateCenterOnScreen(search, 0.85)) is not None:
+                    LXVI_moveTo(toClick, 0.1)
+                    pyautogui.leftClick()
+                    time.sleep(CONFIG["search"]["searchInterval"])
 
                 if (
                     LXVI_locateCenterOnScreen(UIImage("battlebtns.png"), 0.8)
@@ -333,11 +354,8 @@ def searchMode():
                 ):
                     encounterMode()
                     summary()
-
-            if not SearchSuccess:
-                conclude()
-                return
         else:
+            print("not auto searching")
             time.sleep(0.5)
 
 
@@ -397,6 +415,16 @@ def encounterMode():
             pass
         initialChance = getCatchChance()
         print(f"\033[A{initialChance}%")
+    
+    if miscrit != "[redacted]":
+        key = miscrit.strip().lower()
+        if key not in CATCHRATE:
+            CATCHRATE[key] = {}
+        
+        if initialChance not in CATCHRATE[key]:
+            CATCHRATE[key][initialChance] = 1
+        else:
+            CATCHRATE[key][initialChance] += 1
 
     if not checkActive():
         print("Minimized while in encounter mode, concluding process...")
@@ -489,7 +517,7 @@ def catchMode():
                     action = 3
 
             if action == 0:
-                useSkill(toClick, CONFIG["mainMiscrit"]["negate"])
+                useSkill(toClick, CONFIG["mainMiscrit"]["weak"])
                 action = 1
             elif action == 1:
                 useSkill(toClick, CONFIG["mainMiscrit"]["bigpoke"])
@@ -657,6 +685,10 @@ def conclude():
         login()
         return
 
+    with open("catchrate.json5", "w") as file:
+        outputtxt = pyjson5.dumps(CATCHRATE)
+        file.write(outputtxt)
+
     print(
         f"\nEnded process after {Fore.CYAN}{b}{Fore.LIGHTBLACK_EX} Miscrits encountered."
     )
@@ -664,33 +696,75 @@ def conclude():
     playSound(off)
     print(Fore.RESET)
     time.sleep(1)
+    if stop_event.is_set():
+        sys.exit()
     sys.exit()
 
+def runmiscrits():
+    print(Fore.LIGHTBLACK_EX)
+    playSound(on)
+    print("Initiating code... process started.")
+    time.sleep(1)
+    while checkActive():
+        if not checkActive():
+            print("Game not found during search mode, concluding process...")
+            conclude()
+        if LXVI_locateCenterOnScreen(UIImage("battlebtns.png"), 0.8) is not None:
+            encounterMode()
+            summary()
+        else:
+            click(UIImage("closebtn.png"), 0.8, 1, 0)
+            click(UIImage("savebtn.png"), 0.8, 1, 0)
+            click(UIImage("x.png"), 0.8, 1, 0)
+        walkMode()
+        searchMode()
+    print("Game not found on screen. Nothing happened.")
+    playSound(rizz)
+    time.sleep(1)
 
-print(Fore.LIGHTBLACK_EX)
-playSound(on)
-print("Initiating code... process started.")
-time.sleep(1)
-while checkActive():
-    if not checkActive():
-        print("Game not found during search mode, concluding process...")
-        conclude()
-    if LXVI_locateCenterOnScreen(UIImage("battlebtns.png"), 0.8) is not None:
-        encounterMode()
-        summary()
-    elif LXVI_locateCenterOnScreen(UIImage("loginbtn.png"), 0.8) is not None:
-        login()
-    else:
-        click(UIImage("closebtn.png"), 0.9, 1, 0)
-        click(UIImage("savebtn.png"), 0.95, 1, 0)
-        click(UIImage("x.png"), 0.95, 1, 0)
-    if CONFIG["walk"]["autoWalk"] and (LXVI_locateCenterOnScreen(walkRegion, 0.9) is not None):
-        walkGoal = str(pathlib.PurePath("walkImages", f"{searchCode}.png"))
-        if (toClick := LXVI_locateCenterOnScreen(walkGoal, 0.85)) is None:
-            walkMode()
-    else:
-        print("Wrong region for autoWalk.")
-    searchMode()
-print("Game not found on screen.")
-playSound(rizz)
-time.sleep(1)
+def runmiscrits():
+    print(Fore.LIGHTBLACK_EX)
+    playSound(on)
+    print("Initiating code... process started.")
+    time.sleep(1)
+    while checkActive():
+        if not checkActive():
+            print("Game not found during search mode, concluding process...")
+            conclude()
+        if LXVI_locateCenterOnScreen(UIImage("battlebtns.png"), 0.8) is not None:
+            encounterMode()
+            summary()
+        elif LXVI_locateCenterOnScreen(UIImage("loginbtn.png"), 0.8) is not None:
+            login()
+        else:
+            click(UIImage("closebtn.png"), 0.9, 1, 0)
+            click(UIImage("savebtn.png"), 0.95, 1, 0)
+            click(UIImage("x.png"), 0.95, 1, 0)
+        if CONFIG["walk"]["autoWalk"] and (LXVI_locateCenterOnScreen(walkRegion, 0.9) is not None):
+            walkGoal = str(pathlib.PurePath("walkImages", f"{searchCode}.png"))
+            if (toClick := LXVI_locateCenterOnScreen(walkGoal, 0.85)) is None:
+                walkMode()
+        else:
+            print("Wrong region for autoWalk.")
+        searchMode()
+    print("Game not found on screen.")
+    playSound(rizz)
+    time.sleep(1)
+
+def show(key: Key | KeyCode):
+    if isinstance(key,KeyCode):
+        if key.char == 'q':
+            stop_event.set()
+            print("Stopping miscrits...")
+            # thread_keyb.stop()
+            return False
+
+
+if __name__ == "__main__":
+    # thread_keyb = Listener(on_press=show)
+    # thread_keyb.start()
+    thread_mis = threading.Thread(target=runmiscrits)
+    thread_mis.start()
+
+    # thread_keyb.join()
+    thread_mis.join()
