@@ -756,15 +756,15 @@ def show(key: Key | KeyCode):
         if key.char == 'q':
             stop_event.set()
             print("Stopping miscrits...")
-            thread_keyb.stop()
+            # thread_keyb.stop()
             return False
 
 
 if __name__ == "__main__":
-    thread_keyb = Listener(on_press=show)
-    thread_keyb.start()
+    # thread_keyb = Listener(on_press=show)
+    # thread_keyb.start()
     thread_mis = threading.Thread(target=runmiscrits)
     thread_mis.start()
 
-    thread_keyb.join()
+    # thread_keyb.join()
     thread_mis.join()
