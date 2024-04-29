@@ -13,17 +13,18 @@
     "search": {
         "autoSearch": true, // .............. | looks for miscrits in searchable spots for you
         "searchInterval": 5, // ............. | time before clicking the next location (min: 5)
-        "searchCode": "m1_A", // ..... | paste from search codes below, ex: "a1_waddles" 
+        "searchCode": "af_waddles", // ...... | search codes are below, ex: "a1_waddles" 
         "searchSeq": { // ................... | don't change the existing sequences pls don't no no 
-            "af_waddles": ["a1_typha1", "a1_sapling", "a1_typha2", "a1_jagbush"],
+            "af_waddles": ["a1_typha1", "a1_bushsun", "a1_typha1_2"],
             "af_dflue_bkiloray": ["a2_blight", "a2_palm", "a2_tree", "a2_rock1"],
             "af_dlumera": ["a2_chops2", "a2_axe", "a2_chops1", "a2_rock2"],
             "af_tulipinny_dflowerpiller_bfiender": ["a3_blight", "a3_sun", "a3_magic", "a3_fuchsia"],
-            "af_blazebit": ["a4_elder", "a4_bush1", "a4_sun1", "a4_pool1"],
+            "af_blazebit": ["a4_elder", "a4_pool1", "a4_flatrock", "a4_dead2", "a4_sun1"],
             "af_dshelbee": ["a4_pool2", "a4_shrub1", "a4_bush2", "a4_typha1"],
             "af_dsteamguin": ["a4_flatrock", "a4_sun2", "a4_dead2", "a4_sun3"],
             "af_dprawnja": ["a4_typha2", "a4_dead1", "a4_shrub2", "a4_typha3"],
             "af_defilio": ["a4_blight", "a4_typha4", "a4_minis", "a4_yellow"],
+            "m0_cattail": ["m0_cattail01", "m0_cattail02", "m0_cattail03", "m0_cattail04", ],
             "m0_A": ["m0_sapling", "m0_rock1", "m0_rock2", "m0_stone1", "m0_grass", "m0_rock3"],
             "m0_B": ["m0_axe", "m0_crate", "m0_chops", "m0_minis"],
             "m1_A": ["m1_globeB", "m1_potions", "m1_table", "m1_caged"],
@@ -45,19 +46,39 @@
         "autoCatch": true,  // ....... | catches miscrits for you
         "catchablePercentage": 90,  // | makes the attempt to catch the miscrit when the rate is above this value
         "targetAll": true,  // ....... | true -> every encountered miscrit is tagged for capture
-        "targets": ["Treemur"],  
+        "targets": [
+            "DarkFlue", 
+            "BlightedKiloray", 
+            "DarkLumera", 
+            "Treemur"],  
         // ........................... | miscrits added above are prioritized for capture regardless of their initial catch chance
         "blocked": [
-            "Cubsprout", "Sparkupine", // forest 1
-            "Quirk", "Flameling", // forest 2
-            "Snatcher", "Hotfoot", "DarkFlowerpiller", // forest 3
-            "Twiggum", "Shellbee", "Squibee", "Steamguin", "Crickin", // forest 4
-            "Frostmite", "Slithero", "Croaky", "Rafiery", // mansion 1
-            "Humbug", "Nanaslug"], // mansion 2
+            "Sparkupine",
+            "Quirk",
+            "Cubsprout",
+            "Lumera",
+            "Nessy",
+            "Twiggum",
+            "Shellbee", 
+            "Hotfoot", 
+            "Elefauna",
+            "Aria",
+            "Hydroseal",
+            "Bubbles",
+            "Statikat",
+            "Frostmite",
+            "Thundercracker",
+            "Squibee",
+            "Crickin",
+            "DarkPrawnja",
+            "DarkLumera",
+            "Prawnja",
+
+            ],
         // ........................... | miscrits added above will be tagged to not catch
         "catchStandardDict": {  // ... | set values as capture thresholds for each rarity
             "Common": 27, // ....# 27-45%
-            "Rare": 17, // ......# 17-35%
+            "Rare": 19, // ......# 17-35%
             "Epic": 10, // ......# 10-25%
             "Exotic": 10, // ....# ?-10%
             "Legendary": 10, // .# ?-?
@@ -65,8 +86,8 @@
         },
     },
     "mainMiscrit": {  // | info of your first miscrit in the team, the hard carry
-        "strength": "nature.png",
-        "weakness": "water.png",
+        "strength": "gold.png",
+        "weakness": "gold.png",
         "ignoreWeakness": false,
         "hasNegate": false,
         "hasHeal": true,
