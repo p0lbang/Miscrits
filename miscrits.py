@@ -29,7 +29,7 @@ try:
             CATCHRATE = {}
             for key, value in tempcatchrate.items():
                 CATCHRATE[key] = dict(sorted(tempcatchrate[key].items()))
-            
+
             CATCHRATE = dict(sorted(CATCHRATE.items()))
 except IOError:  # FileNotFoundError in Python 3
     with open("catchrate.json5", "w") as file:
@@ -70,7 +70,10 @@ for s, search in enumerate(searchSeq):
 walkRegion = searchCode[:2]
 walkSeq = CONFIG["walk"]["walkSeq"][walkRegion]
 for w, walk in enumerate(walkSeq):
-    walkSeq[w] = Point(int(200*math.cos(math.radians(walkSeq[w]))),int(200*math.sin(math.radians(walkSeq[w]))))
+    walkSeq[w] = Point(
+        int(200 * math.cos(math.radians(walkSeq[w]))),
+        int(200 * math.sin(math.radians(walkSeq[w]))),
+    )
 walkRegion = str(pathlib.PurePath("walkImages", f"{walkRegion}.png"))
 
 with mss.mss() as sct:
@@ -88,9 +91,8 @@ with mss.mss() as sct:
     }
 assert monitor is not None
 
-stop_event= threading.Event()
+stop_event = threading.Event()
 configupdate_event = threading.Event()
-
 
 
 def playSound(audio: pygame.mixer.Sound) -> None:
@@ -247,7 +249,7 @@ def getCatchChance():
                 [int(catchButton.x) - 17, int(catchButton.y) + 13, 18, 22], True
             )
         )
-        return min(chance,100)
+        return min(chance, 100)
     else:
         return None
 
@@ -309,7 +311,7 @@ def useSkill(toClick: Point, skillNo: int = 1):
 def walkMode():
     (chatX, chatY) = LXVI_locateCenterOnScreen(UIImage("chatbtn.png"), 0.9)
     (settX, settY) = LXVI_locateCenterOnScreen(UIImage("settingsbtn.png"), 0.9)
-    center = Point(int((chatX+settX)/2), int((chatY+settY)/2))
+    center = Point(int((chatX + settX) / 2), int((chatY + settY) / 2))
     LXVI_moveTo(center)
     time.sleep(3)
     while checkActive:
@@ -331,22 +333,30 @@ def walkMode():
                     return
             pyautogui.mouseUp()
             return
-    
 
 
 def searchMode():
     while True:
         if not checkActive():
             conclude()
-        
+
         cleanUp()
 
         if CONFIG["search"]["autoSearch"]:
             for search in searchSeq:
-                if (toClick := LXVI_locateCenterOnScreen(search, 0.85)) is not None:
-                    LXVI_moveTo(toClick, 0.1)
-                    pyautogui.leftClick()
-                    time.sleep(CONFIG["search"]["searchInterval"])
+                if (toClick := LXVI_locateCenterOnScreen(search, 0.9)) is None:
+                    continue
+
+                SearchSuccess = True
+                LXVI_moveTo(toClick, 0.1)
+                if LXVI_locateCenterOnScreen(UIImage("searchCD.png"), 0.9) is not None:
+                    while (
+                        LXVI_locateCenterOnScreen(UIImage("searchCD.png"), 0.9)
+                        is not None
+                    ):
+                        pass
+                pyautogui.leftClick()
+                time.sleep(CONFIG["search"]["searchInterval"])
 
                 if (
                     LXVI_locateCenterOnScreen(UIImage("battlebtns.png"), 0.8)
@@ -415,12 +425,12 @@ def encounterMode():
             pass
         initialChance = getCatchChance()
         print(f"\033[A{initialChance}%")
-    
+
     if miscrit != "[redacted]":
         key = miscrit.strip().lower()
         if key not in CATCHRATE:
             CATCHRATE[key] = {}
-        
+
         if initialChance not in CATCHRATE[key]:
             CATCHRATE[key][initialChance] = 1
         else:
@@ -445,18 +455,23 @@ def encounterMode():
     r = 0
     while True:
         r += 1
-        if CONFIG["mainMiscrit"]["hasHeal"] and  r % int(CONFIG["mainMiscrit"]["healCD"] + 1) == 2:
+        if (
+            CONFIG["mainMiscrit"]["hasHeal"]
+            and r % int(CONFIG["mainMiscrit"]["healCD"] + 1) == 2
+        ):
             lastAction = action
             action = 2
         if action == 0:  # strongest attack
             useSkill(toClick, CONFIG["mainMiscrit"]["main"])
-        elif action == -1:  # alternative attack to use for elements that are weak against you
+        elif (
+            action == -1
+        ):  # alternative attack to use for elements that are weak against you
             useSkill(toClick, CONFIG["mainMiscrit"]["strong"])
         elif action == 1:  # skill for weakness element
             if not CONFIG["mainMiscrit"]["ignoreWeakness"]:
                 useSkill(toClick, CONFIG["mainMiscrit"]["weak"])
             else:
-                useSkill(toClick, CONFIG["mainMiscrit"]["main"])    
+                useSkill(toClick, CONFIG["mainMiscrit"]["main"])
             if CONFIG["mainMiscrit"]["hasNegate"]:
                 action = 0
         elif action == 2:
@@ -502,7 +517,7 @@ def catchMode():
         ):
             if LXVI_locateCenterOnScreen(UIImage("closebtn.png"), 0.85) is not None:
                 print(
-                f"\033[A{Fore.RED}{initialChance}%{Fore.LIGHTBLACK_EX} | {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} died at {Fore.RED}{chance}%{Fore.LIGHTBLACK_EX} catch rate."
+                    f"\033[A{Fore.RED}{initialChance}%{Fore.LIGHTBLACK_EX} | {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} died at {Fore.RED}{chance}%{Fore.LIGHTBLACK_EX} catch rate."
                 )
                 return
 
@@ -535,10 +550,14 @@ def catchMode():
                 else:
                     action = 4
             elif action == 4:
-                print(f"\033[A{Fore.Red}{initialChance}%{Fore.LIGHTBLACK_EX} | Failed to catch {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}.")
+                print(
+                    f"\033[A{Fore.Red}{initialChance}%{Fore.LIGHTBLACK_EX} | Failed to catch {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}."
+                )
                 useSkill(toClick, CONFIG["mainMiscrit"]["main"])
-                
-    print(f"\033[A{Fore.GREEN}{initialChance}%{Fore.WHITE} | {Fore.YELLOW}{miscrit}{Fore.WHITE} has been caught at {Fore.GREEN}{chance}%. {Fore.LIGHTBLACK_EX}")
+
+    print(
+        f"\033[A{Fore.GREEN}{initialChance}%{Fore.WHITE} | {Fore.YELLOW}{miscrit}{Fore.WHITE} has been caught at {Fore.GREEN}{chance}%. {Fore.LIGHTBLACK_EX}"
+    )
     click(UIImage("catchSkip.png"), 0.9, 2, 0)
     click(UIImage("closebtn.png"), 0.85, 2, 0)
 
@@ -647,7 +666,7 @@ def switchTeam(levelABCD):
                     if outCount == 0:
                         lastMiscrit = True
                         break
-                
+
         click(UIImage("teamR.png"), 0.8, 0, 0)
     click(UIImage("savebtn.png"), 0.8, 0, 0)
     if outCount != 0:
@@ -700,6 +719,7 @@ def conclude():
         sys.exit()
     sys.exit()
 
+
 def runmiscrits():
     print(Fore.LIGHTBLACK_EX)
     playSound(on)
@@ -722,6 +742,7 @@ def runmiscrits():
     playSound(rizz)
     time.sleep(1)
 
+
 def runmiscrits():
     print(Fore.LIGHTBLACK_EX)
     playSound(on)
@@ -740,7 +761,9 @@ def runmiscrits():
             click(UIImage("closebtn.png"), 0.9, 1, 0)
             click(UIImage("savebtn.png"), 0.95, 1, 0)
             click(UIImage("x.png"), 0.95, 1, 0)
-        if CONFIG["walk"]["autoWalk"] and (LXVI_locateCenterOnScreen(walkRegion, 0.9) is not None):
+        if CONFIG["walk"]["autoWalk"] and (
+            LXVI_locateCenterOnScreen(walkRegion, 0.9) is not None
+        ):
             walkGoal = str(pathlib.PurePath("walkImages", f"{searchCode}.png"))
             if (toClick := LXVI_locateCenterOnScreen(walkGoal, 0.85)) is None:
                 walkMode()
@@ -751,9 +774,10 @@ def runmiscrits():
     playSound(rizz)
     time.sleep(1)
 
+
 def show(key: Key | KeyCode):
-    if isinstance(key,KeyCode):
-        if key.char == 'q':
+    if isinstance(key, KeyCode):
+        if key.char == "q":
             stop_event.set()
             print("Stopping miscrits...")
             # thread_keyb.stop()
