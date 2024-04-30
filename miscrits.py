@@ -17,7 +17,7 @@ from pynput.keyboard import Key, KeyCode, Listener
 import threading
 
 environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
-import pygame
+import pygame  # noqa: E402
 
 CATCHRATE = {}
 
@@ -376,7 +376,16 @@ def searchMode():
 
 
 def encounterMode():
-    global miscrit, b, sNo, onSkillPage, rarity, initialChance, battle_start, toClick, toRun
+    global \
+        miscrit, \
+        b, \
+        sNo, \
+        onSkillPage, \
+        rarity, \
+        initialChance, \
+        battle_start, \
+        toClick, \
+        toRun
 
     b += 1
     sNo = 1
@@ -433,7 +442,7 @@ def encounterMode():
         initialChance = getCatchChance()
         print(f"\033[A{initialChance}%")
 
-    if miscrit not in ["[redacted]", "[unidentified]"] :
+    if miscrit not in ["[redacted]", "[unidentified]"]:
         key = miscrit.strip().lower()
         if key not in CATCHRATE:
             CATCHRATE[key] = {}
@@ -453,18 +462,18 @@ def encounterMode():
         LXVI_moveTo(toClick)
         pyautogui.leftClick()
         print(
-                    "\033[A",
-                    f"{initialChance}% | "
-                    f"Time: {Fore.CYAN}{(time.perf_counter()-battle_start):05.2f}s{Fore.LIGHTBLACK_EX} | ",
-                    f" Avoided {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}.",
-                    sep=""
-                )
+            "\033[A",
+            f"{initialChance}% | "
+            f"Time: {Fore.CYAN}{(time.perf_counter()-battle_start):05.2f}s{Fore.LIGHTBLACK_EX} | ",
+            f" Avoided {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}.",
+            sep="",
+        )
 
         while LXVI_locateCenterOnScreen(UIImage("closebtn.png"), 0.85) is None:
             pass
 
         return
-    
+
     toRun = LXVI_locateCenterOnScreen(UIImage("run.png"), 0.75)
     toClick = Point(toRun.x + 115, toRun.y + 80)
 
@@ -506,7 +515,7 @@ def encounterMode():
                     f"{initialChance}% | "
                     f"Time: {Fore.CYAN}{(time.perf_counter()-battle_start):05.2f}s{Fore.LIGHTBLACK_EX} | ",
                     f"Defeated {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}.",
-                    sep=""
+                    sep="",
                 )
                 return
     else:
@@ -532,12 +541,12 @@ def waitFight():
         if LXVI_locateCenterOnScreen(UIImage("closebtn.png"), 0.85) is not None:
             thread_keybfight.stop()
             print(
-                    "\033[A",
-                    f"{initialChance}% | "
-                    f"Time: {Fore.CYAN}{(time.perf_counter()-battle_start):05.2f}s{Fore.LIGHTBLACK_EX} | ",
-                    f"Defeated {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}.",
-                    sep=""
-                )
+                "\033[A",
+                f"{initialChance}% | "
+                f"Time: {Fore.CYAN}{(time.perf_counter()-battle_start):05.2f}s{Fore.LIGHTBLACK_EX} | ",
+                f"Defeated {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}.",
+                sep="",
+            )
             return
 
 
@@ -699,10 +708,10 @@ def switchTeam(levelABCD):
     exit = LXVI_locateCenterOnScreen(UIImage("x.png"), 0.9)
     pointD = Point(int(exit.x) - 90, int(exit.y) + 200)
     offset = Point(-180, 0)
-    for l, level in enumerate(reversed(levelABCD)):
+    for index, level in enumerate(reversed(levelABCD)):
         if level:
             outCount += 1
-            pointX = Point(pointD.x + l * offset.x, pointD.y + l * offset.y)
+            pointX = Point(pointD.x + index * offset.x, pointD.y + index * offset.y)
             LXVI_moveTo(pointX)
             pyautogui.dragRel((0, 150))
             time.sleep(0.1)
@@ -759,7 +768,7 @@ def login():
             print("Having trouble signing back in. Concluding process...")
             conclude()
         pass
-    print(f"\033[AAccount logged back in. Resuming...   ")
+    print("\033[AAccount logged back in. Resuming...   ")
     time.sleep(5)
     dailySpin()
 
@@ -812,7 +821,7 @@ def runMiscrits():
             LXVI_locateCenterOnScreen(walkRegion, 0.9) is not None
         ):
             walkGoal = str(pathlib.PurePath("walkImages", f"{searchCode}.png"))
-            if (toClick := LXVI_locateCenterOnScreen(walkGoal, 0.85)) is None:
+            if LXVI_locateCenterOnScreen(walkGoal, 0.85) is None:
                 walkMode()
         searchMode()
     print("Game not found on screen.")
