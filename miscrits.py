@@ -374,16 +374,7 @@ def searchMode():
 
 
 def encounterMode():
-    global \
-        miscrit, \
-        b, \
-        sNo, \
-        onSkillPage, \
-        rarity, \
-        initialChance, \
-        battle_start, \
-        toClick, \
-        toRun
+    global miscrit, b, sNo, onSkillPage, rarity, initialChance, battle_start, toClick, toRun
 
     b += 1
     sNo = 1
