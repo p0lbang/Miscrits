@@ -13,7 +13,7 @@
     "search": {
         "autoSearch": true, // .............. | looks for miscrits in searchable spots for you
         "searchInterval": 5, // ............. | time before clicking the next location (min: 5)
-        "searchCode": "af_blazebit", // ..... | paste from search codes below, ex: "a1_waddles" 
+        "searchCode": "af_dflue_bkiloray", // ..... | paste from search codes below, ex: "a1_waddles" 
         "searchSeq": { // ................... | don't change the existing sequences pls don't no no 
             "af_waddles": ["a1_typha1", "a1_bushsun", "a1_typha1_2"],
             "af_dflue_bkiloray": ["a2_blight", "a2_palm", "a2_tree", "a2_rock1"],
@@ -46,6 +46,7 @@
         "autoFight": true,  // false -> use arrow keys to cycle through the skills and 'z' to click skill ('x' to hover on run)
         "strength": "nature.png",
         "weakness": "water.png",
+        "skipWeakness": false,
         "ignoreWeakness": true,
         "hasNegate": false,
         "hasHeal": true,
@@ -58,7 +59,7 @@
         "poke": 10,  // . | skill that reduces wild miscrit's HP until they're catchable
     },
     "catch": {
-        "fightHunt": false,  // ....... | false -> flee from wild miscrits that are not tagged for capture
+        "skipAll": false,  // ....... | true -> flee from wild miscrits that are not tagged for capture
         "autoCatch": true,  // ....... | catches miscrits for you
         "catchablePercentage": 90,  // | makes the attempt to catch the miscrit when the rate is above this value
         "targetAll": true,  // ....... | true -> every encountered miscrit is tagged for capture

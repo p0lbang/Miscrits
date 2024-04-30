@@ -433,7 +433,7 @@ def encounterMode():
         initialChance = getCatchChance()
         print(f"\033[A{initialChance}%")
 
-    if miscrit != "[redacted]":
+    if miscrit not in ["[redacted]", "[unidentified]"] :
         key = miscrit.strip().lower()
         if key not in CATCHRATE:
             CATCHRATE[key] = {}
@@ -447,26 +447,26 @@ def encounterMode():
         print("Minimized while in encounter mode, concluding process...")
         conclude()
 
-    if CONFIG["catch"]["fightHunt"]:
-        toRun = LXVI_locateCenterOnScreen(UIImage("run.png"), 0.75)
-        toClick = Point(toRun.x + 115, toRun.y + 80)
-    else:
+    if CONFIG["fight"]["skipWeakness"] or CONFIG["catch"]["skipAll"]:
         while (toClick := LXVI_locateCenterOnScreen(UIImage("run.png"), 0.99)) is None:
             pass
         LXVI_moveTo(toClick)
         pyautogui.leftClick()
         print(
-            f"\033[A{initialChance}% | Successfully escaped from {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}.",
-            end=" "
-        )
-        print(
-                f"Time: {Fore.CYAN}{(time.perf_counter()-battle_start):05.2f}s{Fore.LIGHTBLACK_EX}"
-            )
+                    "\033[A",
+                    f"{initialChance}% | "
+                    f"Time: {Fore.CYAN}{(time.perf_counter()-battle_start):05.2f}s{Fore.LIGHTBLACK_EX} | ",
+                    f" Avoided {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}.",
+                    sep=""
+                )
 
         while LXVI_locateCenterOnScreen(UIImage("closebtn.png"), 0.85) is None:
             pass
 
         return
+    
+    toRun = LXVI_locateCenterOnScreen(UIImage("run.png"), 0.75)
+    toClick = Point(toRun.x + 115, toRun.y + 80)
 
     r = 0
 
@@ -502,11 +502,11 @@ def encounterMode():
 
             if LXVI_locateCenterOnScreen(UIImage("closebtn.png"), 0.85) is not None:
                 print(
-                    f"\033[A{initialChance}% | {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} was defeated.",
-                    end=" ",
-                )
-                print(
-                    f"Time: {Fore.CYAN}{round(time.perf_counter()-battle_start, 3)}s{Fore.LIGHTBLACK_EX}"
+                    "\033[A",
+                    f"{initialChance}% | "
+                    f"Time: {Fore.CYAN}{(time.perf_counter()-battle_start):05.2f}s{Fore.LIGHTBLACK_EX} | ",
+                    f"Defeated {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}.",
+                    sep=""
                 )
                 return
     else:
@@ -532,12 +532,12 @@ def waitFight():
         if LXVI_locateCenterOnScreen(UIImage("closebtn.png"), 0.85) is not None:
             thread_keybfight.stop()
             print(
-                f"\033[A{initialChance}% | {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} was defeated.",
-                end=" ",
-            )
-            print(
-                f"Time: {Fore.CYAN}{(time.perf_counter()-battle_start):05.2f}s{Fore.LIGHTBLACK_EX}"
-            )
+                    "\033[A",
+                    f"{initialChance}% | "
+                    f"Time: {Fore.CYAN}{(time.perf_counter()-battle_start):05.2f}s{Fore.LIGHTBLACK_EX} | ",
+                    f"Defeated {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}.",
+                    sep=""
+                )
             return
 
 
