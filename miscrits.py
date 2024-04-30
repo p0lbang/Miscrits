@@ -304,9 +304,11 @@ def useSkill(toClick: Point, skillNo: int = 1):
             ):
                 return
             pass
+        LXVI_moveTo(skillClick)
         pyautogui.leftClick()
         pyautogui.moveRel(0, 40)
-    LXVI_moveTo(skillClick)
+    else:
+        LXVI_moveTo(skillClick)
 
 
 def walkMode():
