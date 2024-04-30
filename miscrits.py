@@ -394,6 +394,7 @@ def encounterMode():
     action = 0
     onSkillPage = 1
     battle_start = time.perf_counter()
+    weakness = False
 
     while LXVI_locateCenterOnScreen(UIImage("battlebtns.png"), 0.8) is None:
         pass
@@ -408,6 +409,7 @@ def encounterMode():
         is not None
     ):
         action = 1
+        weakness = True
 
     # miscritsCheck info
     click(UIImage("miscripedia.png"), 0.8, 0.555, 0)
@@ -456,7 +458,7 @@ def encounterMode():
         print("Minimized while in encounter mode, concluding process...")
         conclude()
 
-    if CONFIG["fight"]["skipWeakness"] or CONFIG["catch"]["skipAll"]:
+    if (CONFIG["fight"]["skipWeakness"] and weakness) or CONFIG["catch"]["skipAll"]:
         while (toClick := LXVI_locateCenterOnScreen(UIImage("run.png"), 0.99)) is None:
             pass
         LXVI_moveTo(toClick)
