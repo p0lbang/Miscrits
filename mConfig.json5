@@ -52,29 +52,53 @@
         "healCD": 2,
         "main": 1, // ... | skill to be used mainly for spamming
         "strong": 1, // . | skill to be used for elements weak against you
-        "weak": 1, // . | skill to be used for your weakness element
+        "weak": 2, // . | skill to be used for your weakness element
         "heal": 1,
         "bigpoke": 2,  // | skill that chips away at wild miscrit's HP without killing them
         "poke": 10,  // . | skill that reduces wild miscrit's HP until they're catchable
     },
     "catch": {
-        "fightHunt": true,  // ....... | false -> flee from wild miscrits that are not tagged for capture
+        "fightHunt": false,  // ....... | false -> flee from wild miscrits that are not tagged for capture
         "autoCatch": true,  // ....... | catches miscrits for you
         "catchablePercentage": 90,  // | makes the attempt to catch the miscrit when the rate is above this value
         "targetAll": true,  // ....... | true -> every encountered miscrit is tagged for capture
-        "targets": ["Treemur"],  
+        "targets": [
+            "DarkFlue", 
+            "BlightedKiloray", 
+            "DarkLumera", 
+            "Treemur"
+            ],  
         // ........................... | miscrits added above are prioritized for capture regardless of their initial catch chance
         "blocked": [
-            "Cubsprout", "Sparkupine", // forest 1
-            "Quirk", "Flameling", // forest 2
-            "Snatcher", "Elefauna", "Hotfoot", "DarkFlowerpiller", // forest 3
-            "Twiggum", "Shellbee", "Squibee", "Steamguin", "Crickin", // forest 4
-            "Frostmite", "Slithero", "Croaky", "Rafiery", // mansion 1
-            "Humbug", "Nanaslug"], // mansion 2
+            "Sparkupine",
+            "Quirk",
+            "Cubsprout",
+            "Lumera",
+            "Nessy",
+            "Twiggum",
+            "Shellbee", 
+            "Hotfoot", 
+            "Elefauna",
+            "Aria",
+            "Hydroseal",
+            "Bubbles",
+            "Statikat",
+            "Frostmite",
+            "Thundercracker",
+            "Squibee",
+            "Crickin",
+            "DarkPrawnja",
+            "DarkLumera",
+            "Prawnja",
+            "Narlope",
+            "Croaky",
+            "Sparkspeck",
+
+            ],
         // ........................... | miscrits added above will be tagged to not catch
         "catchStandardDict": {  // ... | set values as capture thresholds for each rarity
             "Common": 27, // ....# 27-45%
-            "Rare": 17, // ......# 17-35%
+            "Rare": 18, // ......# 17-35%
             "Epic": 10, // ......# 10-25%
             "Exotic": 10, // ....# ?-10%
             "Legendary": 10, // .# ?-?

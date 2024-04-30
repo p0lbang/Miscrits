@@ -456,8 +456,17 @@ def encounterMode():
         LXVI_moveTo(toClick)
         pyautogui.leftClick()
         print(
-            f"\033[A{initialChance}% | Successfully escaped from {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}."
+            f"\033[A{initialChance}% | Successfully escaped from {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}.",
+            end=" "
         )
+        print(
+                f"Time: {Fore.CYAN}{(time.perf_counter()-battle_start):05.2f}s{Fore.LIGHTBLACK_EX}"
+            )
+
+        while LXVI_locateCenterOnScreen(UIImage("closebtn.png"), 0.85) is None:
+            pass
+
+        return
 
     r = 0
 
@@ -527,7 +536,7 @@ def waitFight():
                 end=" ",
             )
             print(
-                f"Time: {Fore.CYAN}{round(time.perf_counter()-battle_start, 3)}s{Fore.LIGHTBLACK_EX}"
+                f"Time: {Fore.CYAN}{(time.perf_counter()-battle_start):05.2f}s{Fore.LIGHTBLACK_EX}"
             )
             return
 
@@ -670,8 +679,8 @@ def train():
 
     if autoSwitch:
         levelABCD = [level >= CONFIG["team"]["switchLevel"] for level in getTeamLevel()]
-    if not CONFIG["team"]["switchMain"]:
-        levelABCD[0] = False
+        if not CONFIG["team"]["switchMain"]:
+            levelABCD[0] = False
 
     click(UIImage("x.png"), 0.8, 0.2, 0)
 
