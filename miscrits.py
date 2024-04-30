@@ -49,6 +49,7 @@ def UIImage(imagename: str) -> str:
 
 
 b = 0
+sNo = 1
 caught = False
 autoSwitch = CONFIG["team"]["autoSwitch"]
 start = time.perf_counter()
@@ -276,7 +277,7 @@ def getTeamLevel():
 
 
 def useSkill(toClick: Point, skillNo: int = 1):
-    global onSkillPage
+    global onSkillPage, skillClick
 
     page = int((skillNo - 1) / 4) + 1
     skill = (skillNo - 1) % 4
@@ -290,22 +291,23 @@ def useSkill(toClick: Point, skillNo: int = 1):
             click(UIImage("skillsetL.png"), 0.75, 0, 0)
             onSkillPage -= 1
 
-    while (
-        LXVI_locateCenterOnScreen(
-            UIImage("run.png"), 0.99, [toClick.x - 132, toClick.y - 106, 36, 55]
-        )
-        is None
-    ):
-        if (
-            LXVI_locateCenterOnScreen(UIImage("closebtn.png"), 0.85) is not None
-            or not checkActive()
-        ):
-            return
-        pass
-
     LXVI_moveTo(skillClick)
-    pyautogui.leftClick()
-    pyautogui.moveRel(0, 40)
+
+    if CONFIG["fight"]["autoFight"]:
+        while (
+            LXVI_locateCenterOnScreen(
+                UIImage("run.png"), 0.99, [toClick.x - 132, toClick.y - 106, 36, 55]
+            )
+            is None
+        ):
+            if (
+                LXVI_locateCenterOnScreen(UIImage("closebtn.png"), 0.85) is not None
+                or not checkActive()
+            ):
+                return
+            pass
+        pyautogui.leftClick()
+        pyautogui.moveRel(0, 40)
 
 
 def walkMode():
@@ -343,8 +345,9 @@ def searchMode():
         cleanUp()
 
         if CONFIG["search"]["autoSearch"]:
+            SearchSuccess = False
             for search in searchSeq:
-                if (toClick := LXVI_locateCenterOnScreen(search, 0.9)) is None:
+                if (toClick := LXVI_locateCenterOnScreen(search, 0.75)) is None:
                     continue
 
                 SearchSuccess = True
@@ -364,15 +367,18 @@ def searchMode():
                 ):
                     encounterMode()
                     summary()
+
+            if not SearchSuccess:
+                return
         else:
-            print("not auto searching")
             time.sleep(0.5)
 
 
 def encounterMode():
-    global miscrit, b, onSkillPage, rarity, initialChance
+    global miscrit, b, sNo, onSkillPage, rarity, initialChance, battle_start, toClick, toRun
 
     b += 1
+    sNo = 1
     miscrit = "[redacted]"
     rarity = "Unidentified"
     action = 0
@@ -383,12 +389,12 @@ def encounterMode():
         pass
 
     if (
-        LXVI_locateCenterOnScreen(UIImage(CONFIG["mainMiscrit"]["strength"]), 0.95)
+        LXVI_locateCenterOnScreen(UIImage(CONFIG["fight"]["strength"]), 0.95)
         is not None
     ):
         action = -1
     elif (
-        LXVI_locateCenterOnScreen(UIImage(CONFIG["mainMiscrit"]["weakness"]), 0.95)
+        LXVI_locateCenterOnScreen(UIImage(CONFIG["fight"]["weakness"]), 0.95)
         is not None
     ):
         action = 1
@@ -441,8 +447,8 @@ def encounterMode():
         conclude()
 
     if CONFIG["catch"]["fightHunt"]:
-        toClick = LXVI_locateCenterOnScreen(UIImage("run.png"), 0.75)
-        toClick = Point(toClick.x + 115, toClick.y + 80)
+        toRun = LXVI_locateCenterOnScreen(UIImage("run.png"), 0.75)
+        toClick = Point(toRun.x + 115, toRun.y + 80)
     else:
         while (toClick := LXVI_locateCenterOnScreen(UIImage("run.png"), 0.99)) is None:
             pass
@@ -453,36 +459,68 @@ def encounterMode():
         )
 
     r = 0
-    while True:
-        r += 1
-        if (
-            CONFIG["mainMiscrit"]["hasHeal"]
-            and r % int(CONFIG["mainMiscrit"]["healCD"] + 1) == 2
-        ):
-            lastAction = action
-            action = 2
-        if action == 0:  # strongest attack
-            useSkill(toClick, CONFIG["mainMiscrit"]["main"])
-        elif (
-            action == -1
-        ):  # alternative attack to use for elements that are weak against you
-            useSkill(toClick, CONFIG["mainMiscrit"]["strong"])
-        elif action == 1:  # skill for weakness element
-            if not CONFIG["mainMiscrit"]["ignoreWeakness"]:
-                useSkill(toClick, CONFIG["mainMiscrit"]["weak"])
-            else:
-                useSkill(toClick, CONFIG["mainMiscrit"]["main"])
-            if CONFIG["mainMiscrit"]["hasNegate"]:
-                action = 0
-        elif action == 2:
-            useSkill(toClick, CONFIG["mainMiscrit"]["heal"])
-            action = lastAction
 
+    if CONFIG["fight"]["autoFight"]:
+        while True:
+            r += 1
+            if (
+                CONFIG["fight"]["hasHeal"]
+                and r % int(CONFIG["fight"]["healCD"] + 1) == 2
+            ):
+                lastAction = action
+                action = 2
+            if action == 0:  # strongest attack
+                useSkill(toClick, CONFIG["fight"]["main"])
+            elif (
+                action == -1
+            ):  # alternative attack to use for elements that are weak against you
+                useSkill(toClick, CONFIG["fight"]["strong"])
+            elif action == 1:  # skill for weakness element
+                if not CONFIG["fight"]["ignoreWeakness"]:
+                    useSkill(toClick, CONFIG["fight"]["weak"])
+                else:
+                    useSkill(toClick, CONFIG["fight"]["main"])
+                if CONFIG["fight"]["hasNegate"]:
+                    action = 0
+            elif action == 2:
+                useSkill(toClick, CONFIG["fight"]["heal"])
+                action = lastAction
+
+            if not checkActive():
+                print("Minimized while in encounter mode, concluding process...")
+                conclude()
+
+            if LXVI_locateCenterOnScreen(UIImage("closebtn.png"), 0.85) is not None:
+                print(
+                    f"\033[A{initialChance}% | {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} was defeated.",
+                    end=" ",
+                )
+                print(
+                    f"Time: {Fore.CYAN}{round(time.perf_counter()-battle_start, 3)}s{Fore.LIGHTBLACK_EX}"
+                )
+                return
+    else:
+        global thread_keybfight, thread_waitfight
+
+        useSkill(toClick, 1)
+
+        thread_keybfight = Listener(on_release=keybFight)
+        thread_keybfight.start()
+        thread_waitfight = threading.Thread(target=waitFight)
+        thread_waitfight.start()
+
+        thread_waitfight.join()
+
+
+def waitFight():
+    while True:
         if not checkActive():
-            print("Minimized while in encounter mode, concluding process...")
+            print("Minimized while in fight mode, concluding process...")
+            thread_keybfight.stop()
             conclude()
 
         if LXVI_locateCenterOnScreen(UIImage("closebtn.png"), 0.85) is not None:
+            thread_keybfight.stop()
             print(
                 f"\033[A{initialChance}% | {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} was defeated.",
                 end=" ",
@@ -493,13 +531,39 @@ def encounterMode():
             return
 
 
+def keybFight(key: Key | KeyCode):
+    global sNo, toClick, skillClick, toRun
+    if isinstance(key, KeyCode):
+        if key.char == "z":
+            LXVI_moveTo(skillClick)
+            pyautogui.leftClick()
+            pyautogui.moveRel(0, 40)
+        elif key.char == "x":
+            toRun = LXVI_locateCenterOnScreen(UIImage("run.png"), 0.75)
+            LXVI_moveTo(toRun)
+
+    if isinstance(key, Key):
+        if key == Key.left and sNo > 1:
+            sNo -= 1
+            useSkill(toClick, sNo)
+        elif key == Key.right and sNo < 12:
+            sNo += 1
+            useSkill(toClick, sNo)
+        elif key == Key.up and sNo > 4:
+            sNo -= 4
+            useSkill(toClick, sNo)
+        elif key == Key.down and sNo < 9:
+            sNo += 4
+            useSkill(toClick, sNo)
+
+
 def catchMode():
     global miscrit, caught
     action = 1
 
     chance = initialChance
     if (
-        LXVI_locateCenterOnScreen(UIImage(CONFIG["mainMiscrit"]["weakness"]), 0.95)
+        LXVI_locateCenterOnScreen(UIImage(CONFIG["fight"]["weakness"]), 0.95)
         is not None
     ):
         action = 0
@@ -532,13 +596,13 @@ def catchMode():
                     action = 3
 
             if action == 0:
-                useSkill(toClick, CONFIG["mainMiscrit"]["weak"])
+                useSkill(toClick, CONFIG["fight"]["weak"])
                 action = 1
             elif action == 1:
-                useSkill(toClick, CONFIG["mainMiscrit"]["bigpoke"])
+                useSkill(toClick, CONFIG["fight"]["bigpoke"])
                 action = 2
             elif action == 2:
-                useSkill(toClick, CONFIG["mainMiscrit"]["poke"])
+                useSkill(toClick, CONFIG["fight"]["poke"])
             elif action == 3:
                 click(UIImage("catchbtn.png"), 0.75, 6, 0)
                 if (
@@ -553,7 +617,7 @@ def catchMode():
                 print(
                     f"\033[A{Fore.Red}{initialChance}%{Fore.LIGHTBLACK_EX} | Failed to catch {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}."
                 )
-                useSkill(toClick, CONFIG["mainMiscrit"]["main"])
+                useSkill(toClick, CONFIG["fight"]["main"])
 
     print(
         f"\033[A{Fore.GREEN}{initialChance}%{Fore.WHITE} | {Fore.YELLOW}{miscrit}{Fore.WHITE} has been caught at {Fore.GREEN}{chance}%. {Fore.LIGHTBLACK_EX}"
@@ -704,10 +768,6 @@ def conclude():
         login()
         return
 
-    with open("catchrate.json5", "w") as file:
-        outputtxt = pyjson5.dumps(CATCHRATE)
-        file.write(outputtxt)
-
     print(
         f"\nEnded process after {Fore.CYAN}{b}{Fore.LIGHTBLACK_EX} Miscrits encountered."
     )
@@ -720,30 +780,7 @@ def conclude():
     sys.exit()
 
 
-def runmiscrits():
-    print(Fore.LIGHTBLACK_EX)
-    playSound(on)
-    print("Initiating code... process started.")
-    time.sleep(1)
-    while checkActive():
-        if not checkActive():
-            print("Game not found during search mode, concluding process...")
-            conclude()
-        if LXVI_locateCenterOnScreen(UIImage("battlebtns.png"), 0.8) is not None:
-            encounterMode()
-            summary()
-        else:
-            click(UIImage("closebtn.png"), 0.8, 1, 0)
-            click(UIImage("savebtn.png"), 0.8, 1, 0)
-            click(UIImage("x.png"), 0.8, 1, 0)
-        walkMode()
-        searchMode()
-    print("Game not found on screen. Nothing happened.")
-    playSound(rizz)
-    time.sleep(1)
-
-
-def runmiscrits():
+def runMiscrits():
     print(Fore.LIGHTBLACK_EX)
     playSound(on)
     print("Initiating code... process started.")
@@ -767,8 +804,6 @@ def runmiscrits():
             walkGoal = str(pathlib.PurePath("walkImages", f"{searchCode}.png"))
             if (toClick := LXVI_locateCenterOnScreen(walkGoal, 0.85)) is None:
                 walkMode()
-        else:
-            print("Wrong region for autoWalk.")
         searchMode()
     print("Game not found on screen.")
     playSound(rizz)
@@ -781,13 +816,14 @@ def show(key: Key | KeyCode):
             stop_event.set()
             print("Stopping miscrits...")
             # thread_keyb.stop()
+            conclude()
             return False
 
 
 if __name__ == "__main__":
     # thread_keyb = Listener(on_press=show)
     # thread_keyb.start()
-    thread_mis = threading.Thread(target=runmiscrits)
+    thread_mis = threading.Thread(target=runMiscrits)
     thread_mis.start()
 
     # thread_keyb.join()
