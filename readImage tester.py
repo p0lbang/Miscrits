@@ -37,6 +37,13 @@ def LXVI_readImage(region: tuple[int, int, int, int] | None = None):
     return text
 
 
+def LXVI_getImage(region: tuple[int, int, int, int] | None = None):
+    global reader, img
+
+    img = pyautogui.screenshot(region=region)
+    img.save(f"testing.png")
+
+
 def LXVI_locateCenterOnScreen(
     imagename: str,
     confidence: float = 0.999,
@@ -153,7 +160,12 @@ def getCatchChance():
     print(chance)
 
 
-# switchLevel = 30
-# getTeamLevelB()
+def getMyMiscritProfile():
+    mPedia = LXVI_locateCenterOnScreen("UI_Images\\miscripedia.png", 0.8)
+    if isinstance(mPedia, Point):
+        profile = LXVI_getImage(
+            region=(int(mPedia.x) - 289, int(mPedia.y) - 31, 40, 40)
+        )
 
-print(11 % 4)
+
+getMyMiscritProfile()
