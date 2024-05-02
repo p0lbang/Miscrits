@@ -13,7 +13,7 @@
     "search": {
         "autoSearch": true, // .............. | looks for miscrits in searchable spots for you
         "searchInterval": 5, // ............. | time before clicking the next location (min: 5)
-        "searchCode": "af_dflue_bkiloray", // ..... | paste from search codes below, ex: "a1_waddles" 
+        "searchCode": "m1_thundercracker", // ..... | paste from search codes below, ex: "a1_waddles" 
         "searchSeq": { // ................... | don't change the existing sequences pls don't no no 
             "af_waddles": ["a1_typha1", "a1_bushsun", "a1_typha1_2"],
             "af_dflue_bkiloray": ["a2_blight", "a2_palm", "a2_tree", "a2_rock1"],
@@ -44,19 +44,7 @@
     },
     "fight": {  // | info of your first miscrit in the team, the hard carry
         "autoFight": true,  // false -> use arrow keys to cycle through the skills and 'z' to click skill ('x' to hover on run)
-        "strength": "nature.png",
-        "weakness": "water.png",
-        "skipWeakness": false,
-        "ignoreWeakness": true,
-        "hasNegate": false,
-        "hasHeal": true,
-        "healCD": 2,
-        "main": 1, // ... | skill to be used mainly for spamming
-        "strong": 1, // . | skill to be used for elements weak against you
-        "weak": 2, // . | skill to be used for your weakness element
-        "heal": 1,
-        "bigpoke": 2,  // | skill that chips away at wild miscrit's HP without killing them
-        "poke": 10,  // . | skill that reduces wild miscrit's HP until they're catchable
+        "skipWeakness": false,  // false -> fight weakness element instead of escaping (affected by current miscrit preset)
     },
     "catch": {
         "skipAll": false,  // ....... | true -> flee from wild miscrits that are not tagged for capture
@@ -71,31 +59,13 @@
             ],  
         // ........................... | miscrits added above are prioritized for capture regardless of their initial catch chance
         "blocked": [
-            "Sparkupine",
-            "Quirk",
-            "Cubsprout",
-            "Lumera",
-            "Nessy",
-            "Twiggum",
-            "Shellbee", 
-            "Hotfoot", 
-            "Elefauna",
-            "Aria",
-            "Hydroseal",
-            "Bubbles",
-            "Statikat",
-            "Frostmite",
-            "Thundercracker",
-            "Squibee",
-            "Crickin",
-            "DarkPrawnja",
-            "DarkLumera",
-            "Prawnja",
-            "Narlope",
-            "Croaky",
-            "Sparkspeck",
-
-            ],
+            // "Cubsprout", "Sparkupine", // forest 1
+            // "Quirk", "Flameling", // forest 2
+            // "Snatcher", "Elefauna", "Hotfoot", "DarkFlowerpiller", // forest 3
+            // "Twiggum", "Shellbee", "Squibee", "Steamguin", "Crickin", // forest 4
+            // "Frostmite", "Slithero", "Croaky", "Rafiery", // mansion 1
+            // "Humbug", "Nanaslug" // mansion 2
+        ],
         // ........................... | miscrits added above will be tagged to not catch
         "catchStandardDict": {  // ... | set values as capture thresholds for each rarity
             "Common": 27, // ....# 27-45%
