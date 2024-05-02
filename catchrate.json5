@@ -1,13 +1,1 @@
-{
-  aria: { "36": 1, "39": 1 },
-  bubbles: { "34": 1 },
-  cubsprout: { "34": 1 },
-  hotfoot: { "33": 2 },
-  hydroseal: { "37": 1, "40": 1 },
-  shellbee: { "37": 1 },
-  sparkupine: { "33": 1, "40": 1 },
-  squibee: { "34": 1, "42": 1, "36": 1 },
-  statikat: { "30": 1, "33": 1 },
-  twiggum: { "31": 1, "36": 1 },
-  steamguin: { "36": 1 },
-}
+{"aria":{"36":1,"39":1},"bubbles":{"34":1},"cubsprout":{"34":1},"hotfoot":{"33":2},"hydroseal":{"37":1,"40":1},"shellbee":{"37":1},"sparkupine":{"33":1,"40":1},"squibee":{"34":1,"36":1,"42":1,"31":1},"statikat":{"30":1,"33":1},"steamguin":{"36":1},"twiggum":{"31":1,"36":1}}

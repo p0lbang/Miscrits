@@ -52,7 +52,7 @@
     hasNegate: false,
     hasHeal: true,
     healCD: 1,
-    main: 11,
+    main: 1,
     strong: 1,
     weak: 1,
     heal: 1,
