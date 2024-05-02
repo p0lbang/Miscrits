@@ -17,6 +17,7 @@ import math
 from pynput.keyboard import Key, KeyCode, Listener
 import threading
 import os
+import datetime
 
 environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 import pygame  # noqa: E402
@@ -121,6 +122,14 @@ def playSound(audio: pygame.mixer.Sound) -> None:
 
 def checkActive():
     return LXVI_locateCenterOnScreen(UIImage(APPNAMEPNG), 0.8) is not None
+
+
+def checkMaintenanceTime():
+    now = datetime.datetime.now()
+    if now.hour == 7 and now.minute >= 55:
+        return True
+    else:
+        return False
 
 
 def LXVI_moveTo(p: Point, duration: float = 0):
@@ -284,11 +293,13 @@ def updateCurrentMiscrit():
             is not None
         ):
             profileName = profile[:-4]
-            print(f"Activated Profile: {profileName}")
+            print(f"\033[AActivated Preset: {profileName}             \n")
             return profileName
 
     print("Miscrit profile not found, creating new profile.")
-    print("Run this code again after changing image name in profileImages and details in mPresets.json5")
+    print(
+        "Run this code again after changing image name in profileImages and details in mPresets.json5"
+    )
     mPedia = LXVI_locateCenterOnScreen(UIImage("miscripedia.png"), 0.8)
     if isinstance(mPedia, Point):
         img = pyautogui.screenshot(
@@ -422,6 +433,10 @@ def searchMode():
 
         cleanUp()
 
+        if checkMaintenanceTime():
+            click(UIImage("logoutbtn.png"))
+            time.sleep(310)
+
         if CONFIG["search"]["autoSearch"]:
             loopcount += 1
             SearchSuccess = False
@@ -448,11 +463,11 @@ def searchMode():
                     encounterMode()
                     summary()
 
+            if loopcount > 5:
+                conclude()
+
         else:
             time.sleep(0.5)
-
-        if loopcount > 5:
-            conclude()
 
 
 def encounterMode():
@@ -537,7 +552,10 @@ def encounterMode():
         print("Minimized while in encounter mode, concluding process...")
         conclude()
 
-    if ((PRESETS[current]["skipWeakness"] or CONFIG["fight"]["skipWeakness"]) and weakness) or CONFIG["catch"]["skipAll"]:
+    if (
+        (PRESETS[current]["skipWeakness"] or CONFIG["fight"]["skipWeakness"])
+        and weakness
+    ) or CONFIG["catch"]["skipAll"]:
         while (toClick := LXVI_locateCenterOnScreen(UIImage("run.png"), 0.99)) is None:
             pass
         LXVI_moveTo(toClick)
@@ -892,7 +910,7 @@ def conclude():
 def runMiscrits():
     print(Fore.LIGHTBLACK_EX)
     playSound(on)
-    print("Initiating code... process started.")
+    print("Initiating code... process started.\n")
     time.sleep(1)
     while checkActive():
         if not checkActive():
