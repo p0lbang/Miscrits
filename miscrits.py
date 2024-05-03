@@ -399,8 +399,8 @@ def useSkill(toClick: Point, skillNo: int = 1):
 
 
 def walkMode():
-    (chatX, chatY) = LXVI_locateCenterOnScreen(UIImage("chatbtn.png"), 0.9)
-    (settX, settY) = LXVI_locateCenterOnScreen(UIImage("settingsbtn.png"), 0.9)
+    (chatX, chatY) = LXVI_locateCenterOnScreen(UIImage("levelTop.png"), 0.95)
+    (settX, settY) = LXVI_locateCenterOnScreen(UIImage("menubtn.png"), 0.95)
     center = Point(int((chatX + settX) / 2), int((chatY + settY) / 2))
     LXVI_moveTo(center)
     time.sleep(3)

@@ -5,6 +5,7 @@
         "walkInterval": 3,  // .............. | time before clicking next walking point (DO NOT CHANGE!)
         "walkSeq": {  // .....................| NEVER MOVE YOUR MOUSE WHILE autoWalking!!!
             "af": [0, -45, 45, 0, 0, -30, -30, -150, -150, -150, 135, 135, -135, 180, 150],
+            "zf": [0, 0, 0, 0, -30, -30, -150, -150, -90, -15, 0],
             "m0": [180, 155, 155, 180, -155],
             "m1": [-90, 155, 155],
             "m2": [120, 0, 0, -75, -75],
@@ -13,7 +14,7 @@
     "search": {
         "autoSearch": true, // .............. | looks for miscrits in searchable spots for you
         "searchInterval": 5, // ............. | time before clicking the next location (min: 5)
-        "searchCode": "m1_thundercracker", // ..... | paste from search codes below, ex: "a1_waddles" 
+        "searchCode": "zf_bflue", // ..... | paste from search codes below, ex: "a1_waddles" 
         "searchSeq": { // ................... | don't change the existing sequences pls don't no no 
             "af_waddles": ["a1_typha1", "a1_bushsun", "a1_typha1_2"],
             "af_dflue_bkiloray": ["a2_blight", "a2_palm", "a2_tree", "a2_rock1"],
@@ -25,6 +26,7 @@
             "af_dsteamguin": ["a4_flatrock", "a4_sun2", "a4_dead2", "a4_sun3"],
             "af_dprawnja": ["a4_typha2", "a4_dead1", "a4_shrub2", "a4_typha3"],
             "af_defilio": ["a4_blight", "a4_typha4", "a4_minis", "a4_yellow"],
+            "zf_bflue": ["a4_blight2", "a4_log", "a4_stone", "a4_shrub3"],
             "m0_A": ["m0_sapling", "m0_rock1", "m0_rock2", "m0_stone1", "m0_grass", "m0_rock3"],
             "m0_B": ["m0_axe", "m0_crate", "m0_chops", "m0_minis"],
             "m0_C": ["m0_cattail01", "m0_cattail02", "m0_cattail03", "m0_cattail04"],
@@ -52,9 +54,8 @@
         "catchablePercentage": 90,  // | makes the attempt to catch the miscrit when the rate is above this value
         "targetAll": true,  // ....... | true -> every encountered miscrit is tagged for capture
         "targets": [
-            "DarkFlue", 
-            "BlightedKiloray", 
-            "DarkLumera", 
+            "BlightedFlue", 
+            "EliteAlpha",
             "Treemur"
             ],  
         // ........................... | miscrits added above are prioritized for capture regardless of their initial catch chance
@@ -63,7 +64,7 @@
             // "Quirk", "Flameling", // forest 2
             // "Snatcher", "Elefauna", "Hotfoot", "DarkFlowerpiller", // forest 3
             // "Twiggum", "Shellbee", "Squibee", "Steamguin", "Crickin", // forest 4
-            // "Frostmite", "Slithero", "Croaky", "Rafiery", // mansion 1
+            // "Frostmite", "Bubbles", "Spinnerette", "Slithero", "Croaky", "Rafiery", // mansion 1
             // "Humbug", "Nanaslug" // mansion 2
         ],
         // ........................... | miscrits added above will be tagged to not catch
