@@ -21,6 +21,9 @@ GODOT_DATATYPES = [
 
 class MiscritsData:
     def __init__(self):
+        self.clear()
+
+    def clear(self):
         self.TOKENS = []
         self.currenttok = ""
         self.wholepacketdata = ""
