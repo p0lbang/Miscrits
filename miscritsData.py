@@ -2,6 +2,10 @@ from scapy.all import sniff, Packet
 import struct
 import math
 import json
+import logging
+
+logger = logging.getLogger("MISCRITSDATA")
+logger.disabled = True
 
 GODOT_DATATYPES = [
     "01000000",
@@ -176,16 +180,16 @@ class MiscritsData:
                             "ed": wildstar[5],
                             "pd": wildstar[4],
                         }
-                        # print(wildstardict)
                         self.output = wildstardict
                         return True
                     except Exception as e:
-                        print(e)
-                    # print(json.dumps(parsedobject, indent=2))
+                        logger.warning(e)
+
+                    logger.info(json.dumps(parsedobject, indent=2))
 
                 self.wholepacketdata = ""
             except Exception as error:
-                print("An error occurred:", type(error).__name__, "–", error)
+                logger.warning("An error occurred:", type(error).__name__, "–", error)
 
         return False
 
@@ -195,6 +199,7 @@ class MiscritsData:
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
     mcdata = MiscritsData()
     stats = mcdata.getStats()
-    print(stats)
+    logger.info(stats)
