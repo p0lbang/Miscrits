@@ -310,6 +310,9 @@ def updateCurrentMiscrit():
     PRESETS["newProfile"]["skipWeakness"] = True
     PRESETS["newProfile"]["strength"] = "gold.png"
     PRESETS["newProfile"]["weakness"] = "gold.png"
+    PRESETS["newProfile"]["isDual"] = False
+    PRESETS["newProfile"]["strength2"] = "gold.png"
+    PRESETS["newProfile"]["weakness2"] = "gold.png"
     PRESETS["newProfile"]["ignoreWeakness"] = False
     PRESETS["newProfile"]["hasNegate"] = False
     PRESETS["newProfile"]["hasHeal"] = False
@@ -337,6 +340,8 @@ def getCatchChance():
                 [int(catchButton.x) - 17, int(catchButton.y) + 13, 18, 22], True
             )
         )
+        if chance >= 110:
+            return 10
         return min(chance, 100)
     else:
         return None
@@ -369,13 +374,17 @@ def useSkill(toClick: Point, skillNo: int = 1):
     page = int((skillNo - 1) / 4) + 1
     skill = (skillNo - 1) % 4
     skillClick = Point(toClick.x + 160 * skill, toClick.y)
+    skillsetL = Point(toClick.x - 130, toClick.y)
+    skillsetR = Point(toClick.x + 610, toClick.y)
 
     while onSkillPage != page:
         if onSkillPage < page:
-            click(UIImage("skillsetR.png"), 0.6, 0, 0)
+            LXVI_moveTo(skillsetR)
+            pyautogui.leftClick()
             onSkillPage += 1
         elif onSkillPage > page:
-            click(UIImage("skillsetL.png"), 0.6, 0, 0)
+            LXVI_moveTo(skillsetL)
+            pyautogui.leftClick()
             onSkillPage -= 1
 
     if CONFIG["fight"]["autoFight"]:
@@ -434,6 +443,7 @@ def searchMode():
         cleanUp()
 
         if checkMaintenanceTime():
+            click(UIImage("menubtn.png"), 0.9, 0.2)
             click(UIImage("logoutbtn.png"))
             time.sleep(310)
 
@@ -494,16 +504,29 @@ def encounterMode():
         current = updateCurrentMiscrit()
 
     if (
-        LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["strength"]), 0.9)
+        LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["strength"]), 0.85)
         is not None
     ):
         action = -1
     elif (
-        LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["weakness"]), 0.9)
+        LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["weakness"]), 0.85)
         is not None
     ):
         action = 1
         weakness = True
+
+    if PRESETS[current]["isDual"]:
+        if (
+            LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["strength2"]), 0.85)
+            is not None
+        ):
+            action = -1
+        elif (
+            LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["weakness2"]), 0.85)
+            is not None
+        ):
+            action = 1
+            weakness = True
 
     # miscritsCheck info
     click(UIImage("miscripedia.png"), 0.8, 0.555, 0)
@@ -536,6 +559,8 @@ def encounterMode():
         while LXVI_locateCenterOnScreen(UIImage("run.png"), 0.99) is None:
             pass
         initialChance = getCatchChance()
+        if initialChance >= 100:
+            initialChance = 10
         print(f"\033[A{initialChance}%")
 
     if miscrit not in ["[redacted]", "[unidentified]"]:
@@ -740,7 +765,7 @@ def catchMode():
                     action = 4
             elif action == 4:
                 print(
-                    f"\033[A{Fore.Red}{initialChance}%{Fore.LIGHTBLACK_EX} | Failed to catch {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}."
+                    f"\033[A{Fore.RED}{initialChance}%{Fore.LIGHTBLACK_EX} | Failed to catch {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}.     "
                 )
                 useSkill(toClick, PRESETS[current]["main"])
 
@@ -875,7 +900,7 @@ def login():
             conclude()
         pass
     print("\033[AAccount logged back in. Resuming...   ")
-    time.sleep(5)
+    time.sleep(10)
     dailySpin()
 
 
@@ -926,7 +951,7 @@ def runMiscrits():
             click(UIImage("savebtn.png"), 0.95, 1, 0)
             click(UIImage("x.png"), 0.95, 1, 0)
         if CONFIG["walk"]["autoWalk"] and (
-            LXVI_locateCenterOnScreen(walkRegion, 0.9) is not None
+            LXVI_locateCenterOnScreen(walkRegion, 0.8) is not None
         ):
             walkGoal = str(pathlib.PurePath("walkImages", f"{searchCode}.png"))
             if LXVI_locateCenterOnScreen(walkGoal, 0.85) is None:

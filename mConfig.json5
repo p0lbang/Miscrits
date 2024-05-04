@@ -1,13 +1,14 @@
 {
     "audio": true, // false -> mute the code audios
     "walk": {
-        "autoWalk": false, // ................ | walks until it finds your searching location
+        "autoWalk": true, // ................ | walks until it finds your searching location
         "walkInterval": 3,  // .............. | time before clicking next walking point (DO NOT CHANGE!)
         "walkSeq": {  // .....................| NEVER MOVE YOUR MOUSE WHILE autoWalking!!!
             "fa": [0, -45, 45, 0, 0, -30, -30, -150, -150, -150, 135, 135, -135, 180, 150],
             "fb": [0, -45, 45, 0, 0, -30, -30, -150, -150, -90, -15, 0],
-            "ga": [],
-            "m0": [180, 155, 155, 180, -155],
+            "ga": [-155, -60, 180, 180, -155, -90, -35, -35, 25, -55, -35, -135, 180, -90],
+            "gb": [-155, -30, -30, -125, -30, 80],
+            "m0": [180, 155, 155, 180, -90],
             "m1": [-90, 155, 155],
             "m2": [120, 0, 0, -75, -75],
         }
@@ -15,7 +16,7 @@
     "search": {
         "autoSearch": true, // .............. | looks for miscrits in searchable spots for you
         "searchInterval": 5, // ............. | time before clicking the next location (min: 5)
-        "searchCode": "ga_poltergust_dkiloray", // ...... | paste from search codes below, ex: "a1_waddles" 
+        "searchCode": "ga_munkee_liothning_dpoltergust_fflintly", // ...... | paste from search codes below, ex: "a1_waddles" 
         "searchSeq": { // ................... | don't change the existing sequences pls don't no no 
         // fa, fb --> Miscrian Forest
             "fa_waddles": ["a1_typha1", "a1_bushsun", "a1_typha1_2"],
@@ -31,16 +32,14 @@
             "fb_bflue": ["a4_blight2", "a4_log", "a4_stone", "a4_shrub3"],
         // ga --> Mount Gemma
             "ga_luna": ["b1_stone", "b1_typha", "b1_potrock", "b1_mound1"],
-            "ga_poltergust_dkiloray": ["b1_crystal1", "b1_dead", "b1_mound2", "b1_smallcact", "b1_stack"],
-            "ga_fkiloray": ["b1_crystal2", "b1_megarock", "b1_shrub", "b1_gigarock"],
+            "gb_poltergust_dkiloray": ["b1_crystal1", "b1_dead", "b1_mound2", "b1_smallcact", "b1_stack"],
+            "gb_fkiloray": ["b1_crystal2", "b1_megarock", "b1_shrub", "b1_gigarock"],
             "ga_dcroaky": ["b2_pink", "b2_yellow", "b2_deadbush", "b2_stone", "b2_sapling"],
             "ga_eggy": [],
             "ga_fossilia": [],
             "ga_dowlie": [],
             "ga_boltzee": [],
-            "ga_munkee_liothning": [],
-            "ga_fflintly": [],
-            "ga_dpoltergust": [],
+            "ga_munkee_liothning_dpoltergust_fflintly": ["b4_gold", "b4_fade", "b4_purpred", "b4_blue"],
         // m0, m1, m2 --> The Mansion
             "m0_kelpa": ["m0_typha", "m0_hay"],
             "m0_A": ["m0_sapling", "m0_rock1", "m0_rock2", "m0_stone1", "m0_grass", "m0_rock3"],
@@ -62,7 +61,7 @@
     },
     "fight": {  // | info of your first miscrit in the team, the hard carry
         "autoFight": true,  // false -> use arrow keys to cycle through the skills and 'z' to click skill ('x' to hover on run)
-        "skipWeakness": true,  // false -> fight weakness element instead of escaping (affected by current miscrit preset)
+        "skipWeakness": false,  // false -> fight weakness element instead of escaping (affected by current miscrit preset)
     },
     "catch": {
         "skipAll": false,  // ....... | true -> flee from wild miscrits that are not tagged for capture
@@ -70,7 +69,7 @@
         "catchablePercentage": 87,  // | makes the attempt to catch the miscrit when the rate is above this value
         "targetAll": true,  // ....... | true -> every encountered miscrit is tagged for capture
         "targets": [
-            "BlightedFlue", "Poltergust", "DarkCroaky", "FoilKiloray", "DarkKiloray"
+            "BlightedFlue", "Liothning", "DarkPoltergust", "FoilFlintly"
             ],  
         // ........................... | miscrits added above are prioritized for capture regardless of their initial catch chance
         "blocked": [
@@ -78,6 +77,7 @@
             "Quirk", "Flameling", // forest 2
             "Snatcher", "Elefauna", "Hotfoot", "DarkFlowerpiller", // forest 3
             "Twiggum", "Shellbee", "Squibee", "Steamguin", "Crickin", // forest 4
+            "Breezycheeks", // gemma 1
             "Frostmite", "Bubbles", "Spinnerette", "Slithero", "Croaky", "Rafiery", // mansion 1
             "Humbug", "Nanaslug" // mansion 2
         ],
