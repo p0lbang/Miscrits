@@ -3,6 +3,7 @@ import struct
 import math
 import json
 import logging
+import time
 
 logger = logging.getLogger("MISCRITSDATA")
 logger.disabled = True
@@ -24,12 +25,16 @@ class MiscritsData:
         self.clear()
 
     def clear(self):
+        self.timeStarted = time.perf_counter()
         self.TOKENS = []
         self.currenttok = ""
         self.wholepacketdata = ""
         self.previousWild = []
         self.currentWild = []
         self.output = {}
+
+    def elapsedTime(self):
+        return time.perf_counter() - self.timeStarted
 
     def splitToNSize(self, value: str, n):
         string = value
@@ -199,6 +204,10 @@ class MiscritsData:
     def getStats(self) -> dict:
         sniff(filter="udp", stop_filter=self._getStats)
         return self.output
+
+    def getWildData(self) -> dict:
+        sniff(filter="udp", stop_filter=self._getStats)
+        return self.currentWild
 
 
 if __name__ == "__main__":
