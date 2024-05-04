@@ -46,7 +46,7 @@ def readJSON(filename:str, sort: bool = True) -> dict:
             file.write(str(pyjson5.dumps({})))
             return {}
 
-AREASTATS = readJSON("areastats.json5")
+# AREASTATS = readJSON("areastats.json5")
 CATCHRATE = readJSON("catchrate.json5")
 CONFIG = readJSON("mConfig.json5",sort=False)
 PRESETS = readJSON("mPresets.json5", sort=False)
