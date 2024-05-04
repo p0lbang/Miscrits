@@ -15,8 +15,7 @@ GODOT_DATATYPES = [
 ]
 
 
-class MiscritsData():
-
+class MiscritsData:
     def __init__(self):
         self.TOKENS = []
         self.currenttok = ""
@@ -24,21 +23,18 @@ class MiscritsData():
         self.previousmiscrit = []
         self.output = {}
 
-
-    def splitToNSize(self,value: str, n):
+    def splitToNSize(self, value: str, n):
         string = value
         return [string[i : i + n] for i in range(0, len(string), n)]
 
-
-    def removeZero(self,tok: str):
+    def removeZero(self, tok: str):
         if tok is None:
             return ""
         while tok.endswith("00"):
             tok = tok[:-2]
         return tok
 
-
-    def toInt(self,hex:str):
+    def toInt(self, hex: str):
         strippedhex = self.removeZero(hex)
         parsedhex = "".join(reversed(self.splitToNSize(strippedhex, 2)))
         if parsedhex == "":
@@ -46,15 +42,13 @@ class MiscritsData():
         output = int(parsedhex, 16)
         return output
 
-
-    def toFloat(self,hex):
+    def toFloat(self, hex):
         strippedhex = self.removeZero(hex)
         parsedhex = "".join(reversed(self.splitToNSize(strippedhex, 2)))
         if parsedhex == "":
             return 0
         output = struct.unpack("!f", bytes.fromhex(parsedhex))[0]
         return output
-
 
     def poptoken(self):
         try:
@@ -66,8 +60,7 @@ class MiscritsData():
         except Exception:
             return None
 
-
-    def getTokens(self,rawdata: str):
+    def getTokens(self, rawdata: str):
         index = 0
         if rawdata.startswith("000200000000") or rawdata.startswith("000300000000"):
             index = 36
@@ -84,14 +77,12 @@ class MiscritsData():
         tkns = [string[i : i + n] for i in range(0, len(string), n)]
         return tkns
 
-
-    def parsegodot(self,rawdata):
+    def parsegodot(self, rawdata):
         self.TOKENS = self.getTokens(rawdata=rawdata)
         values = []
         while len(self.TOKENS) != 0:
             values.append(self.keywords(self.poptoken()))
         return values
-
 
     def getyes():
         charlength1 = self.toInt(self.poptoken())
@@ -99,19 +90,16 @@ class MiscritsData():
         realtok = "".join([self.poptoken() for _ in range(toklen)])
         return realtok
 
-
     def getLenofValue(self):
         charlength1 = self.toInt(self.poptoken())
         toklen = math.ceil(charlength1 / 4)
         return toklen
 
-
-    def getDynamicSizeTok(self,toklen: int):
+    def getDynamicSizeTok(self, toklen: int):
         realtok = "".join([self.poptoken() for _ in range(toklen)])
         return realtok
 
-
-    def keywords(self,tok):
+    def keywords(self, tok):
         if tok is None:
             return None
         elif tok == "00000000":
@@ -157,10 +145,7 @@ class MiscritsData():
             return temp
         return 0
 
-
-
-
-    def _getStats(self,packet: Packet):
+    def _getStats(self, packet: Packet):
         pkt = packet[0][1]
         if (pkt.src == "34.105.0.189" or pkt.dst == "34.105.0.189") and pkt.len > 40:
             if pkt.len < 44:
@@ -168,7 +153,9 @@ class MiscritsData():
             try:
                 line = pkt.load.hex()
                 n = 2
-                groupped = [line[i : i + n].capitalize() for i in range(0, len(line), n)]
+                groupped = [
+                    line[i : i + n].capitalize() for i in range(0, len(line), n)
+                ]
                 joinned = "".join(groupped)
                 joinned = joinned[28:]
                 if pkt.len >= 1420:
@@ -204,7 +191,9 @@ class MiscritsData():
                         print(e)
                     print(json.dumps(parsedobject, indent=2))
                 elif parsedobject is None:
-                    if len(self.wholepacketdata) != len("9000ed8c8600023a000607012760464e"):
+                    if len(self.wholepacketdata) != len(
+                        "9000ed8c8600023a000607012760464e"
+                    ):
                         print(self.wholepacketdata)
                 else:
                     print(parsedobject)
@@ -215,7 +204,7 @@ class MiscritsData():
 
         return False
 
-    def getStats(self):
+    def getStats(self) -> dict:
         sniff(filter="udp", stop_filter=self._getStats)
         return self.output
 
