@@ -18,28 +18,33 @@ from pynput.keyboard import Key, KeyCode, Listener
 import threading
 import os
 import datetime
+import json
 
 environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 import pygame  # noqa: E402
 
-def readJSON(filename:str, sort: bool = True) -> dict:
+def readJSON(filename:str, sortouter: bool = True, sortinner: bool = True) -> dict:
     try:
         DICTIONARY = {}
         with open(filename, "r") as file:
             filetext = file.read()
             if filetext != "":
                 tempjson = pyjson5.loads(filetext)
-                if sort:
+                
+                if sortinner:
                     for key, value in tempjson.items():
                         try:
                             DICTIONARY[key] = dict(sorted(tempjson[key].items()))
                         except AttributeError:
                             pass
-
+                else:
+                    DICTIONARY = tempjson
+                
+                if sortouter:
                     DICTIONARY = dict(sorted(DICTIONARY.items()))
                 else:
                     DICTIONARY = tempjson
-        
+
         return DICTIONARY
     except IOError:  # FileNotFoundError in Python 3
         with open(filename, "w") as file:
@@ -48,8 +53,8 @@ def readJSON(filename:str, sort: bool = True) -> dict:
 
 # AREASTATS = readJSON("areastats.json5")
 CATCHRATE = readJSON("catchrate.json5")
-CONFIG = readJSON("mConfig.json5",sort=False)
-PRESETS = readJSON("mPresets.json5", sort=False)
+CONFIG = readJSON("mConfig.json5",sortouter=False,sortinner=False)
+PRESETS = readJSON("mPresets.json5",sortouter=True,sortinner=False)
 
 reader = easyocr.Reader(["en"], gpu=True, verbose=True)
 pygame.init()
@@ -930,7 +935,7 @@ def conclude():
         return
 
     with open("catchrate.json5", "w") as file:
-        outputtxt = pyjson5.dumps(CATCHRATE)
+        outputtxt = json.dumps(CATCHRATE,indent=2)
         file.write(outputtxt)
 
     print(
