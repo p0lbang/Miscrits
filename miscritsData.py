@@ -26,12 +26,16 @@ class MiscritsData:
 
     def clear(self):
         self.timeStarted = time.perf_counter()
+        self.timeoutThreshold = 60
         self.TOKENS = []
         self.currenttok = ""
         self.wholepacketdata = ""
         self.previousWild = []
         self.currentWild = []
         self.output = {}
+
+    def setTimeStarted(self):
+        self.timeStarted = time.perf_counter()
 
     def elapsedTime(self):
         return time.perf_counter() - self.timeStarted
@@ -150,6 +154,10 @@ class MiscritsData:
     def _getStats(self, packet: Packet):
         pkt = packet[0][1]
 
+        if self.elapsedTime() > self.timeoutThreshold:
+            logger.info("Timed out")
+            return True
+
         if (pkt.src == "34.105.0.189" or pkt.dst == "34.105.0.189") and pkt.len > 44:
             try:
                 line = pkt.load.hex()
@@ -201,11 +209,15 @@ class MiscritsData:
 
         return False
 
-    def getStats(self) -> dict:
+    def getStats(self, timeout: int = 60) -> dict:
+        self.timeoutThreshold = timeout
+        self.setTimeStarted()
         sniff(filter="udp", stop_filter=self._getStats)
         return self.output
 
-    def getWildData(self) -> dict:
+    def getWildData(self, timeout: int = 60) -> dict:
+        self.timeoutThreshold = timeout
+        self.setTimeStarted()
         sniff(filter="udp", stop_filter=self._getStats)
         return self.currentWild
 
