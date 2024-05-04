@@ -72,11 +72,12 @@ toContinue = True
 firstBattle = True
 autoSwitch = CONFIG["team"]["autoSwitch"]
 start = time.perf_counter()
-rizz = pygame.mixer.Sound(pathlib.PurePath("audio", "rizz.mp3"))
 on = pygame.mixer.Sound(pathlib.PurePath("audio", "on.mp3"))
 off = pygame.mixer.Sound(pathlib.PurePath("audio", "off.mp3"))
+rizz = pygame.mixer.Sound(pathlib.PurePath("audio", "rizz.mp3"))
 pluck = pygame.mixer.Sound(pathlib.PurePath("audio", "pluck.mp3"))
 bend = pygame.mixer.Sound(pathlib.PurePath("audio", "bend.mp3"))
+rock = pygame.mixer.Sound(pathlib.PurePath("audio", "rock.mp3"))
 
 APPNAMEPNG = "appname.png"
 if sys.platform.startswith("linux"):
@@ -247,6 +248,7 @@ rarDict = {
     "rar": "Rare",
     "epi": "Epic",
     "exo": "Exotic",
+    "leg": "Legendary",
     "lag": "Legendary",
 }
 
@@ -542,6 +544,8 @@ def encounterMode():
             )
 
             catchStandard = CONFIG["catch"]["catchStandardDict"][rarity]
+            if rarity == "Legendary":
+                playSound(rock)
             while LXVI_locateCenterOnScreen(UIImage("run.png"), 0.99) is None:
                 pass
             if ((initialChance := getCatchChance()) <= catchStandard) or (
