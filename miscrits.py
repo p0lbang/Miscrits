@@ -581,9 +581,10 @@ def encounterMode():
         while LXVI_locateCenterOnScreen(UIImage("run.png"), 0.99) is None:
             pass
         initialChance = getCatchChance()
-        if initialChance >= 100:
-            initialChance = 10
-        print(f"\033[A{initialChance}%")
+        if initialChance >= 50:
+            initialChance = str(initialChance)
+            initialChance = int(initialChance[:1])
+        print(f"\033[A{initialChance:02d}%")
 
     if miscrit not in ["[redacted]", "[unidentified]"]:
         key = miscrit.strip().lower()
@@ -609,7 +610,7 @@ def encounterMode():
         pyautogui.leftClick()
         print(
             "\033[A",
-            f"{initialChance}% | "
+            f"{initialChance:02d}% | "
             f"Time: {Fore.CYAN}{(time.perf_counter()-battle_start):05.2f}s{Fore.LIGHTBLACK_EX} | ",
             f" Avoided {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}.",
             sep="",
