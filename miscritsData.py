@@ -1,7 +1,7 @@
 from scapy.all import sniff, Packet
 import struct
-import json
 import math
+import json
 
 GODOT_DATATYPES = [
     "01000000",
@@ -83,12 +83,6 @@ class MiscritsData:
         while len(self.TOKENS) != 0:
             values.append(self.keywords(self.poptoken()))
         return values
-
-    def getyes():
-        charlength1 = self.toInt(self.poptoken())
-        toklen = math.ceil(charlength1 / 4)
-        realtok = "".join([self.poptoken() for _ in range(toklen)])
-        return realtok
 
     def getLenofValue(self):
         charlength1 = self.toInt(self.poptoken())
@@ -184,19 +178,12 @@ class MiscritsData:
                             "ed": wildstar[5],
                             "pd": wildstar[4],
                         }
-                        print(wildstardict)
+                        # print(wildstardict)
                         self.output = wildstardict
                         return True
                     except Exception as e:
                         print(e)
-                    print(json.dumps(parsedobject, indent=2))
-                elif parsedobject is None:
-                    if len(self.wholepacketdata) != len(
-                        "9000ed8c8600023a000607012760464e"
-                    ):
-                        print(self.wholepacketdata)
-                else:
-                    print(parsedobject)
+                    # print(json.dumps(parsedobject, indent=2))
 
                 self.wholepacketdata = ""
             except Exception as error:
