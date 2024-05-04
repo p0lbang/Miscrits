@@ -4,7 +4,6 @@ import time
 import mss
 import mss.tools
 from PIL import ImageGrab
-from PIL import Image
 import numpy
 import pyautogui
 import easyocr
@@ -23,14 +22,15 @@ import json
 environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 import pygame  # noqa: E402
 
-def readJSON(filename:str, sortouter: bool = True, sortinner: bool = True) -> dict:
+
+def readJSON(filename: str, sortouter: bool = True, sortinner: bool = True) -> dict:
     try:
         DICTIONARY = {}
         with open(filename, "r") as file:
             filetext = file.read()
             if filetext != "":
                 tempjson = pyjson5.loads(filetext)
-                
+
                 if sortinner:
                     for key, value in tempjson.items():
                         try:
@@ -39,7 +39,7 @@ def readJSON(filename:str, sortouter: bool = True, sortinner: bool = True) -> di
                             pass
                 else:
                     DICTIONARY = tempjson
-                
+
                 if sortouter:
                     DICTIONARY = dict(sorted(DICTIONARY.items()))
                 else:
@@ -51,10 +51,11 @@ def readJSON(filename:str, sortouter: bool = True, sortinner: bool = True) -> di
             file.write(str(pyjson5.dumps({})))
             return {}
 
+
 # AREASTATS = readJSON("areastats.json5")
 CATCHRATE = readJSON("catchrate.json5")
-CONFIG = readJSON("mConfig.json5",sortouter=False,sortinner=False)
-PRESETS = readJSON("mPresets.json5",sortouter=True,sortinner=False)
+CONFIG = readJSON("mConfig.json5", sortouter=False, sortinner=False)
+PRESETS = readJSON("mPresets.json5", sortouter=True, sortinner=False)
 
 reader = easyocr.Reader(["en"], gpu=True, verbose=True)
 pygame.init()
@@ -164,7 +165,10 @@ def LXVI_dragTo(p: Point, duration: float = 0):
             int(p[0]) + monitor["left"], int(p[1]) + monitor["top"], duration=duration
         )
 
-def LXVI_screenshot(region: tuple[int, int, int, int] = (0, 0, 0, 0),):
+
+def LXVI_screenshot(
+    region: tuple[int, int, int, int] = (0, 0, 0, 0),
+):
     # PIL library, bbox = (left,top,right,bottom)
     # pyautogui library, region = (left,top,width,height)
 
@@ -179,6 +183,7 @@ def LXVI_screenshot(region: tuple[int, int, int, int] = (0, 0, 0, 0),):
     img = ImageGrab.grab(bbox=computedBbox, all_screens=True)
 
     return img
+
 
 def LXVI_locateCenterOnScreen(
     imagename: str,
@@ -316,10 +321,8 @@ def updateCurrentMiscrit():
     )
     mPedia = LXVI_locateCenterOnScreen(UIImage("miscripedia.png"), 0.8)
     if isinstance(mPedia, Point):
-        img = LXVI_screenshot(
-            region=(int(mPedia.x) - 289, int(mPedia.y) - 31, 40, 40)
-        )
-        img.save(f"profileImages\\newProfile.png")
+        img = LXVI_screenshot(region=(int(mPedia.x) - 289, int(mPedia.y) - 31, 40, 40))
+        img.save("profileImages\\newProfile.png")
     PRESETS["newProfile"] = {}
     PRESETS["newProfile"]["skipWeakness"] = True
     PRESETS["newProfile"]["strength"] = "gold.png"
@@ -495,7 +498,7 @@ def searchMode():
 
 
 def encounterMode():
-    global miscrit, current, b, sNo, onSkillPage, rarity, initialChance, battle_start, toClick, toRun, firstBattle
+    global miscrit, current, b, sNo, onSkillPage, rarity, initialChance, battle_start, toClick, toRun, firstBattle  # noqa
 
     b += 1
     sNo = 1
@@ -549,7 +552,10 @@ def encounterMode():
     click(UIImage("mpedia_exit.png"), 0.8, 0, 0)
     pyautogui.leftClick()
 
-    if CONFIG["catch"]["autoCatch"] and (miscrit not in CONFIG["catch"]["blocked"] or CONFIG["catch"]["ignoreBlockedIfS+"]):
+    if CONFIG["catch"]["autoCatch"] and (
+        miscrit not in CONFIG["catch"]["blocked"]
+        or CONFIG["catch"]["ignoreBlockedIfS+"]
+    ):
         if CONFIG["catch"]["targetAll"] or miscrit in CONFIG["catch"]["targets"]:
             print(
                 f"\033[A    | {Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} found!{Fore.LIGHTBLACK_EX}"
@@ -935,7 +941,7 @@ def conclude():
         return
 
     with open("catchrate.json5", "w") as file:
-        outputtxt = json.dumps(CATCHRATE,indent=2)
+        outputtxt = json.dumps(CATCHRATE, indent=2)
         file.write(outputtxt)
 
     print(
