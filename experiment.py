@@ -5,9 +5,11 @@ import json
 
 TOKENS = []
 
-def splitToNSize(value:str,n):
+
+def splitToNSize(value: str, n):
     string = value
     return [string[i : i + n] for i in range(0, len(string), n)]
+
 
 def removeZero(tok: str):
     if tok is None:
@@ -19,21 +21,25 @@ def removeZero(tok: str):
 
 def toInt(hex):
     strippedhex = removeZero(hex)
-    parsedhex = "".join(reversed(splitToNSize(strippedhex,2)))
+    parsedhex = "".join(reversed(splitToNSize(strippedhex, 2)))
     if parsedhex == "":
         return 0
     output = int(parsedhex, 16)
     return output
 
+
 def toFloat(hex):
     strippedhex = removeZero(hex)
-    parsedhex = "".join(reversed(splitToNSize(strippedhex,2)))
+    parsedhex = "".join(reversed(splitToNSize(strippedhex, 2)))
     if parsedhex == "":
         return 0
-    output = struct.unpack('!f', bytes.fromhex(parsedhex))[0]
+    output = struct.unpack("!f", bytes.fromhex(parsedhex))[0]
     return output
 
+
 currenttok = ""
+
+
 def poptoken():
     global currenttok
     try:
@@ -45,8 +51,19 @@ def poptoken():
     except Exception:
         return None
 
-DATATYPES = ["01000000","02000000","03000000","04000000","05000000","1b000000","1c000000","1f000000"]
+
+DATATYPES = [
+    "01000000",
+    "02000000",
+    "03000000",
+    "04000000",
+    "05000000",
+    "1b000000",
+    "1c000000",
+    "1f000000",
+]
 # DATATYPES = ["1b000000","1c000000","1f000000"]
+
 
 def getTokens(rawdata: str):
     index = 0
@@ -65,6 +82,7 @@ def getTokens(rawdata: str):
     tkns = [string[i : i + n] for i in range(0, len(string), n)]
     return tkns
 
+
 def parsegodot(rawdata):
     global TOKENS
     TOKENS = getTokens(rawdata=rawdata)
@@ -73,16 +91,19 @@ def parsegodot(rawdata):
         values.append(keywords(poptoken()))
     return values
 
+
 def getyes():
     charlength1 = toInt(poptoken())
     toklen = math.ceil(charlength1 / 4)
     realtok = "".join([poptoken() for _ in range(toklen)])
     return realtok
 
+
 def getLenofValue():
     charlength1 = toInt(poptoken())
     toklen = math.ceil(charlength1 / 4)
     return toklen
+
 
 def getDynamicSizeTok(toklen: int):
     realtok = "".join([poptoken() for _ in range(toklen)])
@@ -91,9 +112,9 @@ def getDynamicSizeTok(toklen: int):
 
 def keywords(tok):
     if tok is None:
-        return None  
+        return None
     elif tok == "00000000":
-        return None  
+        return None
     elif tok == "01000000":  # bool
         return bool(toInt(poptoken()))
     elif tok == "02000000":  # integer
@@ -105,15 +126,15 @@ def keywords(tok):
         toklen = math.ceil(charlength / 4)
         realtok = "".join([poptoken() for _ in range(toklen)])
         stringoutput = bytes.fromhex(removeZero(realtok))
-        output = stringoutput.decode('utf-8')
+        output = stringoutput.decode("utf-8")
         return output
     elif tok == "05000000":  # vector2
         xlen = getLenofValue()
         ylen = getLenofValue()
         x = toInt(getDynamicSizeTok(xlen))
         y = toInt(getDynamicSizeTok(ylen))
-        return (x,y)
-    elif tok == "1b000000": # map/dictionary
+        return (x, y)
+    elif tok == "1b000000":  # map/dictionary
         temp = {}
         numelements = toInt(poptoken())
         for x in range(numelements):
@@ -121,7 +142,7 @@ def keywords(tok):
             value = keywords(poptoken())
             temp[key] = value
         return temp
-    elif tok == "1c000000": # array
+    elif tok == "1c000000":  # array
         temp = []
         numelements = toInt(poptoken())
         for x in range(numelements):
@@ -135,8 +156,11 @@ def keywords(tok):
         return temp
     return 0
 
+
 wholepacketdata = ""
 previousmiscrit = []
+
+
 ## Define our Custom Action function
 def custom_action(packet: Packet):
     global wholepacketdata, previousmiscrit
@@ -153,11 +177,11 @@ def custom_action(packet: Packet):
             if pkt.len >= 1420:
                 wholepacketdata += "".join(getTokens(joinned))
                 return False
-            
+
             wholepacketdata += "".join(getTokens(joinned))
-            
+
             parsedobject = parsegodot(wholepacketdata)
-            if isinstance(parsedobject,(list,dict)):
+            if isinstance(parsedobject, (list, dict)):
                 if parsedobject == []:
                     return False
                 try:
@@ -180,13 +204,13 @@ def custom_action(packet: Packet):
                     return True
                 except Exception as e:
                     print(e)
-                print(json.dumps(parsedobject,indent=2))
+                print(json.dumps(parsedobject, indent=2))
             elif parsedobject is None:
                 if len(wholepacketdata) != len("9000ed8c8600023a000607012760464e"):
                     print(wholepacketdata)
             else:
                 print(parsedobject)
-            
+
             wholepacketdata = ""
             # print(groupped)
         except Exception as error:
@@ -194,7 +218,7 @@ def custom_action(packet: Packet):
             # print(pkt.show())
             # print(currenttok)
             print("An error occurred:", type(error).__name__, "–", error)
-    
+
     return False
 
 
