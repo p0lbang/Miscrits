@@ -521,12 +521,12 @@ def encounterMode():
         current = updateCurrentMiscrit()
 
     if (
-        LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["strength"]), 0.80)
+        LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["strength"]), 0.8)
         is not None
     ):
         action = -1
     elif (
-        LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["weakness"]), 0.80)
+        LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["weakness"]), 0.8)
         is not None
     ):
         action = 1
@@ -534,12 +534,12 @@ def encounterMode():
 
     if PRESETS[current]["isDual"]:
         if (
-            LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["strength2"]), 0.80)
+            LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["strength2"]), 0.8)
             is not None
         ):
             action = -1
         elif (
-            LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["weakness2"]), 0.80)
+            LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["weakness2"]), 0.8)
             is not None
         ):
             action = 1

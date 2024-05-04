@@ -64,15 +64,15 @@
     },
     "fight": {  // | info of your first miscrit in the team, the hard carry
         "autoFight": true,  // false -> use arrow keys to cycle through the skills and 'z' to click skill ('x' to hover on run)
-        "skipWeakness": false,  // false -> fight weakness element instead of escaping (affected by current miscrit preset)
+        "skipWeakness": true,  // false -> fight weakness element instead of escaping (overrides miscrit preset if true)
     },
     "catch": {
         "skipAll": false,  // ....... | true -> flee from wild miscrits that are not tagged for capture
         "autoCatch": true,  // ....... | catches miscrits for you
-        "catchablePercentage": 87,  // | makes the attempt to catch the miscrit when the rate is above this value
+        "catchablePercentage": 90,  // | makes the attempt to catch the miscrit when the rate is above this value
         "targetAll": true,  // ....... | true -> every encountered miscrit is tagged for capture
         "targets": [
-            "BlightedFlue", "Liothning", "DarkPoltergust", "FoilFlintly"
+            "BlightedFlue", "DarkPoltergust", "FoilFlintly", "FoilWaddles", "Liothning"
             ],  
         // ........................... | miscrits added above are prioritized for capture regardless of their initial catch chance
         "ignoreBlockedIfS+": true,
@@ -87,8 +87,8 @@
         ],
         // ........................... | miscrits added above will be tagged to not catch
         "catchStandardDict": {  // ... | set values as capture thresholds for each rarity
-            "Common": 28, // ....# 27-45%
-            "Rare": 18, // ......# 17-35%
+            "Common": 27, // ....# 27-45%
+            "Rare": 17, // ......# 17-35%
             "Epic": 10, // ......# 10-25%
             "Exotic": 10, // ....# ?-10%
             "Legendary": 10, // .# ?-?
