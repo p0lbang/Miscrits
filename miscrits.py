@@ -372,10 +372,10 @@ def useSkill(toClick: Point, skillNo: int = 1):
 
     while onSkillPage != page:
         if onSkillPage < page:
-            click(UIImage("skillsetR.png"), 0.75, 0, 0)
+            click(UIImage("skillsetR.png"), 0.6, 0, 0)
             onSkillPage += 1
         elif onSkillPage > page:
-            click(UIImage("skillsetL.png"), 0.75, 0, 0)
+            click(UIImage("skillsetL.png"), 0.6, 0, 0)
             onSkillPage -= 1
 
     if CONFIG["fight"]["autoFight"]:
@@ -441,7 +441,7 @@ def searchMode():
             loopcount += 1
             SearchSuccess = False
             for search in searchSeq:
-                if (toClick := LXVI_locateCenterOnScreen(search, 0.75)) is None:
+                if (toClick := LXVI_locateCenterOnScreen(search, 0.85)) is None:
                     continue
 
                 SearchSuccess = True
@@ -494,12 +494,12 @@ def encounterMode():
         current = updateCurrentMiscrit()
 
     if (
-        LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["strength"]), 0.95)
+        LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["strength"]), 0.9)
         is not None
     ):
         action = -1
     elif (
-        LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["weakness"]), 0.95)
+        LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["weakness"]), 0.9)
         is not None
     ):
         action = 1
