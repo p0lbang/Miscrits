@@ -20,7 +20,8 @@ class MiscritsData:
         self.TOKENS = []
         self.currenttok = ""
         self.wholepacketdata = ""
-        self.previousmiscrit = []
+        self.previousWild = []
+        self.currentWild = []
         self.output = {}
 
     def splitToNSize(self, value: str, n):
@@ -60,6 +61,9 @@ class MiscritsData:
         except Exception:
             return None
 
+    def splitToN(self, inputstr: str, n: int):
+        return [inputstr[i : i + n] for i in range(0, len(inputstr), n)]
+
     def getTokens(self, rawdata: str):
         index = 0
         if rawdata.startswith("000200000000") or rawdata.startswith("000300000000"):
@@ -72,9 +76,9 @@ class MiscritsData:
                 x = rawdata.find(datatype)
                 if x > -1 and x < index:
                     index = x
-        string = rawdata[index:]
-        n = 8  # every n characters
-        tkns = [string[i : i + n] for i in range(0, len(string), n)]
+
+        # every 8 characters
+        tkns = self.splitToN(rawdata[index:], 8)
         return tkns
 
     def parsegodot(self, rawdata):
@@ -133,35 +137,37 @@ class MiscritsData:
 
     def _getStats(self, packet: Packet):
         pkt = packet[0][1]
-        if (pkt.src == "34.105.0.189" or pkt.dst == "34.105.0.189") and pkt.len > 40:
-            if pkt.len < 44:
-                return
+
+        if (pkt.src == "34.105.0.189" or pkt.dst == "34.105.0.189") and pkt.len > 44:
             try:
                 line = pkt.load.hex()
                 n = 2
-                groupped = [
-                    line[i : i + n].capitalize() for i in range(0, len(line), n)
-                ]
-                joinned = "".join(groupped)
-                joinned = joinned[28:]
+                temp_hex = self.splitToN(line, n)
+                temp_hex = "".join(temp_hex)
+
+                # remove first 28 characters, TODO: determine what is the purpose
+                temp_hex = temp_hex[28:]
+
+                # if udp packet is greater len than 1420 it means it has a next part
                 if pkt.len >= 1420:
-                    self.wholepacketdata += "".join(self.getTokens(joinned))
+                    self.wholepacketdata += "".join(self.getTokens(temp_hex))
                     return False
 
-                self.wholepacketdata += "".join(self.getTokens(joinned))
+                self.wholepacketdata += "".join(self.getTokens(temp_hex))
 
                 parsedobject = self.parsegodot(self.wholepacketdata)
+
                 if isinstance(parsedobject, (list, dict)):
                     if parsedobject == []:
                         return False
                     try:
                         wildstar = parsedobject[1][0]["Star"]
-                        wild = parsedobject[1][0]
-                        if wild != self.previousmiscrit:
-                            self.previousmiscrit = wild
-                        else:
-                            return
-                        wildstar = wild["Star"]
+                        self.currentWild = parsedobject[1][0]
+
+                        if self.currentWild == self.previousWild:
+                            return False
+
+                        self.previousWild = self.currentWild
                         wildstardict = {
                             "hp": wildstar[2],
                             "spd": wildstar[3],
