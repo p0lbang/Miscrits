@@ -159,6 +159,21 @@ def LXVI_dragTo(p: Point, duration: float = 0):
             int(p[0]) + monitor["left"], int(p[1]) + monitor["top"], duration=duration
         )
 
+def LXVI_screenshot(region: tuple[int, int, int, int] = (0, 0, 0, 0),):
+    # PIL library, bbox = (left,top,right,bottom)
+    # pyautogui library, region = (left,top,width,height)
+
+    # converts region to bbox
+    bbox_left = monitor["left"] + region[0]
+    bbox_top = monitor["top"] + region[1]
+    bbox_right = bbox_left + region[2]
+    bbox_bottom = bbox_top + region[3]
+
+    computedBbox = (bbox_left, bbox_top, bbox_right, bbox_bottom)
+
+    img = ImageGrab.grab(bbox=computedBbox, all_screens=True)
+
+    return img
 
 def LXVI_locateCenterOnScreen(
     imagename: str,
@@ -192,18 +207,7 @@ def LXVI_locateCenterOnScreen(
 def LXVI_readImage(
     region: tuple[int, int, int, int] = (0, 0, 0, 0), numerical: bool = False
 ):
-    # PIL library, bbox = (left,top,right,bottom)
-    # pyautogui library, region = (left,top,width,height)
-
-    # converts region to bbox
-    bbox_left = monitor["left"] + region[0]
-    bbox_top = monitor["top"] + region[1]
-    bbox_right = bbox_left + region[2]
-    bbox_bottom = bbox_top + region[3]
-
-    computedBbox = (bbox_left, bbox_top, bbox_right, bbox_bottom)
-
-    img = ImageGrab.grab(bbox=computedBbox, all_screens=True)
+    img = LXVI_screenshot(region=region)
     if numerical:
         read = reader.recognize(
             numpy.array(img), allowlist="0123456789", blocklist="-~( ).,"
@@ -278,7 +282,7 @@ def getCurrentMiscrit(region: tuple[int, int, int, int] | None = None):
     global reader, img
 
     mPedia = LXVI_locateCenterOnScreen(UIImage("miscripedia.png"), 0.8)
-    img = pyautogui.screenshot(region=(int(mPedia.x) - 289, int(mPedia.y) - 31, 40, 40))
+    img = LXVI_screenshot(region=(int(mPedia.x) - 289, int(mPedia.y) - 31, 40, 40))
     img.save(f"{UIImage("currentMiscrit.png")}")
 
 
@@ -307,7 +311,7 @@ def updateCurrentMiscrit():
     )
     mPedia = LXVI_locateCenterOnScreen(UIImage("miscripedia.png"), 0.8)
     if isinstance(mPedia, Point):
-        img = pyautogui.screenshot(
+        img = LXVI_screenshot(
             region=(int(mPedia.x) - 289, int(mPedia.y) - 31, 40, 40)
         )
         img.save(f"profileImages\\newProfile.png")
@@ -502,19 +506,19 @@ def encounterMode():
 
     if (
         firstBattle
-        or LXVI_locateCenterOnScreen(UIImage("currentMiscrit.png"), 0.99) is None
+        or LXVI_locateCenterOnScreen(UIImage("currentMiscrit.png"), 0.80) is None
     ):
         firstBattle = False
         getCurrentMiscrit()
         current = updateCurrentMiscrit()
 
     if (
-        LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["strength"]), 0.85)
+        LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["strength"]), 0.80)
         is not None
     ):
         action = -1
     elif (
-        LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["weakness"]), 0.85)
+        LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["weakness"]), 0.80)
         is not None
     ):
         action = 1
@@ -522,12 +526,12 @@ def encounterMode():
 
     if PRESETS[current]["isDual"]:
         if (
-            LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["strength2"]), 0.85)
+            LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["strength2"]), 0.80)
             is not None
         ):
             action = -1
         elif (
-            LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["weakness2"]), 0.85)
+            LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["weakness2"]), 0.80)
             is not None
         ):
             action = 1
@@ -612,7 +616,7 @@ def encounterMode():
 
     if CONFIG["fight"]["autoFight"]:
         while True:
-            if LXVI_locateCenterOnScreen(UIImage("currentMiscrit.png"), 0.99) is None:
+            if LXVI_locateCenterOnScreen(UIImage("currentMiscrit.png"), 0.80) is None:
                 getCurrentMiscrit()
                 current = updateCurrentMiscrit()
             r += 1
