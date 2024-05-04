@@ -94,9 +94,7 @@ class MiscritsData:
         return realtok
 
     def keywords(self, tok):
-        if tok is None:
-            return None
-        elif tok == "00000000":
+        if tok is None or tok == "00000000":
             return None
         elif tok == "01000000":  # bool
             return bool(self.toInt(self.poptoken()))
@@ -125,13 +123,7 @@ class MiscritsData:
                 value = self.keywords(self.poptoken())
                 temp[key] = value
             return temp
-        elif tok == "1c000000":  # array
-            temp = []
-            numelements = self.toInt(self.poptoken())
-            for x in range(numelements):
-                temp.append(self.keywords(self.poptoken()))
-            return temp
-        elif tok == "1f000000":
+        elif tok == "1c000000" or tok == "1f000000":  # array
             temp = []
             numelements = self.toInt(self.poptoken())
             for x in range(numelements):
@@ -198,4 +190,5 @@ class MiscritsData:
 
 if __name__ == "__main__":
     mcdata = MiscritsData()
-    mcdata.getStats()
+    stats = mcdata.getStats()
+    print(stats)
