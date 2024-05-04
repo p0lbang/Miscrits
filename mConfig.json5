@@ -21,10 +21,11 @@
         // fa, fb --> Miscrian Forest
             "fa_waddles": ["a1_typha1", "a1_bushsun", "a1_typha1_2"],
             "fa_dflue_bkiloray": ["a2_blight", "a2_palm", "a2_tree", "a2_rock1"],
+            "af_bkiloray_custom": ["a2_blight", "a2_palm", ],
             "fa_dlumera": ["a2_chops2", "a2_axe", "a2_chops1", "a2_rock2"],
             "fa_tulipinny_dflowerpiller_bfiender": ["a3_blight", "a3_sun", "a3_magic", "a3_fuchsia"],
-            "fa_blazebit": ["a4_elder", "a4_bush1", "a4_sun1", "a4_pool1"],
-            // "fa_blazebit": ["a4_elderUp"],
+            "fa_blazebit": ["a4_elder", "a4_pool1", "a4_flatrock", "a4_dead2", "a4_sun1"],
+            "fa_treemur": ["a4_elder", "a4_flatrock", "a4_dead2",],
             "fa_dshelbee": ["a4_pool2", "a4_shrub1", "a4_bush2", "a4_typha1"],
             "fa_dsteamguin": ["a4_flatrock", "a4_sun2", "a4_dead2", "a4_sun3"],
             "fa_dprawnja": ["a4_typha2", "a4_dead1", "a4_shrub2", "a4_typha3"],
@@ -42,6 +43,7 @@
             "ga_munkee_liothning_dpoltergust_fflintly": ["b4_gold", "b4_fade", "b4_purpred", "b4_blue"],
         // m0, m1, m2 --> The Mansion
             "m0_kelpa": ["m0_typha", "m0_hay"],
+            "af_defilio_cutom": ["a4_blight", "a4_typha4",],
             "m0_A": ["m0_sapling", "m0_rock1", "m0_rock2", "m0_stone1", "m0_grass", "m0_rock3"],
             "m0_B": ["m0_axe", "m0_crate", "m0_chops", "m0_minis"],
             "m0_C": ["m0_cattail01", "m0_cattail02", "m0_cattail03", "m0_cattail04"],
@@ -55,7 +57,8 @@
     "team": {
         "autoTrain": true,  // .. | levels up your miscrits for you
         "bonusTrain": false,  //  | true -> spend platinum for bonus stats when levelling up
-        "autoSwitch": true,  // . | switches miscrits on your team depending on the reached level
+        "autoSwitch": false,  // . | switches miscrits on your team depending on the reached level
+        "switchAmount": 3,  // . | amount of miscrits to check on your team from the left
         "switchMain": false,  // . | false if miscrit 1 is excluded from switching
         "switchLevel": 30,  // .. | the reached level in question
     },
@@ -72,6 +75,7 @@
             "BlightedFlue", "Liothning", "DarkPoltergust", "FoilFlintly"
             ],  
         // ........................... | miscrits added above are prioritized for capture regardless of their initial catch chance
+        "ignoreBlockedIfS+": true,
         "blocked": [
             "Cubsprout", "Sparkupine", // forest 1
             "Quirk", "Flameling", // forest 2
@@ -83,7 +87,7 @@
         ],
         // ........................... | miscrits added above will be tagged to not catch
         "catchStandardDict": {  // ... | set values as capture thresholds for each rarity
-            "Common": 27, // ....# 27-45%
+            "Common": 28, // ....# 27-45%
             "Rare": 18, // ......# 17-35%
             "Epic": 10, // ......# 10-25%
             "Exotic": 10, // ....# ?-10%

@@ -4,7 +4,6 @@ import time
 import mss
 import mss.tools
 from PIL import ImageGrab
-from PIL import Image
 import numpy
 import pyautogui
 import easyocr
@@ -18,35 +17,45 @@ from pynput.keyboard import Key, KeyCode, Listener
 import threading
 import os
 import datetime
+import json
 
 environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 import pygame  # noqa: E402
 
-CATCHRATE = {}
-try:
-    with open("catchrate.json5", "r") as file:
-        catchratetext = file.read()
-        if catchratetext != "":
-            tempcatchrate = pyjson5.loads(catchratetext)
-            CATCHRATE = {}
-            for key, value in tempcatchrate.items():
-                CATCHRATE[key] = dict(sorted(tempcatchrate[key].items()))
-            CATCHRATE = dict(sorted(CATCHRATE.items()))
-except IOError:  # FileNotFoundError in Python 3
-    with open("catchrate.json5", "w") as file:
-        file.write(str(pyjson5.dumps({})))
 
-PRESETS = {}
-try:
-    with open("mPresets.json5", "r") as file:
-        PRESETS = pyjson5.loads(file.read())
-except IOError:  # FileNotFoundError in Python 3
-    with open("mPresets.json5", "w") as file:
-        file.write(str(pyjson5.dumps({})))
+def readJSON(filename: str, sortouter: bool = True, sortinner: bool = True) -> dict:
+    try:
+        DICTIONARY = {}
+        with open(filename, "r") as file:
+            filetext = file.read()
+            if filetext != "":
+                tempjson = pyjson5.loads(filetext)
 
-CONFIG = {}
-with open("mConfig.json5", "r") as file:
-    CONFIG = pyjson5.loads(file.read())
+                if sortinner:
+                    for key, value in tempjson.items():
+                        try:
+                            DICTIONARY[key] = dict(sorted(tempjson[key].items()))
+                        except AttributeError:
+                            pass
+                else:
+                    DICTIONARY = tempjson
+
+                if sortouter:
+                    DICTIONARY = dict(sorted(DICTIONARY.items()))
+                else:
+                    DICTIONARY = tempjson
+
+        return DICTIONARY
+    except IOError:  # FileNotFoundError in Python 3
+        with open(filename, "w") as file:
+            file.write(str(pyjson5.dumps({})))
+            return {}
+
+
+# AREASTATS = readJSON("areastats.json5")
+CATCHRATE = readJSON("catchrate.json5")
+CONFIG = readJSON("mConfig.json5", sortouter=False, sortinner=False)
+PRESETS = readJSON("mPresets.json5", sortouter=True, sortinner=False)
 
 reader = easyocr.Reader(["en"], gpu=True, verbose=True)
 pygame.init()
@@ -157,6 +166,25 @@ def LXVI_dragTo(p: Point, duration: float = 0):
         )
 
 
+def LXVI_screenshot(
+    region: tuple[int, int, int, int] = (0, 0, 0, 0),
+):
+    # PIL library, bbox = (left,top,right,bottom)
+    # pyautogui library, region = (left,top,width,height)
+
+    # converts region to bbox
+    bbox_left = monitor["left"] + region[0]
+    bbox_top = monitor["top"] + region[1]
+    bbox_right = bbox_left + region[2]
+    bbox_bottom = bbox_top + region[3]
+
+    computedBbox = (bbox_left, bbox_top, bbox_right, bbox_bottom)
+
+    img = ImageGrab.grab(bbox=computedBbox, all_screens=True)
+
+    return img
+
+
 def LXVI_locateCenterOnScreen(
     imagename: str,
     confidence: float = 0.999,
@@ -189,18 +217,7 @@ def LXVI_locateCenterOnScreen(
 def LXVI_readImage(
     region: tuple[int, int, int, int] = (0, 0, 0, 0), numerical: bool = False
 ):
-    # PIL library, bbox = (left,top,right,bottom)
-    # pyautogui library, region = (left,top,width,height)
-
-    # converts region to bbox
-    bbox_left = monitor["left"] + region[0]
-    bbox_top = monitor["top"] + region[1]
-    bbox_right = bbox_left + region[2]
-    bbox_bottom = bbox_top + region[3]
-
-    computedBbox = (bbox_left, bbox_top, bbox_right, bbox_bottom)
-
-    img = ImageGrab.grab(bbox=computedBbox, all_screens=True)
+    img = LXVI_screenshot(region=region)
     if numerical:
         read = reader.recognize(
             numpy.array(img), allowlist="0123456789", blocklist="-~( ).,"
@@ -275,7 +292,7 @@ def getCurrentMiscrit(region: tuple[int, int, int, int] | None = None):
     global reader, img
 
     mPedia = LXVI_locateCenterOnScreen(UIImage("miscripedia.png"), 0.8)
-    img = pyautogui.screenshot(region=(int(mPedia.x) - 289, int(mPedia.y) - 31, 40, 40))
+    img = LXVI_screenshot(region=(int(mPedia.x) - 289, int(mPedia.y) - 31, 40, 40))
     img.save(f"{UIImage("currentMiscrit.png")}")
 
 
@@ -304,10 +321,8 @@ def updateCurrentMiscrit():
     )
     mPedia = LXVI_locateCenterOnScreen(UIImage("miscripedia.png"), 0.8)
     if isinstance(mPedia, Point):
-        img = pyautogui.screenshot(
-            region=(int(mPedia.x) - 289, int(mPedia.y) - 31, 40, 40)
-        )
-        img.save(f"profileImages\\newProfile.png")
+        img = LXVI_screenshot(region=(int(mPedia.x) - 289, int(mPedia.y) - 31, 40, 40))
+        img.save("profileImages\\newProfile.png")
     PRESETS["newProfile"] = {}
     PRESETS["newProfile"]["skipWeakness"] = True
     PRESETS["newProfile"]["strength"] = "gold.png"
@@ -483,7 +498,7 @@ def searchMode():
 
 
 def encounterMode():
-    global miscrit, current, b, sNo, onSkillPage, rarity, initialChance, battle_start, toClick, toRun, firstBattle
+    global miscrit, current, b, sNo, onSkillPage, rarity, initialChance, battle_start, toClick, toRun, firstBattle  # noqa
 
     b += 1
     sNo = 1
@@ -499,19 +514,19 @@ def encounterMode():
 
     if (
         firstBattle
-        or LXVI_locateCenterOnScreen(UIImage("currentMiscrit.png"), 0.99) is None
+        or LXVI_locateCenterOnScreen(UIImage("currentMiscrit.png"), 0.80) is None
     ):
         firstBattle = False
         getCurrentMiscrit()
         current = updateCurrentMiscrit()
 
     if (
-        LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["strength"]), 0.85)
+        LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["strength"]), 0.80)
         is not None
     ):
         action = -1
     elif (
-        LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["weakness"]), 0.85)
+        LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["weakness"]), 0.80)
         is not None
     ):
         action = 1
@@ -519,12 +534,12 @@ def encounterMode():
 
     if PRESETS[current]["isDual"]:
         if (
-            LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["strength2"]), 0.85)
+            LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["strength2"]), 0.80)
             is not None
         ):
             action = -1
         elif (
-            LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["weakness2"]), 0.85)
+            LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["weakness2"]), 0.80)
             is not None
         ):
             action = 1
@@ -537,7 +552,10 @@ def encounterMode():
     click(UIImage("mpedia_exit.png"), 0.8, 0, 0)
     pyautogui.leftClick()
 
-    if CONFIG["catch"]["autoCatch"] and miscrit not in CONFIG["catch"]["blocked"]:
+    if CONFIG["catch"]["autoCatch"] and (
+        miscrit not in CONFIG["catch"]["blocked"]
+        or CONFIG["catch"]["ignoreBlockedIfS+"]
+    ):
         if CONFIG["catch"]["targetAll"] or miscrit in CONFIG["catch"]["targets"]:
             print(
                 f"\033[A    | {Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} found!{Fore.LIGHTBLACK_EX}"
@@ -609,7 +627,7 @@ def encounterMode():
 
     if CONFIG["fight"]["autoFight"]:
         while True:
-            if LXVI_locateCenterOnScreen(UIImage("currentMiscrit.png"), 0.99) is None:
+            if LXVI_locateCenterOnScreen(UIImage("currentMiscrit.png"), 0.80) is None:
                 getCurrentMiscrit()
                 current = updateCurrentMiscrit()
             r += 1
@@ -923,7 +941,7 @@ def conclude():
         return
 
     with open("catchrate.json5", "w") as file:
-        outputtxt = pyjson5.dumps(CATCHRATE)
+        outputtxt = json.dumps(CATCHRATE, indent=2)
         file.write(outputtxt)
 
     print(
