@@ -31,6 +31,7 @@ def readJSON(filename: str, sortouter: bool = True, sortinner: bool = True) -> d
             filetext = file.read()
             if filetext != "":
                 tempjson = pyjson5.loads(filetext)
+                DICTIONARY = tempjson
 
                 if sortinner:
                     for key, value in tempjson.items():
@@ -38,13 +39,9 @@ def readJSON(filename: str, sortouter: bool = True, sortinner: bool = True) -> d
                             DICTIONARY[key] = dict(sorted(tempjson[key].items()))
                         except AttributeError:
                             pass
-                else:
-                    DICTIONARY = tempjson
 
                 if sortouter:
                     DICTIONARY = dict(sorted(DICTIONARY.items()))
-                else:
-                    DICTIONARY = tempjson
 
         return DICTIONARY
     except IOError:  # FileNotFoundError in Python 3
@@ -303,8 +300,9 @@ def getCurrentMiscrit(region: tuple[int, int, int, int] | None = None):
     global reader, img
 
     mPedia = LXVI_locateCenterOnScreen(UIImage("miscripedia.png"), 0.8)
-    img = LXVI_screenshot(region=(int(mPedia.x) - 289, int(mPedia.y) - 31, 40, 40))
-    img.save(f"{UIImage("currentMiscrit.png")}")
+    if mPedia is not None:
+        img = LXVI_screenshot(region=(int(mPedia.x) - 289, int(mPedia.y) - 31, 40, 40))
+        img.save(f"{UIImage("currentMiscrit.png")}")
 
 
 def updateCurrentMiscrit():
