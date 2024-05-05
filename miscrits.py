@@ -18,6 +18,7 @@ import threading
 import os
 import datetime
 import json
+import miscritsData
 
 environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 import pygame  # noqa: E402
@@ -466,12 +467,11 @@ def searchMode():
 
         if CONFIG["search"]["autoSearch"]:
             loopcount += 1
-            SearchSuccess = False
+
             for search in searchSeq:
                 if (toClick := LXVI_locateCenterOnScreen(search, 0.85)) is None:
                     continue
 
-                SearchSuccess = True
                 LXVI_moveTo(toClick, 0.1)
                 if LXVI_locateCenterOnScreen(UIImage("searchCD.png"), 0.9) is not None:
                     while (
@@ -498,7 +498,7 @@ def searchMode():
 
 
 def encounterMode():
-    global miscrit, current, b, sNo, onSkillPage, rarity, initialChance, battle_start, toClick, toRun, firstBattle  # noqa
+    global miscrit, current, weakness, b, sNo, onSkillPage, rarity, initialChance, battle_start, toClick, toRun, firstBattle  # noqa
 
     b += 1
     sNo = 1
@@ -564,9 +564,24 @@ def encounterMode():
             catchStandard = CONFIG["catch"]["catchStandardDict"][rarity]
             if rarity == "Legendary":
                 playSound(rock)
+                time.sleep(10)
             while LXVI_locateCenterOnScreen(UIImage("run.png"), 0.99) is None:
                 pass
-            if ((initialChance := getCatchChance()) <= catchStandard) or (
+
+            initialChance = getCatchChance()
+            if initialChance >= 46:
+                initialChance = str(initialChance)
+                initialChance = int(initialChance[:1])
+            elif initialChance == 45 and rarity != "Common":
+                initialChance = 4
+            elif initialChance == 35 and rarity != "Rare":
+                initialChance = 3
+            elif initialChance == 25 and rarity != "Epic":
+                initialChance = 2
+            elif initialChance == 15 and rarity != "Exotic":
+                initialChance = 1
+
+            if (initialChance <= catchStandard) or (
                 miscrit in CONFIG["catch"]["targets"]
             ):
                 print(f"\033[A{Fore.WHITE}{initialChance}%{Fore.LIGHTBLACK_EX}")
@@ -581,9 +596,6 @@ def encounterMode():
         while LXVI_locateCenterOnScreen(UIImage("run.png"), 0.99) is None:
             pass
         initialChance = getCatchChance()
-        if initialChance >= 50:
-            initialChance = str(initialChance)
-            initialChance = int(initialChance[:1])
         print(f"\033[A{initialChance:02d}%")
 
     if miscrit not in ["[redacted]", "[unidentified]"]:
@@ -662,7 +674,7 @@ def encounterMode():
             if LXVI_locateCenterOnScreen(UIImage("closebtn.png"), 0.85) is not None:
                 print(
                     "\033[A",
-                    f"{initialChance}% | "
+                    f"{initialChance:02d}% | "
                     f"Time: {Fore.CYAN}{(time.perf_counter()-battle_start):05.2f}s{Fore.LIGHTBLACK_EX} | ",
                     f"Defeated {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}.",
                     sep="",
@@ -692,7 +704,7 @@ def waitFight():
             thread_keybfight.stop()
             print(
                 "\033[A",
-                f"{initialChance}% | "
+                f"{initialChance:02d}% | "
                 f"Time: {Fore.CYAN}{(time.perf_counter()-battle_start):05.2f}s{Fore.LIGHTBLACK_EX} | ",
                 f"Defeated {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}.",
                 sep="",
@@ -731,10 +743,7 @@ def catchMode():
     action = 1
 
     chance = initialChance
-    if (
-        LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["weakness"]), 0.95)
-        is not None
-    ):
+    if weakness:
         action = 0
 
     while not caught:
@@ -754,7 +763,7 @@ def catchMode():
         ):
             if LXVI_locateCenterOnScreen(UIImage("closebtn.png"), 0.85) is not None:
                 print(
-                    f"\033[A{Fore.RED}{initialChance}%{Fore.LIGHTBLACK_EX} | {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} died at {Fore.RED}{chance}%{Fore.LIGHTBLACK_EX} catch rate."
+                    f"\033[A{Fore.RED}{initialChance:02d}%{Fore.LIGHTBLACK_EX} | {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} died at {Fore.RED}{chance}%{Fore.LIGHTBLACK_EX} catch rate."
                 )
                 return
 
@@ -765,18 +774,18 @@ def catchMode():
             chance = getCatchChance()
 
             if int(chance) >= CONFIG["catch"]["catchablePercentage"]:
-                if action != 4:
-                    action = 3
+                if action != 3:
+                    action = 2
 
             if action == 0:
                 useSkill(toClick, PRESETS[current]["weak"])
                 action = 1
             elif action == 1:
-                useSkill(toClick, PRESETS[current]["bigpoke"])
-                action = 2
+                if int(chance) < CONFIG["catch"]["bigpokeThreshold"]:
+                    useSkill(toClick, PRESETS[current]["bigpoke"])
+                else:
+                    useSkill(toClick, PRESETS[current]["poke"])
             elif action == 2:
-                useSkill(toClick, PRESETS[current]["poke"])
-            elif action == 3:
                 click(UIImage("catchbtn.png"), 0.75, 6, 0)
                 if (
                     LXVI_locateCenterOnScreen(UIImage("catchSuccess.png"), 0.9)
@@ -785,15 +794,15 @@ def catchMode():
                     playSound(bend)
                     caught = True
                 else:
-                    action = 4
-            elif action == 4:
+                    action = 3
+            elif action == 3:
                 print(
-                    f"\033[A{Fore.RED}{initialChance}%{Fore.LIGHTBLACK_EX} | Failed to catch {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}.     "
+                    f"\033[A{Fore.RED}{initialChance:02d}%{Fore.LIGHTBLACK_EX} | Failed to catch {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX}.     "
                 )
                 useSkill(toClick, PRESETS[current]["main"])
 
     print(
-        f"\033[A{Fore.GREEN}{initialChance}%{Fore.WHITE} | {Fore.YELLOW}{miscrit}{Fore.WHITE} has been caught at {Fore.GREEN}{chance}%. {Fore.LIGHTBLACK_EX}"
+        f"\033[A{Fore.GREEN}{initialChance:02d}%{Fore.WHITE} | {Fore.YELLOW}{miscrit}{Fore.WHITE} has been caught at {Fore.GREEN}{chance}%. {Fore.LIGHTBLACK_EX}"
     )
     click(UIImage("catchSkip.png"), 0.9, 2, 0)
     click(UIImage("closebtn.png"), 0.85, 2, 0)
