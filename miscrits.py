@@ -762,7 +762,7 @@ def catchMode():
             )
             conclude()
 
-        if LXVI_locateCenterOnScreen(UIImage("currentMiscrit.png"), 0.99) is None:
+        if LXVI_locateCenterOnScreen(UIImage("currentMiscrit.png"), 0.80) is None:
             getCurrentMiscrit()
             current = updateCurrentMiscrit()
 

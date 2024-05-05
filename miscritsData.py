@@ -6,7 +6,7 @@ import logging
 import time
 
 logger = logging.getLogger("MISCRITSDATA")
-logger.disabled = True
+logger.disabled = False
 
 GODOT_DATATYPES = [
     "01000000",
@@ -83,9 +83,9 @@ class MiscritsData:
 
     def getTokens(self, rawdata: str):
         index = 0
-        if rawdata.startswith("000200000000") or rawdata.startswith("000300000000"):
+        if rawdata.startswith("000200000000") or rawdata.startswith("000300000000") or rawdata.startswith("000400000000"):
             index = 36
-        elif rawdata.startswith("0002000000") or rawdata.startswith("0003000000"):
+        elif rawdata.startswith("0002000000") or rawdata.startswith("0003000000")  or rawdata.startswith("0004000000"):
             index = 28
         else:
             index = 1_000_000
@@ -202,7 +202,7 @@ class MiscritsData:
 
                 self.wholepacketdata = ""
             except Exception as error:
-                logger.warning("An error occurred:", type(error).__name__, "–", error)
+                logger.warning("An error occurred:", error)
 
         return False
 
@@ -225,7 +225,7 @@ class MiscritsData:
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     mcdata = MiscritsData()
-    stats = mcdata.getStats()
+    stats = mcdata.getStats(10)
     logger.info(stats)
 
     # from playsound import playsound

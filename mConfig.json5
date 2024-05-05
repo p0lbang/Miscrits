@@ -1,5 +1,5 @@
 {
-    "audio": false, // false -> mute the code audios and not import pygame
+    "audio": true, // false -> mute the code audios and not import pygame
     "walk": {
         "autoWalk": true, // ................ | walks until it finds your searching location
         "walkInterval": 3,  // .............. | time before clicking next walking point (DO NOT CHANGE!)
