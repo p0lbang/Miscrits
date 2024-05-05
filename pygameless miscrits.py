@@ -9,7 +9,6 @@ import pyautogui
 import easyocr
 from colorama import Fore
 from pyscreeze import Point
-from os import environ
 import pathlib
 import pyjson5
 import math
@@ -19,9 +18,6 @@ import os
 import datetime
 import json
 import miscritsData
-
-environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
-import pygame  # noqa: E402
 
 
 def readJSON(filename: str, sortouter: bool = True, sortinner: bool = True) -> dict:
@@ -59,7 +55,6 @@ CONFIG = readJSON("mConfig.json5", sortouter=False, sortinner=False)
 PRESETS = readJSON("mPresets.json5", sortouter=True, sortinner=False)
 
 reader = easyocr.Reader(["en"], gpu=True, verbose=True)
-pygame.init()
 MCDATA = miscritsData.MiscritsData()
 
 
@@ -83,13 +78,21 @@ toContinue = True
 firstBattle = True
 autoSwitch = CONFIG["team"]["autoSwitch"]
 start = time.perf_counter()
-on = pygame.mixer.Sound(pathlib.PurePath("audio", "on.mp3"))
-off = pygame.mixer.Sound(pathlib.PurePath("audio", "off.mp3"))
-rizz = pygame.mixer.Sound(pathlib.PurePath("audio", "rizz.mp3"))
-pluck = pygame.mixer.Sound(pathlib.PurePath("audio", "pluck.mp3"))
-bend = pygame.mixer.Sound(pathlib.PurePath("audio", "bend.mp3"))
-rock = pygame.mixer.Sound(pathlib.PurePath("audio", "rock.mp3"))
-
+qualityDict = [
+    "F-",
+    "F ",
+    "F+",
+    "D ",
+    "D+",
+    "C ",
+    "C+",
+    "B ",
+    "B+",
+    "A ",
+    "A+",
+    "S ",
+    "S+",
+]
 
 APPNAMEPNG = "appname.png"
 if sys.platform.startswith("linux"):
@@ -109,8 +112,6 @@ for w, walk in enumerate(walkSeq):
     )
 walkRegion = str(pathlib.PurePath("walkImages", f"{walkRegion}.png"))
 
-qualityDict = ["F-", "F ", "F+", "D ", "D+", "C ","C+", "B ", "B+", "A ", "A+", "S ", "S+"]
-
 with mss.mss() as sct:
     # Get information of monitor 2
     monitor_number = 1
@@ -128,11 +129,6 @@ assert monitor is not None
 
 stop_event = threading.Event()
 configupdate_event = threading.Event()
-
-
-def playSound(audio: pygame.mixer.Sound) -> None:
-    if CONFIG["audio"]:
-        audio.play()
 
 
 def checkActive():
@@ -575,15 +571,11 @@ def encounterMode():
             )
 
             catchStandard = CONFIG["catch"]["catchStandardDict"][rarity]
-            if rarity == "Legendary":
-                playSound(rock)
-                time.sleep(10)
             while LXVI_locateCenterOnScreen(UIImage("run.png"), 0.99) is None:
                 pass
 
             if (wildScore >= catchStandard) or (miscrit in CONFIG["catch"]["targets"]):
                 print(f"\033[A{Fore.WHITE}{qualityDict[wildScore]}{Fore.LIGHTBLACK_EX}")
-                playSound(pluck)
                 catchMode()
                 return
             else:
@@ -800,7 +792,6 @@ def catchMode():
                     LXVI_locateCenterOnScreen(UIImage("catchSuccess.png"), 0.9)
                     is not None
                 ):
-                    playSound(bend)
                     caught = True
                 else:
                     action = 3
@@ -967,7 +958,6 @@ def conclude():
         f"\nEnded process after {Fore.CYAN}{b}{Fore.LIGHTBLACK_EX} Miscrits encountered."
     )
     print(f"Runtime: {Fore.CYAN}{time.perf_counter()-start}{Fore.LIGHTBLACK_EX}")
-    playSound(off)
     print(Fore.RESET)
     time.sleep(0.5)
     sys.exit()
@@ -975,7 +965,6 @@ def conclude():
 
 def runMiscrits():
     print(Fore.LIGHTBLACK_EX)
-    playSound(on)
     print("Initiating code... process started.\n")
     time.sleep(1)
     while checkActive():
@@ -999,7 +988,6 @@ def runMiscrits():
                 walkMode()
         searchMode()
     print("Game not found on screen.")
-    playSound(rizz)
     time.sleep(1)
 
 

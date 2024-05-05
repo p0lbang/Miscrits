@@ -26,6 +26,7 @@ class MiscritsData:
 
     def clear(self):
         self.timeStarted = time.perf_counter()
+        self.timeElapsed = 0
         self.timeoutThreshold = 60
         self.TOKENS = []
         self.currenttok = ""
@@ -183,10 +184,6 @@ class MiscritsData:
                     try:
                         wildstar = parsedobject[1][0]["Star"]
                         self.currentWild = parsedobject[1][0]
-
-                        if self.currentWild == self.previousWild:
-                            return False
-
                         self.previousWild = self.currentWild
                         wildstardict = {
                             "hp": wildstar[2],
@@ -209,16 +206,19 @@ class MiscritsData:
 
         return False
 
-    def getStats(self, timeout: int = 60) -> dict:
+    def getData(self, timeout: int = 60):
+        self.clear()
         self.timeoutThreshold = timeout
         self.setTimeStarted()
         sniff(filter="udp", stop_filter=self._getStats)
+        self.timeElapsed = self.elapsedTime()
+
+    def getStats(self, timeout: int = 60) -> dict:
+        self.getData(timeout=timeout)
         return self.output
 
     def getWildData(self, timeout: int = 60) -> dict:
-        self.timeoutThreshold = timeout
-        self.setTimeStarted()
-        sniff(filter="udp", stop_filter=self._getStats)
+        self.getData(timeout=timeout)
         return self.currentWild
 
 
@@ -227,3 +227,8 @@ if __name__ == "__main__":
     mcdata = MiscritsData()
     stats = mcdata.getStats()
     logger.info(stats)
+
+    # from playsound import playsound
+    # import pathlib
+
+    # playsound(pathlib.PurePath("audio", "on.mp3"))

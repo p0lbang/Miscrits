@@ -1,5 +1,5 @@
 {
-    "audio": true, // false -> mute the code audios
+    "audio": false, // false -> mute the code audios and not import pygame
     "walk": {
         "autoWalk": true, // ................ | walks until it finds your searching location
         "walkInterval": 3,  // .............. | time before clicking next walking point (DO NOT CHANGE!)
@@ -85,16 +85,17 @@
             "Breezycheeks", // gemma 1
             "Frostmite", "Bubbles", "Spinnerette", "Slithero", "Croaky", "Rafiery", // mansion 1
             "Humbug", "Nanaslug", // mansion 2
-            "Owlie", "Peekly", "Liothning"// gemma 4
+            "Owlie", "Peekly", // gemma 3
+            "Liothning", // gemma 4
         ],
         // ........................... | miscrits added above will be tagged to not catch
         "catchStandardDict": {  // ... | set values as capture thresholds for each rarity
-            "Common": 27, // ....# 27-45%
-            "Rare": 17, // ......# 17-35%
-            "Epic": 7, // ......# 07-25%
-            "Exotic": 10, // ....# ?-10%
-            "Legendary": 10, // .# ?-?
-            "Unidentified": 27,  // -> if rarity identification fails
-        },
+            "Common": 12, // ....# 0-12
+            "Rare": 12, // ......# 0-12
+            "Epic": 12, // ......# 0-12
+            "Exotic": 10, // ....# 0-12
+            "Legendary": 6, // .# 6-12
+            "Unidentified": 12,  // -> if rarity identification fails
+        },    
     },
 }
