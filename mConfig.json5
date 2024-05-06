@@ -2,12 +2,15 @@
     "audio": true, // false -> mute the code audios and not import pygame
     "walk": {
         "autoWalk": true, // ................ | walks until it finds your searching location
-        "walkInterval": 3,  // .............. | time before clicking next walking point (DO NOT CHANGE!)
+        "walkInterval": 3,  // .............. | time before clicking next walking point (DO NOT CHANGE!) default: 3
+        "walkDistance": 200,  // ............ | how far the cursor moves from the 'center' (ALSO DO NOT CHANGE) default: 200
         "walkSeq": {  // .....................| NEVER MOVE YOUR MOUSE WHILE autoWalking!!!
             "fa": [0, -45, 45, 0, 0, -30, -30, -150, -150, -150, 135, 135, -135, 180, 150],
             "fb": [0, -45, 45, 0, 0, -30, -30, -150, -150, -90, -15, 0],
             "ga": [-155, -60, 180, 180, -155, -90, -35, -35, 25, -55, -35, -135, 180, -90],
             "gb": [-155, -30, -30, -125, -30, 80],
+            "gc": [-155, -60, 180, 180, -155, -90, 155, -90, 0, -25, -25, 25, -100, -155],
+            "gd": [-155, -60, 180, 180, -155, -90, -35, -35, 25, 35, -35, -35, 35, 90],
             "m0": [180, 155, 155, 180, -90],
             "m1": [-90, 155, 155],
             "m2": [120, 0, 0, -75, -75],
@@ -16,7 +19,7 @@
     "search": {
         "autoSearch": true, // .............. | looks for miscrits in searchable spots for you
         "searchInterval": 5, // ............. | time before clicking the next location (min: 5)
-        "searchCode": "ga_ffossilia", // ...... | paste from search codes below, ex: "a1_waddles" 
+        "searchCode": "gd_boltzee_ffossillia", // ...... | paste from search codes below, ex: "a1_waddles" 
         "searchSeq": { // ................... | don't change the existing sequences pls don't no no 
         // fa, fb --> Miscrian Forest
             "fa_waddles": ["a1_typha1", "a1_bushsun", "a1_typha1_2"],
@@ -33,21 +36,20 @@
             "fb_bflue": ["a4_blight2", "a4_log", "a4_stone", "a4_shrub3"],
             // "fb_bflue": ["a4_blight2", "a4_blight2R"],
         // ga --> Mount Gemma
-            "ga_luna": ["b1_stone", 
-            "b1_typha", 
-            "b1_potrock", 
-            "b1_mound1"],
+            "ga_luna": ["b1_stone", "b1_typha", "b1_potrock", "b1_mound1"],
             "gb_poltergust_dkiloray": ["b1_crystal1", "b1_dead", "b1_mound2", "b1_smallcact", "b1_stack"],
+            "gb_fangly": ["b1_slimrock", "b1_stump", "b1_typha2"], 
             "gb_fkiloray": ["b1_crystal2", "b1_megarock", "b1_shrub", "b1_gigarock"],
-            "ga_dcroaky": ["b2_pink", "b2_yellow", "b2_deadbush", "b2_stone", "b2_sapling"],
-            "ga_eggy": [],
-            "ga_fossilia": [],
-            "ga_ffossilia": ["b3_sparkcrystal","b3_cactus","b3_potrock",],
-            "ga_fwaddles": ["b2_fwcrystal","b2_fwcactus","b2_fwrock",],
-            "ga_dowlie": [],
-            "ga_boltzee": [],
-            // "ga_munkee_liothning_dpoltergust_fflintly": ["b4_gold", "b4_fade", "b4_purpred", "b4_blue"],
-            "ga_munkee_liothning_dpoltergust_fflintly": ["b4_purpred", "b4_fade"],
+            "gc_thundercracker_fiender": ["b2_deadbush2", "b2_dead", "b2_smallcact", "b2_sapling2"],
+            "gc_dcroaky": ["b2_pink", "b2_yellow", "b2_deadbush", "b2_stone", "b2_sapling"],
+            "gc_gog": ["b2_megarock", "b2_stack", "b2_stump", "b2_smallcact2"],
+            "gc_fwaddles": ["b2_fwcrystal","b2_fwcactus","b2_fwrock",],
+            "gd_fossillia_eggy": ["b3_valleyrock", "b3_stump", "b3_deadbush", "b3_bonsai"],
+            "gd_dowlie": ["b3_rockA", "b3_rockB", "b3_rockC"],
+            "gd_boltzee_ffossillia": ["b3_gigarock", "b3_potrock", "b3_sparkcrystal", "b3_megarock"],
+            "gc_fthundercracker": ["b4_twilightcrystal", "b4_potrock", "b4_galaxycrystal", "b4_typha"],
+            "ga_munkee_liothning_dpoltergust_fflintly": ["b4_gold", "b4_fade", "b4_purpred", "b4_blue"],
+            // "ga_munkee_liothning_dpoltergust_fflintly": ["b4_purpred", "b4_fade"],
         // m0, m1, m2 --> The Mansion
             "m0_kelpa": ["m0_typha", "m0_hay"],
             "af_defilio_cutom": ["a4_blight", "a4_typha4",],
@@ -81,7 +83,7 @@
         "bigpokeThreshold": 70,
         "targetAll": true,  // ....... | true -> every encountered miscrit is tagged for capture
         "targets": [
-            "BlightedFlue", "DarkPoltergust", "FoilWWaddles", "FoilWaddles", "FoilThundercracker", "FoilFossilia", "FoilFossillia",
+            "BlightedFlue", "DarkPoltergust", "FoilWWaddles", "FoilWaddles", "FoilThundercracker", "FoilFossillia", "Boltzee", "Eggy", "Fossillia",
             ],  
         // ........................... | miscrits added above are prioritized for capture regardless of their initial catch chance
         "ignoreBlockedIfS+": false,
@@ -92,11 +94,11 @@
             "Snatcher", "Elefauna", "Hotfoot", "DarkFlowerpiller", // forest 3
             "Twiggum", "Shellbee", "Squibee", "Steamguin", "Crickin", // forest 4
             "Breezycheeks", // gemma 1
-            "Frostmite", "Bubbles", "Spinnerette", "Slithero", "Rafiery", // mansion 1
-            "Humbug", "Nanaslug", // mansion 2
-            "Croaky", // gemma 2
+            "Croaky", "Aria", // gemma 2
             "Craggy", "Owlie", "Peekly", "Sparkslug", "Felis", // gemma 3
             "MunKee", "Liothning", // gemma 4
+            "Frostmite", "Bubbles", "Spinnerette", "Slithero", "Rafiery", // mansion 1
+            "Humbug", "Nanaslug", // mansion 2
         ],
         // ........................... | miscrits added above will be tagged to not catch
         "catchStandardDict": {  // ... | set values as capture thresholds for each rarity

@@ -107,10 +107,11 @@ for s, search in enumerate(searchSeq):
 
 walkRegion = searchCode[:2]
 walkSeq = CONFIG["walk"]["walkSeq"][walkRegion]
+walkDis = CONFIG["walk"]["walkDistance"]
 for w, walk in enumerate(walkSeq):
     walkSeq[w] = Point(
-        int(200 * math.cos(math.radians(walkSeq[w]))),
-        int(200 * math.sin(math.radians(walkSeq[w]))),
+        int(walkDis * math.cos(math.radians(walkSeq[w]))),
+        int(walkDis * math.sin(math.radians(walkSeq[w]))),
     )
 walkRegion = str(pathlib.PurePath("walkImages", f"{walkRegion}.png"))
 
@@ -457,7 +458,7 @@ def walkMode():
     time.sleep(3)
     while checkActive:
         walkGoal = str(pathlib.PurePath("walkImages", f"{searchCode}.png"))
-        if LXVI_locateCenterOnScreen(walkGoal, 0.95) is not None:
+        if LXVI_locateCenterOnScreen(walkGoal, 0.90) is not None:
             return
 
         if CONFIG["walk"]["autoWalk"]:
@@ -553,6 +554,13 @@ def encounterMode():
         getCurrentMiscrit()
         current = updateCurrentMiscrit()
 
+    # miscritsCheck info
+    click(UIImage("miscripedia.png"), 0.8, 0.555, 0)
+    getMiscritData()
+    print(f"{qualityDict[wildScore]} | {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} wants to fight.")
+    click(UIImage("mpedia_exit.png"), 0.8, 0, 0)
+    pyautogui.leftClick()
+
     if (
         LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["strength"]), 0.8)
         is not None
@@ -578,13 +586,6 @@ def encounterMode():
             action = 1
             weakness = True
 
-    # miscritsCheck info
-    click(UIImage("miscripedia.png"), 0.8, 0.555, 0)
-    getMiscritData()
-    print(f"   | {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} wants to fight.")
-    click(UIImage("mpedia_exit.png"), 0.8, 0, 0)
-    pyautogui.leftClick()
-
     if CONFIG["catch"]["autoCatch"] and (
         miscrit not in CONFIG["catch"]["blocked"]
         or (CONFIG["catch"]["ignoreBlockedIfS+"] and wildScore >= 12)
@@ -596,15 +597,13 @@ def encounterMode():
             or wildScore >= 12
         ):
             print(
-                f"\033[A   | {Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} found!{Fore.LIGHTBLACK_EX}"
+                f"\033[A{qualityDict[wildScore]} | {Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} found!{Fore.LIGHTBLACK_EX}"
             )
 
             catchStandard = CONFIG["catch"]["catchStandardDict"][rarity]
             if rarity == "Legendary":
                 playSound(rock)
                 time.sleep(10)
-            while LXVI_locateCenterOnScreen(UIImage("run.png"), 0.99) is None:
-                pass
 
             if (wildScore >= catchStandard) or (miscrit in CONFIG["catch"]["targets"]):
                 print(f"\033[A{Fore.WHITE}{qualityDict[wildScore]}{Fore.LIGHTBLACK_EX}")
@@ -616,8 +615,6 @@ def encounterMode():
                     f"\033[A{qualityDict[wildScore]} | {Fore.WHITE}This {Fore.YELLOW}{miscrit}{Fore.WHITE} is trash. -p0lbang{Fore.LIGHTBLACK_EX}"
                 )
     else:
-        while LXVI_locateCenterOnScreen(UIImage("run.png"), 0.99) is None:
-            pass
         print(f"\033[A{qualityDict[wildScore]}")
 
     if miscrit not in ["[redacted]", "[unidentified]"]:
@@ -968,12 +965,18 @@ def login():
         LXVI_moveTo(toClick)
         time.sleep(3)
         pyautogui.leftClick()
+        time.sleep(5)
+    if (toClick := LXVI_locateCenterOnScreen(UIImage("loginbtn.png"), 0.8)) is not None:
+        print("Attempting to log in again...")
+        LXVI_moveTo(toClick)
+        time.sleep(3)
+        pyautogui.leftClick()
     while LXVI_locateCenterOnScreen(UIImage("miscripedia.png"), 0.75) is not None:
         if time.perf_counter() - wait >= 30:
             print("Having trouble signing back in. Concluding process...")
             conclude()
         pass
-    print("\033[AAccount logged back in. Resuming...   ")
+    print("Account logged back in. Resuming...   ")
     time.sleep(10)
     dailySpin()
 
@@ -1025,10 +1028,10 @@ def runMiscrits():
             click(UIImage("savebtn.png"), 0.95, 1, 0)
             click(UIImage("x.png"), 0.95, 1, 0)
         if CONFIG["walk"]["autoWalk"] and (
-            LXVI_locateCenterOnScreen(walkRegion, 0.8) is not None
+            LXVI_locateCenterOnScreen(walkRegion, 0.75) is not None
         ):
             walkGoal = str(pathlib.PurePath("walkImages", f"{searchCode}.png"))
-            if LXVI_locateCenterOnScreen(walkGoal, 0.85) is None:
+            if LXVI_locateCenterOnScreen(walkGoal, 0.9) is None:
                 walkMode()
         searchMode()
     print("Game not found on screen.")
