@@ -59,7 +59,6 @@ CONFIG = readJSON("mConfig.json5", sortouter=False, sortinner=False)
 PRESETS = readJSON("mPresets.json5", sortouter=True, sortinner=False)
 
 reader = easyocr.Reader(["en"], gpu=True, verbose=True)
-pygame.init()
 MCDATA = miscritsData.MiscritsData()
 
 
@@ -75,6 +74,10 @@ def miscritProfiles() -> list[str]:
         if os.path.isfile(pathlib.PurePath("profileImages", f))
     ]
 
+def getSound(filename):
+    if not CONFIG["audio"]:
+        return None
+    return pygame.mixer.Sound(filename)
 
 b = 0
 sNo = 1
@@ -83,13 +86,16 @@ toContinue = True
 firstBattle = True
 autoSwitch = CONFIG["team"]["autoSwitch"]
 start = time.perf_counter()
-on = pygame.mixer.Sound(pathlib.PurePath("audio", "on.mp3"))
-off = pygame.mixer.Sound(pathlib.PurePath("audio", "off.mp3"))
-rizz = pygame.mixer.Sound(pathlib.PurePath("audio", "rizz.mp3"))
-pluck = pygame.mixer.Sound(pathlib.PurePath("audio", "pluck.mp3"))
-bend = pygame.mixer.Sound(pathlib.PurePath("audio", "bend.mp3"))
-rock = pygame.mixer.Sound(pathlib.PurePath("audio", "rock.mp3"))
 
+if CONFIG["audio"]:
+    pygame.init()
+    
+on = getSound(pathlib.PurePath("audio", "on.mp3"))
+off = getSound(pathlib.PurePath("audio", "off.mp3"))
+rizz = getSound(pathlib.PurePath("audio", "rizz.mp3"))
+pluck = getSound(pathlib.PurePath("audio", "pluck.mp3"))
+bend = getSound(pathlib.PurePath("audio", "bend.mp3"))
+rock = getSound(pathlib.PurePath("audio", "rock.mp3"))
 
 APPNAMEPNG = "appname.png"
 if sys.platform.startswith("linux"):
@@ -567,9 +573,9 @@ def encounterMode():
 
     if CONFIG["catch"]["autoCatch"] and (
         miscrit not in CONFIG["catch"]["blocked"]
-        or CONFIG["catch"]["ignoreBlockedIfS+"]
+        or (CONFIG["catch"]["ignoreBlockedIfS+"] and wildScore >= 12)
     ):
-        if CONFIG["catch"]["targetAll"] or miscrit in CONFIG["catch"]["targets"]:
+        if CONFIG["catch"]["targetAll"] or miscrit in CONFIG["catch"]["targets"] or wildScore >= 12:
             print(
                 f"\033[A   | {Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} found!{Fore.LIGHTBLACK_EX}"
             )
@@ -596,14 +602,16 @@ def encounterMode():
         print(f"\033[A{qualityDict[wildScore]}")
 
     if miscrit not in ["[redacted]", "[unidentified]"]:
-        key = miscrit.strip().lower()
-        if key not in CATCHRATE:
-            CATCHRATE[key] = {}
+        keyMiscrit = miscrit.strip().lower()
+        if keyMiscrit not in CATCHRATE:
+            CATCHRATE[keyMiscrit] = {}
 
-        if wildScore not in CATCHRATE[key]:
-            CATCHRATE[key][qualityDict[wildScore]] = 1
+        keyQuality = qualityDict[wildScore]
+
+        if keyQuality not in CATCHRATE[keyMiscrit]:
+            CATCHRATE[keyMiscrit][keyQuality] = 1
         else:
-            CATCHRATE[key][qualityDict[wildScore]] += 1
+            CATCHRATE[keyMiscrit][keyQuality] += 1
 
     if not checkActive():
         print("Minimized while in encounter mode, concluding process...")
