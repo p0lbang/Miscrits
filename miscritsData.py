@@ -6,7 +6,7 @@ import logging
 import time
 
 logger = logging.getLogger("MISCRITSDATA")
-logger.disabled = False
+logger.disabled = True
 
 GODOT_DATATYPES = [
     "01000000",

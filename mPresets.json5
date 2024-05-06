@@ -225,7 +225,7 @@
     ignoreWeakness: false,
     hasNegate: true,
     hasHeal: true,
-    healCD: 2,
+    healCD: 3,
     main: 1,
     strong: 3,
     weak: 6,

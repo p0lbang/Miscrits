@@ -782,7 +782,7 @@ def catchMode():
             toClick = Point(toClick.x + 115, toClick.y + 80)
             chance = getCatchChance()
 
-            if int(chance) >= CONFIG["catch"]["catchablePercentage"]:
+            if (rarity == "Legendary" and int(chance) >= CONFIG["catch"]["catchablePercentageL"]) or (rarity != "Legendary" and int(chance) >= CONFIG["catch"]["catchablePercentage"]):
                 if action != 3:
                     action = 2
 

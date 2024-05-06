@@ -31,6 +31,7 @@
             "fa_dprawnja": ["a4_typha2", "a4_dead1", "a4_shrub2", "a4_typha3"],
             "fa_defilio": ["a4_blight", "a4_typha4", "a4_minis", "a4_yellow"],
             "fb_bflue": ["a4_blight2", "a4_log", "a4_stone", "a4_shrub3"],
+            // "fb_bflue": ["a4_blight2", "a4_blight2R"],
         // ga --> Mount Gemma
             "ga_luna": ["b1_stone", "b1_typha", "b1_potrock", "b1_mound1"],
             "gb_poltergust_dkiloray": ["b1_crystal1", "b1_dead", "b1_mound2", "b1_smallcact", "b1_stack"],
@@ -40,7 +41,8 @@
             "ga_fossilia": [],
             "ga_dowlie": [],
             "ga_boltzee": [],
-            "ga_munkee_liothning_dpoltergust_fflintly": ["b4_gold", "b4_fade", "b4_purpred", "b4_blue"],
+            // "ga_munkee_liothning_dpoltergust_fflintly": ["b4_gold", "b4_fade", "b4_purpred", "b4_blue"],
+            "ga_munkee_liothning_dpoltergust_fflintly": ["b4_gold", "b4_fade"],
         // m0, m1, m2 --> The Mansion
             "m0_kelpa": ["m0_typha", "m0_hay"],
             "af_defilio_cutom": ["a4_blight", "a4_typha4",],
@@ -58,18 +60,19 @@
         "autoTrain": true,  // .. | levels up your miscrits for you
         "bonusTrain": false,  //  | true -> spend platinum for bonus stats when levelling up
         "autoSwitch": true,  // . | switches miscrits on your team depending on the reached level
-        "switchAmount": 3,  // . | amount of miscrits to check on your team from the left
+        "switchAmount": 3,  // . | amount of miscrits to check on your team from the right
         "switchMain": false,  // . | false if miscrit 1 is excluded from switching
         "switchLevel": 30,  // .. | the reached level in question
     },
     "fight": {  // | info of your first miscrit in the team, the hard carry
         "autoFight": true,  // false -> use arrow keys to cycle through the skills and 'z' to click skill ('x' to hover on run)
-        "skipWeakness": false,  // false -> fight weakness element instead of escaping (overrides miscrit preset if true)
+        "skipWeakness": true,  // false -> fight weakness element instead of escaping (overrides miscrit preset if true)
     },
     "catch": {
         "skipAll": false,  // ....... | true -> flee from wild miscrits that are not tagged for capture
         "autoCatch": true,  // ....... | catches miscrits for you
-        "catchablePercentage": 80,  // | makes the attempt to catch the miscrit when the rate is above this value
+        "catchablePercentage": 90,  // | makes the attempt to catch the miscrit when the rate is above this value
+        "catchablePercentageL": 82,  // above but for legendaries
         "bigpokeThreshold": 70,
         "targetAll": true,  // ....... | true -> every encountered miscrit is tagged for capture
         "targets": [
@@ -85,7 +88,7 @@
             "Breezycheeks", // gemma 1
             "Frostmite", "Bubbles", "Spinnerette", "Slithero", "Croaky", "Rafiery", // mansion 1
             "Humbug", "Nanaslug", // mansion 2
-            "Owlie", "Peekly", // gemma 3
+            "Owlie", "Peekly", "Felis", // gemma 3
             "Liothning", // gemma 4
         ],
         // ........................... | miscrits added above will be tagged to not catch
