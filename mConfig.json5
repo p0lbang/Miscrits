@@ -16,7 +16,7 @@
     "search": {
         "autoSearch": true, // .............. | looks for miscrits in searchable spots for you
         "searchInterval": 5, // ............. | time before clicking the next location (min: 5)
-        "searchCode": "fb_bflue", // ...... | paste from search codes below, ex: "a1_waddles" 
+        "searchCode": "ga_ffossilia", // ...... | paste from search codes below, ex: "a1_waddles" 
         "searchSeq": { // ................... | don't change the existing sequences pls don't no no 
         // fa, fb --> Miscrian Forest
             "fa_waddles": ["a1_typha1", "a1_bushsun", "a1_typha1_2"],
@@ -42,6 +42,7 @@
             "ga_dcroaky": ["b2_pink", "b2_yellow", "b2_deadbush", "b2_stone", "b2_sapling"],
             "ga_eggy": [],
             "ga_fossilia": [],
+            "ga_ffossilia": ["b3_sparkcrystal","b3_cactus","b3_potrock",],
             "ga_dowlie": [],
             "ga_boltzee": [],
             // "ga_munkee_liothning_dpoltergust_fflintly": ["b4_gold", "b4_fade", "b4_purpred", "b4_blue"],
@@ -75,7 +76,7 @@
         "skipAll": false,  // ....... | true -> flee from wild miscrits that are not tagged for capture
         "autoCatch": true,  // ....... | catches miscrits for you
         "catchablePercentage": 90,  // | makes the attempt to catch the miscrit when the rate is above this value
-        "catchablePercentageL": 82,  // above but for legendaries
+        "catchablePercentageL": 78,  // above but for legendaries
         "bigpokeThreshold": 70,
         "targetAll": true,  // ....... | true -> every encountered miscrit is tagged for capture
         "targets": [
