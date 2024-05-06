@@ -6,7 +6,7 @@ import logging
 import time
 
 logger = logging.getLogger("MISCRITSDATA")
-logger.disabled = True
+logger.disabled = False
 
 GODOT_DATATYPES = [
     "01000000",
@@ -194,6 +194,7 @@ class MiscritsData:
                             "pd": wildstar[4],
                         }
                         self.output = wildstardict
+                        logger.info(json.dumps(parsedobject, indent=2))
                         return True
                     except Exception as e:
                         logger.warning(e)

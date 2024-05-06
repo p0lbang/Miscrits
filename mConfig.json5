@@ -33,7 +33,10 @@
             "fb_bflue": ["a4_blight2", "a4_log", "a4_stone", "a4_shrub3"],
             // "fb_bflue": ["a4_blight2", "a4_blight2R"],
         // ga --> Mount Gemma
-            "ga_luna": ["b1_stone", "b1_typha", "b1_potrock", "b1_mound1"],
+            "ga_luna": ["b1_stone", 
+            "b1_typha", 
+            "b1_potrock", 
+            "b1_mound1"],
             "gb_poltergust_dkiloray": ["b1_crystal1", "b1_dead", "b1_mound2", "b1_smallcact", "b1_stack"],
             "gb_fkiloray": ["b1_crystal2", "b1_megarock", "b1_shrub", "b1_gigarock"],
             "ga_dcroaky": ["b2_pink", "b2_yellow", "b2_deadbush", "b2_stone", "b2_sapling"],
@@ -101,6 +104,6 @@
             "Exotic": 10, // ....# 0-12
             "Legendary": 6, // .# 6-12
             "Unidentified": 12,  // -> if rarity identification fails
-        },    
+        },
     },
 }
