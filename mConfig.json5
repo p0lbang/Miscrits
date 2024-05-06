@@ -43,7 +43,7 @@
             "ga_eggy": [],
             "ga_fossilia": [],
             "ga_ffossilia": ["b3_sparkcrystal","b3_cactus","b3_potrock",],
-            "ga_fwaddles": ["b1_puddle","b1_fwtypha","b1_fwcrystal",],
+            "ga_fwaddles": ["b2_fwcrystal","b2_fwcactus","b2_fwrock",],
             "ga_dowlie": [],
             "ga_boltzee": [],
             // "ga_munkee_liothning_dpoltergust_fflintly": ["b4_gold", "b4_fade", "b4_purpred", "b4_blue"],
@@ -81,7 +81,7 @@
         "bigpokeThreshold": 70,
         "targetAll": true,  // ....... | true -> every encountered miscrit is tagged for capture
         "targets": [
-            "BlightedFlue", "DarkPoltergust", "FoilWaddles"
+            "BlightedFlue", "DarkPoltergust", "FoilWWaddles", "FoilFossillia",
             ],  
         // ........................... | miscrits added above are prioritized for capture regardless of their initial catch chance
         "ignoreBlockedIfS+": true,

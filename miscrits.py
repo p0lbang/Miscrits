@@ -1042,9 +1042,8 @@ def show(key: Key | KeyCode):
         if key.char == "q":
             toContinue = False
             print("Stopping miscrits...")
-            thread_keyb.stop()
-            LXVI_moveTo((0, 0))
-            return False
+            
+            pyautogui.moveTo((0, 0))
 
 
 thread_keyb = Listener(on_press=show)
@@ -1052,4 +1051,5 @@ thread_keyb.start()
 try:
     runMiscrits()
 except pyautogui.FailSafeException:
+    thread_keyb.stop()
     conclude()
