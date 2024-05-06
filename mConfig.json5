@@ -1,5 +1,5 @@
 {
-    "audio": true, // false -> mute the code audios and not import pygame
+    "audio": false, // false -> mute the code audios and not import pygame
     "walk": {
         "autoWalk": true, // ................ | walks until it finds your searching location
         "walkInterval": 3,  // .............. | time before clicking next walking point (DO NOT CHANGE!)
@@ -16,7 +16,7 @@
     "search": {
         "autoSearch": true, // .............. | looks for miscrits in searchable spots for you
         "searchInterval": 5, // ............. | time before clicking the next location (min: 5)
-        "searchCode": "ga_munkee_liothning_dpoltergust_fflintly", // ...... | paste from search codes below, ex: "a1_waddles" 
+        "searchCode": "ga_ffossilia", // ...... | paste from search codes below, ex: "a1_waddles" 
         "searchSeq": { // ................... | don't change the existing sequences pls don't no no 
         // fa, fb --> Miscrian Forest
             "fa_waddles": ["a1_typha1", "a1_bushsun", "a1_typha1_2"],
@@ -33,12 +33,16 @@
             "fb_bflue": ["a4_blight2", "a4_log", "a4_stone", "a4_shrub3"],
             // "fb_bflue": ["a4_blight2", "a4_blight2R"],
         // ga --> Mount Gemma
-            "ga_luna": ["b1_stone", "b1_typha", "b1_potrock", "b1_mound1"],
+            "ga_luna": ["b1_stone", 
+            "b1_typha", 
+            "b1_potrock", 
+            "b1_mound1"],
             "gb_poltergust_dkiloray": ["b1_crystal1", "b1_dead", "b1_mound2", "b1_smallcact", "b1_stack"],
             "gb_fkiloray": ["b1_crystal2", "b1_megarock", "b1_shrub", "b1_gigarock"],
             "ga_dcroaky": ["b2_pink", "b2_yellow", "b2_deadbush", "b2_stone", "b2_sapling"],
             "ga_eggy": [],
             "ga_fossilia": [],
+            "ga_ffossilia": ["b3_sparkcrystal","b3_cactus","b3_potrock",],
             "ga_dowlie": [],
             "ga_boltzee": [],
             // "ga_munkee_liothning_dpoltergust_fflintly": ["b4_gold", "b4_fade", "b4_purpred", "b4_blue"],
@@ -72,14 +76,14 @@
         "skipAll": false,  // ....... | true -> flee from wild miscrits that are not tagged for capture
         "autoCatch": true,  // ....... | catches miscrits for you
         "catchablePercentage": 90,  // | makes the attempt to catch the miscrit when the rate is above this value
-        "catchablePercentageL": 82,  // above but for legendaries
+        "catchablePercentageL": 78,  // above but for legendaries
         "bigpokeThreshold": 70,
         "targetAll": true,  // ....... | true -> every encountered miscrit is tagged for capture
         "targets": [
             "BlightedFlue", "DarkPoltergust", "FoilWaddles"
             ],  
         // ........................... | miscrits added above are prioritized for capture regardless of their initial catch chance
-        "ignoreBlockedIfS+": false,
+        "ignoreBlockedIfS+": true,
         "blocked": [
             "Cubsprout", "Sparkupine", // forest 1
             "Quirk", "Flameling", // forest 2
@@ -90,6 +94,8 @@
             "Humbug", "Nanaslug", // mansion 2
             "Owlie", "Peekly", "Felis", // gemma 3
             "Liothning", // gemma 4
+            "Drilldent","Breezycheeks","Auger","Mumbah","Equestrion","Kiloray","Aria",
+            "Felis",
         ],
         // ........................... | miscrits added above will be tagged to not catch
         "catchStandardDict": {  // ... | set values as capture thresholds for each rarity
@@ -99,6 +105,6 @@
             "Exotic": 10, // ....# 0-12
             "Legendary": 6, // .# 6-12
             "Unidentified": 12,  // -> if rarity identification fails
-        },    
+        },
     },
 }

@@ -31,6 +31,7 @@ def readJSON(filename: str, sortouter: bool = True, sortinner: bool = True) -> d
             filetext = file.read()
             if filetext != "":
                 tempjson = pyjson5.loads(filetext)
+                DICTIONARY = tempjson
 
                 if sortinner:
                     for key, value in tempjson.items():
@@ -38,13 +39,9 @@ def readJSON(filename: str, sortouter: bool = True, sortinner: bool = True) -> d
                             DICTIONARY[key] = dict(sorted(tempjson[key].items()))
                         except AttributeError:
                             pass
-                else:
-                    DICTIONARY = tempjson
 
                 if sortouter:
                     DICTIONARY = dict(sorted(DICTIONARY.items()))
-                else:
-                    DICTIONARY = tempjson
 
         return DICTIONARY
     except IOError:  # FileNotFoundError in Python 3
@@ -59,7 +56,6 @@ CONFIG = readJSON("mConfig.json5", sortouter=False, sortinner=False)
 PRESETS = readJSON("mPresets.json5", sortouter=True, sortinner=False)
 
 reader = easyocr.Reader(["en"], gpu=True, verbose=True)
-pygame.init()
 MCDATA = miscritsData.MiscritsData()
 
 
@@ -76,6 +72,12 @@ def miscritProfiles() -> list[str]:
     ]
 
 
+def getSound(filename):
+    if not CONFIG["audio"]:
+        return None
+    return pygame.mixer.Sound(filename)
+
+
 b = 0
 sNo = 1
 caught = False
@@ -83,13 +85,16 @@ toContinue = True
 firstBattle = True
 autoSwitch = CONFIG["team"]["autoSwitch"]
 start = time.perf_counter()
-on = pygame.mixer.Sound(pathlib.PurePath("audio", "on.mp3"))
-off = pygame.mixer.Sound(pathlib.PurePath("audio", "off.mp3"))
-rizz = pygame.mixer.Sound(pathlib.PurePath("audio", "rizz.mp3"))
-pluck = pygame.mixer.Sound(pathlib.PurePath("audio", "pluck.mp3"))
-bend = pygame.mixer.Sound(pathlib.PurePath("audio", "bend.mp3"))
-rock = pygame.mixer.Sound(pathlib.PurePath("audio", "rock.mp3"))
 
+if CONFIG["audio"]:
+    pygame.init()
+
+on = getSound(pathlib.PurePath("audio", "on.mp3"))
+off = getSound(pathlib.PurePath("audio", "off.mp3"))
+rizz = getSound(pathlib.PurePath("audio", "rizz.mp3"))
+pluck = getSound(pathlib.PurePath("audio", "pluck.mp3"))
+bend = getSound(pathlib.PurePath("audio", "bend.mp3"))
+rock = getSound(pathlib.PurePath("audio", "rock.mp3"))
 
 APPNAMEPNG = "appname.png"
 if sys.platform.startswith("linux"):
@@ -109,7 +114,21 @@ for w, walk in enumerate(walkSeq):
     )
 walkRegion = str(pathlib.PurePath("walkImages", f"{walkRegion}.png"))
 
-qualityDict = ["F-", "F ", "F+", "D ", "D+", "C ","C+", "B ", "B+", "A ", "A+", "S ", "S+"]
+qualityDict = [
+    "F-",
+    "F ",
+    "F+",
+    "D ",
+    "D+",
+    "C ",
+    "C+",
+    "B ",
+    "B+",
+    "A ",
+    "A+",
+    "S ",
+    "S+",
+]
 
 with mss.mss() as sct:
     # Get information of monitor 2
@@ -297,8 +316,9 @@ def getCurrentMiscrit(region: tuple[int, int, int, int] | None = None):
     global reader, img
 
     mPedia = LXVI_locateCenterOnScreen(UIImage("miscripedia.png"), 0.8)
-    img = LXVI_screenshot(region=(int(mPedia.x) - 289, int(mPedia.y) - 31, 40, 40))
-    img.save(f"{UIImage("currentMiscrit.png")}")
+    if mPedia is not None:
+        img = LXVI_screenshot(region=(int(mPedia.x) - 289, int(mPedia.y) - 31, 40, 40))
+        img.save(f"{UIImage("currentMiscrit.png")}")
 
 
 def updateCurrentMiscrit():
@@ -347,7 +367,7 @@ def updateCurrentMiscrit():
     PRESETS["newProfile"]["poke"] = 10
 
     with open("mPresets.json5", "w") as file:
-        outputtxt = pyjson5.dumps(PRESETS)
+        outputtxt = json.dumps(PRESETS,indent=2)
         file.write(outputtxt)
 
     print("Concluding process...")
@@ -567,9 +587,13 @@ def encounterMode():
 
     if CONFIG["catch"]["autoCatch"] and (
         miscrit not in CONFIG["catch"]["blocked"]
-        or CONFIG["catch"]["ignoreBlockedIfS+"]
+        or (CONFIG["catch"]["ignoreBlockedIfS+"] and wildScore >= 12)
     ):
-        if CONFIG["catch"]["targetAll"] or miscrit in CONFIG["catch"]["targets"]:
+        if (
+            CONFIG["catch"]["targetAll"]
+            or miscrit in CONFIG["catch"]["targets"]
+            or wildScore >= 12
+        ):
             print(
                 f"\033[A   | {Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} found!{Fore.LIGHTBLACK_EX}"
             )
@@ -596,14 +620,16 @@ def encounterMode():
         print(f"\033[A{qualityDict[wildScore]}")
 
     if miscrit not in ["[redacted]", "[unidentified]"]:
-        key = miscrit.strip().lower()
-        if key not in CATCHRATE:
-            CATCHRATE[key] = {}
+        keyMiscrit = miscrit.strip().lower()
+        if keyMiscrit not in CATCHRATE:
+            CATCHRATE[keyMiscrit] = {}
 
-        if wildScore not in CATCHRATE[key]:
-            CATCHRATE[key][qualityDict[wildScore]] = 1
+        keyQuality = qualityDict[wildScore]
+
+        if keyQuality not in CATCHRATE[keyMiscrit]:
+            CATCHRATE[keyMiscrit][keyQuality] = 1
         else:
-            CATCHRATE[key][qualityDict[wildScore]] += 1
+            CATCHRATE[keyMiscrit][keyQuality] += 1
 
     if not checkActive():
         print("Minimized while in encounter mode, concluding process...")
@@ -782,7 +808,13 @@ def catchMode():
             toClick = Point(toClick.x + 115, toClick.y + 80)
             chance = getCatchChance()
 
-            if (rarity == "Legendary" and int(chance) >= CONFIG["catch"]["catchablePercentageL"]) or (rarity != "Legendary" and int(chance) >= CONFIG["catch"]["catchablePercentage"]):
+            if (
+                rarity == "Legendary"
+                and int(chance) >= CONFIG["catch"]["catchablePercentageL"]
+            ) or (
+                rarity != "Legendary"
+                and int(chance) >= CONFIG["catch"]["catchablePercentage"]
+            ):
                 if action != 3:
                     action = 2
 
