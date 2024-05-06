@@ -588,6 +588,7 @@ def encounterMode():
     if CONFIG["catch"]["autoCatch"] and (
         miscrit not in CONFIG["catch"]["blocked"]
         or (CONFIG["catch"]["ignoreBlockedIfS+"] and wildScore >= 12)
+        or (CONFIG["catch"]["catchF-"] and wildScore == 0)
     ):
         if (
             CONFIG["catch"]["targetAll"]

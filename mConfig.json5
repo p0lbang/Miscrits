@@ -16,7 +16,7 @@
     "search": {
         "autoSearch": true, // .............. | looks for miscrits in searchable spots for you
         "searchInterval": 5, // ............. | time before clicking the next location (min: 5)
-        "searchCode": "ga_ffossilia", // ...... | paste from search codes below, ex: "a1_waddles" 
+        "searchCode": "ga_fwaddles", // ...... | paste from search codes below, ex: "a1_waddles" 
         "searchSeq": { // ................... | don't change the existing sequences pls don't no no 
         // fa, fb --> Miscrian Forest
             "fa_waddles": ["a1_typha1", "a1_bushsun", "a1_typha1_2"],
@@ -43,6 +43,7 @@
             "ga_eggy": [],
             "ga_fossilia": [],
             "ga_ffossilia": ["b3_sparkcrystal","b3_cactus","b3_potrock",],
+            "ga_fwaddles": ["b1_puddle","b1_fwtypha","b1_fwcrystal",],
             "ga_dowlie": [],
             "ga_boltzee": [],
             // "ga_munkee_liothning_dpoltergust_fflintly": ["b4_gold", "b4_fade", "b4_purpred", "b4_blue"],
@@ -84,6 +85,7 @@
             ],  
         // ........................... | miscrits added above are prioritized for capture regardless of their initial catch chance
         "ignoreBlockedIfS+": true,
+        "catchF-": true,
         "blocked": [
             "Cubsprout", "Sparkupine", // forest 1
             "Quirk", "Flameling", // forest 2
@@ -94,12 +96,13 @@
             "Humbug", "Nanaslug", // mansion 2
             "Owlie", "Peekly", "Felis", // gemma 3
             "Liothning", // gemma 4
-            "Drilldent","Breezycheeks","Auger","Mumbah","Equestrion","Kiloray","Aria",
-            "Felis",
+            "Drilldent","Breezycheeks","Auger",
+            "Mumbah","Equestrion","Kiloray","Aria",
+            "Felis", "Vexie", "Sparkslug",
         ],
         // ........................... | miscrits added above will be tagged to not catch
         "catchStandardDict": {  // ... | set values as capture thresholds for each rarity
-            "Common": 12, // ....# 0-12
+            "Common": 11, // ....# 0-12
             "Rare": 12, // ......# 0-12
             "Epic": 12, // ......# 0-12
             "Exotic": 10, // ....# 0-12
