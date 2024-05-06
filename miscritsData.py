@@ -83,9 +83,17 @@ class MiscritsData:
 
     def getTokens(self, rawdata: str):
         index = 0
-        if rawdata.startswith("000200000000") or rawdata.startswith("000300000000") or rawdata.startswith("000400000000"):
+        if (
+            rawdata.startswith("000200000000")
+            or rawdata.startswith("000300000000")
+            or rawdata.startswith("000400000000")
+        ):
             index = 36
-        elif rawdata.startswith("0002000000") or rawdata.startswith("0003000000")  or rawdata.startswith("0004000000"):
+        elif (
+            rawdata.startswith("0002000000")
+            or rawdata.startswith("0003000000")
+            or rawdata.startswith("0004000000")
+        ):
             index = 28
         else:
             index = 1_000_000

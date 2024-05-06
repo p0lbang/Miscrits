@@ -71,10 +71,12 @@ def miscritProfiles() -> list[str]:
         if os.path.isfile(pathlib.PurePath("profileImages", f))
     ]
 
+
 def getSound(filename):
     if not CONFIG["audio"]:
         return None
     return pygame.mixer.Sound(filename)
+
 
 b = 0
 sNo = 1
@@ -86,7 +88,7 @@ start = time.perf_counter()
 
 if CONFIG["audio"]:
     pygame.init()
-    
+
 on = getSound(pathlib.PurePath("audio", "on.mp3"))
 off = getSound(pathlib.PurePath("audio", "off.mp3"))
 rizz = getSound(pathlib.PurePath("audio", "rizz.mp3"))
@@ -112,7 +114,21 @@ for w, walk in enumerate(walkSeq):
     )
 walkRegion = str(pathlib.PurePath("walkImages", f"{walkRegion}.png"))
 
-qualityDict = ["F-", "F ", "F+", "D ", "D+", "C ","C+", "B ", "B+", "A ", "A+", "S ", "S+"]
+qualityDict = [
+    "F-",
+    "F ",
+    "F+",
+    "D ",
+    "D+",
+    "C ",
+    "C+",
+    "B ",
+    "B+",
+    "A ",
+    "A+",
+    "S ",
+    "S+",
+]
 
 with mss.mss() as sct:
     # Get information of monitor 2
@@ -573,7 +589,11 @@ def encounterMode():
         miscrit not in CONFIG["catch"]["blocked"]
         or (CONFIG["catch"]["ignoreBlockedIfS+"] and wildScore >= 12)
     ):
-        if CONFIG["catch"]["targetAll"] or miscrit in CONFIG["catch"]["targets"] or wildScore >= 12:
+        if (
+            CONFIG["catch"]["targetAll"]
+            or miscrit in CONFIG["catch"]["targets"]
+            or wildScore >= 12
+        ):
             print(
                 f"\033[A   | {Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} found!{Fore.LIGHTBLACK_EX}"
             )
@@ -788,7 +808,13 @@ def catchMode():
             toClick = Point(toClick.x + 115, toClick.y + 80)
             chance = getCatchChance()
 
-            if (rarity == "Legendary" and int(chance) >= CONFIG["catch"]["catchablePercentageL"]) or (rarity != "Legendary" and int(chance) >= CONFIG["catch"]["catchablePercentage"]):
+            if (
+                rarity == "Legendary"
+                and int(chance) >= CONFIG["catch"]["catchablePercentageL"]
+            ) or (
+                rarity != "Legendary"
+                and int(chance) >= CONFIG["catch"]["catchablePercentage"]
+            ):
                 if action != 3:
                     action = 2
 
