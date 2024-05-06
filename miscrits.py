@@ -367,7 +367,7 @@ def updateCurrentMiscrit():
     PRESETS["newProfile"]["poke"] = 10
 
     with open("mPresets.json5", "w") as file:
-        outputtxt = pyjson5.dumps(PRESETS)
+        outputtxt = json.dumps(PRESETS,indent=2)
         file.write(outputtxt)
 
     print("Concluding process...")
