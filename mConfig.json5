@@ -1,5 +1,5 @@
 {
-    "audio": false, // false -> mute the code audios and not import pygame
+    "audio": true, // false -> mute the code audios and not import pygame
     "walk": {
         "autoWalk": true, // ................ | walks until it finds your searching location
         "walkInterval": 3,  // .............. | time before clicking next walking point (DO NOT CHANGE!)
@@ -16,7 +16,7 @@
     "search": {
         "autoSearch": true, // .............. | looks for miscrits in searchable spots for you
         "searchInterval": 5, // ............. | time before clicking the next location (min: 5)
-        "searchCode": "ga_fwaddles", // ...... | paste from search codes below, ex: "a1_waddles" 
+        "searchCode": "ga_ffossilia", // ...... | paste from search codes below, ex: "a1_waddles" 
         "searchSeq": { // ................... | don't change the existing sequences pls don't no no 
         // fa, fb --> Miscrian Forest
             "fa_waddles": ["a1_typha1", "a1_bushsun", "a1_typha1_2"],
@@ -47,7 +47,7 @@
             "ga_dowlie": [],
             "ga_boltzee": [],
             // "ga_munkee_liothning_dpoltergust_fflintly": ["b4_gold", "b4_fade", "b4_purpred", "b4_blue"],
-            "ga_munkee_liothning_dpoltergust_fflintly": ["b4_gold", "b4_fade"],
+            "ga_munkee_liothning_dpoltergust_fflintly": ["b4_purpred", "b4_fade"],
         // m0, m1, m2 --> The Mansion
             "m0_kelpa": ["m0_typha", "m0_hay"],
             "af_defilio_cutom": ["a4_blight", "a4_typha4",],
@@ -67,11 +67,11 @@
         "autoSwitch": true,  // . | switches miscrits on your team depending on the reached level
         "switchAmount": 3,  // . | amount of miscrits to check on your team from the right
         "switchMain": false,  // . | false if miscrit 1 is excluded from switching
-        "switchLevel": 30,  // .. | the reached level in question
+        "switchLevel": 15,  // .. | the reached level in question
     },
     "fight": {  // | info of your first miscrit in the team, the hard carry
         "autoFight": true,  // false -> use arrow keys to cycle through the skills and 'z' to click skill ('x' to hover on run)
-        "skipWeakness": true,  // false -> fight weakness element instead of escaping (overrides miscrit preset if true)
+        "skipWeakness": false,  // false -> fight weakness element instead of escaping (overrides miscrit preset if true)
     },
     "catch": {
         "skipAll": false,  // ....... | true -> flee from wild miscrits that are not tagged for capture
@@ -81,10 +81,10 @@
         "bigpokeThreshold": 70,
         "targetAll": true,  // ....... | true -> every encountered miscrit is tagged for capture
         "targets": [
-            "BlightedFlue", "DarkPoltergust", "FoilWWaddles", "FoilFossillia",
+            "BlightedFlue", "DarkPoltergust", "FoilWWaddles", "FoilWaddles", "FoilThundercracker", "FoilFossilia", "FoilFossillia",
             ],  
         // ........................... | miscrits added above are prioritized for capture regardless of their initial catch chance
-        "ignoreBlockedIfS+": true,
+        "ignoreBlockedIfS+": false,
         "catchF-": true,
         "blocked": [
             "Cubsprout", "Sparkupine", // forest 1
@@ -92,17 +92,15 @@
             "Snatcher", "Elefauna", "Hotfoot", "DarkFlowerpiller", // forest 3
             "Twiggum", "Shellbee", "Squibee", "Steamguin", "Crickin", // forest 4
             "Breezycheeks", // gemma 1
-            "Frostmite", "Bubbles", "Spinnerette", "Slithero", "Croaky", "Rafiery", // mansion 1
+            "Frostmite", "Bubbles", "Spinnerette", "Slithero", "Rafiery", // mansion 1
             "Humbug", "Nanaslug", // mansion 2
-            "Owlie", "Peekly", "Felis", // gemma 3
-            "Liothning", // gemma 4
-            "Drilldent","Breezycheeks","Auger",
-            "Mumbah","Equestrion","Kiloray","Aria",
-            "Felis", "Vexie", "Sparkslug",
+            "Croaky", // gemma 2
+            "Craggy", "Owlie", "Peekly", "Sparkslug", "Felis", // gemma 3
+            "MunKee", "Liothning", // gemma 4
         ],
         // ........................... | miscrits added above will be tagged to not catch
         "catchStandardDict": {  // ... | set values as capture thresholds for each rarity
-            "Common": 11, // ....# 0-12
+            "Common": 12, // ....# 0-12
             "Rare": 12, // ......# 0-12
             "Epic": 12, // ......# 0-12
             "Exotic": 10, // ....# 0-12
