@@ -107,11 +107,12 @@ for s, search in enumerate(searchSeq):
 
 walkRegion = searchCode[:2]
 walkSeq = CONFIG["walk"]["walkSeq"][walkRegion]
+walkInt = CONFIG["walk"]["walkSeq"][f"{walkRegion}0"]
 walkDis = CONFIG["walk"]["walkDistance"]
 for w, walk in enumerate(walkSeq):
     walkSeq[w] = Point(
         int(walkDis * math.cos(math.radians(walkSeq[w]))),
-        int(walkDis * math.sin(math.radians(walkSeq[w]))),
+        int(-walkDis * math.sin(math.radians(walkSeq[w]))),
     )
 walkRegion = str(pathlib.PurePath("walkImages", f"{walkRegion}.png"))
 
@@ -465,11 +466,12 @@ def walkMode():
             return
 
         if CONFIG["walk"]["autoWalk"]:
-            for walk in walkSeq:
+            for w, walk in enumerate(walkSeq):
                 toWalk = Point(center.x + walk.x, center.y + walk.y)
                 LXVI_moveTo(toWalk, 0.2)
                 pyautogui.mouseDown()
-                time.sleep(CONFIG["walk"]["walkInterval"])
+                print(f"{walk} | {walkInt[w]}")
+                time.sleep(walkInt[w])
 
                 if (toClick := LXVI_locateCenterOnScreen(walkGoal, 0.85)) is not None:
                     LXVI_moveTo(toClick)

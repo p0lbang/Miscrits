@@ -210,4 +210,20 @@
     "bigpoke": 4,
     "poke": 10
   },
+  "BlightedFlue30": {
+    "skipWeakness": false,
+    "strength": "nature.png",
+    "weakness": "water.png",
+    "isDual": false,
+    "ignoreWeakness": true,
+    "hasNegate": false,
+    "hasHeal": false,
+    "healCD": 1,
+    "main": 1,
+    "strong": 1,
+    "weak": 1,
+    "heal": 1,
+    "bigpoke": 6,
+    "poke": 10
+  }
 }
