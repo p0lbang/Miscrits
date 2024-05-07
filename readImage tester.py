@@ -24,8 +24,8 @@ def LXVI_readImage(region: tuple[int, int, int, int] | None = None):
 
     read = reader.recognize(
         numpy.array(img),
-        # ,blocklist="-~() "
-        allowlist="0123456789",
+        blocklist="-~() 1234567890",
+        # allowlist="0123456789",
     )
 
     (_, text, _) = read[0]
@@ -168,4 +168,4 @@ def getMyMiscritProfile():
         )
 
 
-getMyMiscritProfile()
+getMiscritName()

@@ -248,7 +248,7 @@ def LXVI_readImage(
             numpy.array(img), allowlist="0123456789", blocklist="-~( ).,"
         )
     else:
-        read = reader.recognize(numpy.array(img), blocklist="-~( ).,")
+        read = reader.recognize(numpy.array(img), blocklist="-~( ).,1234567890")
     (_, text, _) = read[0]
 
     # img.save(f"errorer.jpg")

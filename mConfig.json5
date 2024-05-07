@@ -19,7 +19,7 @@
     "search": {
         "autoSearch": true, // .............. | looks for miscrits in searchable spots for you
         "searchInterval": 5, // ............. | time before clicking the next location (min: 5)
-        "searchCode": "gd_boltzee_ffossillia", // ...... | paste from search codes below, ex: "a1_waddles" 
+        "searchCode": "gd_fossillia_eggy", // ...... | paste from search codes below, ex: "a1_waddles" 
         "searchSeq": { // ................... | don't change the existing sequences pls don't no no 
         // fa, fb --> Miscrian Forest
             "fa_waddles": ["a1_typha1", "a1_bushsun", "a1_typha1_2"],
@@ -46,7 +46,7 @@
             "gc_fwaddles": ["b2_fwcrystal","b2_fwcactus","b2_fwrock",],
             "gd_fossillia_eggy": ["b3_valleyrock", "b3_stump", "b3_deadbush", "b3_bonsai"],
             "gd_dowlie": ["b3_rockA", "b3_rockB", "b3_rockC"],
-            "gd_boltzee_ffossillia": ["b3_gigarock", "b3_potrock", "b3_sparkcrystal", "b3_megarock"],
+            "gd_boltzee_ffossillia": ["b3_gigarock", "b3_potrock", "b3_sparkcrystal", "b3_megarock", "b3_typha"],
             "gc_fthundercracker": ["b4_twilightcrystal", "b4_potrock", "b4_galaxycrystal", "b4_typha"],
             "ga_munkee_liothning_dpoltergust_fflintly": ["b4_gold", "b4_fade", "b4_purpred", "b4_blue"],
             // "ga_munkee_liothning_dpoltergust_fflintly": ["b4_purpred", "b4_fade"],
@@ -69,7 +69,7 @@
         "autoSwitch": true,  // . | switches miscrits on your team depending on the reached level
         "switchAmount": 3,  // . | amount of miscrits to check on your team from the right
         "switchMain": false,  // . | false if miscrit 1 is excluded from switching
-        "switchLevel": 15,  // .. | the reached level in question
+        "switchLevel": 30,  // .. | the reached level in question
     },
     "fight": {  // | info of your first miscrit in the team, the hard carry
         "autoFight": true,  // false -> use arrow keys to cycle through the skills and 'z' to click skill ('x' to hover on run)
@@ -83,7 +83,7 @@
         "bigpokeThreshold": 70,
         "targetAll": true,  // ....... | true -> every encountered miscrit is tagged for capture
         "targets": [
-            "BlightedFlue", "DarkPoltergust", "FoilWWaddles", "FoilWaddles", "FoilThundercracker", "FoilFossillia", "Boltzee", "Eggy", "Fossillia",
+            "BlightedFlue", "DarkPoltergust", "FoilWWaddles", "FoilWaddles", "FoilThundercracker", "Boltzee", "Eggy",
             ],  
         // ........................... | miscrits added above are prioritized for capture regardless of their initial catch chance
         "ignoreBlockedIfS+": false,
@@ -95,7 +95,7 @@
             "Twiggum", "Shellbee", "Squibee", "Steamguin", "Crickin", // forest 4
             "Breezycheeks", // gemma 1
             "Croaky", "Aria", // gemma 2
-            "Craggy", "Owlie", "Peekly", "Sparkslug", "Felis", // gemma 3
+            "Craggy", "Vexie", "Owlie", "Peekly", "Sparkslug", "Felis", // gemma 3
             "MunKee", "Liothning", // gemma 4
             "Frostmite", "Bubbles", "Spinnerette", "Slithero", "Rafiery", // mansion 1
             "Humbug", "Nanaslug", // mansion 2
