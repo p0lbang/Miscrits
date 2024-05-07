@@ -156,6 +156,9 @@ def playSound(audio: pygame.mixer.Sound) -> None:
 
 
 def checkActive():
+    if LXVI_locateCenterOnScreen(UIImage("loginbtn.png"), 0.9) is not None:
+        login()
+        return True
     return LXVI_locateCenterOnScreen(UIImage(APPNAMEPNG), 0.8) is not None
 
 
@@ -368,7 +371,7 @@ def updateCurrentMiscrit():
     PRESETS["newProfile"]["poke"] = 10
 
     with open("mPresets.json5", "w") as file:
-        outputtxt = json.dumps(PRESETS,indent=2)
+        outputtxt = json.dumps(PRESETS, indent=2)
         file.write(outputtxt)
 
     print("Concluding process...")
@@ -532,7 +535,7 @@ def searchMode():
 
 
 def encounterMode():
-    global miscrit, current, weakness, b, sNo, onSkillPage, rarity, battle_start, toClick, toRun, firstBattle  # noqa
+    global miscrit, current, weakness, strength1, b, sNo, onSkillPage, rarity, battle_start, toClick, toRun, firstBattle  # noqa
 
     b += 1
     sNo = 1
@@ -542,6 +545,7 @@ def encounterMode():
     onSkillPage = 1
     battle_start = time.perf_counter()
     weakness = False
+    strength1 = False
 
     while LXVI_locateCenterOnScreen(UIImage("battlebtns.png"), 0.8) is None:
         pass
@@ -557,7 +561,9 @@ def encounterMode():
     # miscritsCheck info
     click(UIImage("miscripedia.png"), 0.8, 0.555, 0)
     getMiscritData()
-    print(f"{qualityDict[wildScore]} | {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} wants to fight.")
+    print(
+        f"{qualityDict[wildScore]} | {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} wants to fight."
+    )
     click(UIImage("mpedia_exit.png"), 0.8, 0, 0)
     pyautogui.leftClick()
 
@@ -566,6 +572,7 @@ def encounterMode():
         is not None
     ):
         action = -1
+        strength1 = True
     elif (
         LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["weakness"]), 0.8)
         is not None
@@ -579,6 +586,7 @@ def encounterMode():
             is not None
         ):
             action = -1
+            strength1 = False
         elif (
             LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["weakness2"]), 0.8)
             is not None
@@ -676,7 +684,10 @@ def encounterMode():
             elif (
                 action == -1
             ):  # alternative attack to use for elements that are weak against you
-                useSkill(toClick, PRESETS[current]["strong"])
+                if strength1:
+                    useSkill(toClick, PRESETS[current]["strong"])
+                else:
+                    useSkill(toClick, PRESETS[current]["strong2"])
             elif action == 1:  # skill for weakness element
                 if not PRESETS[current]["ignoreWeakness"]:
                     useSkill(toClick, PRESETS[current]["weak"])
@@ -971,13 +982,13 @@ def login():
         LXVI_moveTo(toClick)
         time.sleep(3)
         pyautogui.leftClick()
-    while LXVI_locateCenterOnScreen(UIImage("miscripedia.png"), 0.75) is not None:
+    while LXVI_locateCenterOnScreen(UIImage("miscripedia.png"), 0.75) is None:
         if time.perf_counter() - wait >= 30:
             print("Having trouble signing back in. Concluding process...")
             conclude()
         pass
     print("Account logged back in. Resuming...   ")
-    time.sleep(10)
+    time.sleep(5)
     dailySpin()
 
 
@@ -1045,7 +1056,6 @@ def show(key: Key | KeyCode):
         if key.char == "q":
             toContinue = False
             print("Stopping miscrits...")
-            
             pyautogui.moveTo((0, 0))
 
 

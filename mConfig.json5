@@ -19,7 +19,7 @@
     "search": {
         "autoSearch": true, // .............. | looks for miscrits in searchable spots for you
         "searchInterval": 5, // ............. | time before clicking the next location (min: 5)
-        "searchCode": "gd_fossillia_eggy", // ...... | paste from search codes below, ex: "a1_waddles" 
+        "searchCode": "m1_dorux", // ...... | paste from search codes below, ex: "a1_waddles" 
         "searchSeq": { // ................... | don't change the existing sequences pls don't no no 
         // fa, fb --> Miscrian Forest
             "fa_waddles": ["a1_typha1", "a1_bushsun", "a1_typha1_2"],
@@ -56,7 +56,7 @@
             "m0_A": ["m0_sapling", "m0_rock1", "m0_rock2", "m0_stone1", "m0_grass", "m0_rock3"],
             "m0_B": ["m0_axe", "m0_crate", "m0_chops", "m0_minis"],
             "m0_C": ["m0_cattail01", "m0_cattail02", "m0_cattail03", "m0_cattail04"],
-            "m1_A": ["m1_globeB", "m1_potions", "m1_table", "m1_caged"],
+            "m1_dorux": ["m1_globeB", "m1_potions", "m1_candle", "m1_caged"],
             "m1_rafiery_raldio": ["m1_stool", "m1_cage1", "m1_mirrors", "m1_cage2"],
             "m1_thundercracker": ["m1_globeY", "m1_sofaL", "m1_candelabraR", "m1_sofaR"],
             "m2_flutterpat": ["m2_relics", "m2_brush", "m2_potions", "m2_woodcage"],
@@ -83,7 +83,7 @@
         "bigpokeThreshold": 70,
         "targetAll": true,  // ....... | true -> every encountered miscrit is tagged for capture
         "targets": [
-            "BlightedFlue", "DarkPoltergust", "FoilWWaddles", "FoilWaddles", "FoilThundercracker", "Boltzee", "Eggy",
+            "BlightedFlue", "DarkPoltergust", "FoilWWaddles", "FoilWaddles", "FoilThundercracker", "Dorux"
             ],  
         // ........................... | miscrits added above are prioritized for capture regardless of their initial catch chance
         "ignoreBlockedIfS+": false,
