@@ -29,7 +29,7 @@
     "search": { // if you want to use custom, duplicate existing then comment out the original
         "autoSearch": true, // .............. | looks for miscrits in searchable spots for you
         "searchInterval": 5, // ............. | time before clicking the next location (min: 5)
-        "searchCode": "m1_dorux", // ...... | paste from search codes below, ex: "fa_waddles" 
+        "searchCode": "m0_kelpa", // ...... | paste from search codes below, ex: "fa_waddles" 
         "searchSeq": { // ................... | don't change the existing sequences pls don't no no 
     //Miscrian Forest
             "fa_waddles": ["a1_typha1", "a1_bushsun", "a1_typha1_2"],
@@ -62,11 +62,10 @@
                 // "ga_munkee_liothning_dpoltergust_fflintly": ["b4_purpred", "b4_fade"],
     //The Mansion
             "m0_kelpa": ["m0_typha", "m0_hay"],
-            "af_defilio_cutom": ["a4_blight", "a4_typha4",],
             "m0_A": ["m0_sapling", "m0_rock1", "m0_rock2", "m0_stone1", "m0_grass", "m0_rock3"],
             "m0_B": ["m0_axe", "m0_crate", "m0_chops", "m0_minis"],
             "m0_C": ["m0_cattail01", "m0_cattail02", "m0_cattail03", "m0_cattail04"],
-            "m1_dorux": ["m1_globeB", "m1_potions", "m1_candle", "m1_caged"],
+            "m1_flintly_dorux": ["m1_globeB", "m1_redcage", "m1_candle", "m1_caged"],
             "m1_rafiery_raldio": ["m1_stool", "m1_cage1", "m1_mirrors", "m1_cage2"],
             "m1_thundercracker": ["m1_globeY", "m1_sofaL", "m1_candelabraR", "m1_sofaR"],
             "m2_flutterpat": ["m2_relics", "m2_brush", "m2_potions", "m2_woodcage"],
@@ -93,17 +92,17 @@
         "bigpokeThreshold": 70,
         "targetAll": true,  // ....... | true -> every encountered miscrit is tagged for capture
         "targets": [
-            "BlightedFlue", "DarkPoltergust", "FoilWWaddles", "FoilWaddles", "FoilThundercracker", "Dorux"
+            "BlightedFlue", "DarkPoltergust", "FoilWWaddles", "FoilWaddles", "FoilThundercracker", "Flintly"
             ],  
         // ........................... | miscrits added above are prioritized for capture regardless of their initial catch chance
         "ignoreBlockedIfS+": false,
         "catchF-": true,
         "blocked": [
-            "Cubsprout", "Sparkupine", // forest 1
+            "Cubsprout", "Hydroseal", "Sparkupine", // forest 1
             "Quirk", "Flameling", // forest 2
             "Snatcher", "Elefauna", "Hotfoot", "DarkFlowerpiller", // forest 3
             "Twiggum", "Shellbee", "Squibee", "Steamguin", "Crickin", // forest 4
-            "Breezycheeks", // gemma 1
+            "Breezycheeks", "Statikat", // gemma 1
             "Croaky", "Aria", // gemma 2
             "Craggy", "Vexie", "Owlie", "Peekly", "Sparkslug", "Felis", // gemma 3
             "MunKee", "Liothning", // gemma 4

@@ -470,7 +470,7 @@ def walkMode():
                 toWalk = Point(center.x + walk.x, center.y + walk.y)
                 LXVI_moveTo(toWalk, 0.2)
                 pyautogui.mouseDown()
-                print(f"{walk} | {walkInt[w]}")
+                # print(f"{walk} | {walkInt[w]}")
                 time.sleep(walkInt[w])
 
                 if (toClick := LXVI_locateCenterOnScreen(walkGoal, 0.85)) is not None:
@@ -515,6 +515,7 @@ def searchMode():
 
                 wildScore = 0
                 wildStats = MCDATA.getStats(CONFIG["search"]["searchInterval"])
+                # print(f"\n{wildStats}")
                 for stat in wildStats:
                     wildScore += int(wildStats[stat]) - 1
                 time.sleep(
@@ -596,36 +597,20 @@ def encounterMode():
             action = 1
             weakness = True
 
-    if CONFIG["catch"]["autoCatch"] and (
-        miscrit not in CONFIG["catch"]["blocked"]
-        or (CONFIG["catch"]["ignoreBlockedIfS+"] and wildScore >= 12)
-        or (CONFIG["catch"]["catchF-"] and wildScore == 0)
-    ):
-        if (
-            CONFIG["catch"]["targetAll"]
-            or miscrit in CONFIG["catch"]["targets"]
-            or wildScore >= 12
-        ):
-            print(
-                f"\033[A{qualityDict[wildScore]} | {Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} found!{Fore.LIGHTBLACK_EX}"
-            )
-
-            catchStandard = CONFIG["catch"]["catchStandardDict"][rarity]
-            if rarity == "Legendary":
-                playSound(rock)
-                time.sleep(10)
-
-            if (wildScore >= catchStandard) or (miscrit in CONFIG["catch"]["targets"]):
-                print(f"\033[A{Fore.WHITE}{qualityDict[wildScore]}{Fore.LIGHTBLACK_EX}")
-                playSound(pluck)
-                catchMode()
-                return
-            else:
-                print(
-                    f"\033[A{qualityDict[wildScore]} | {Fore.WHITE}This {Fore.YELLOW}{miscrit}{Fore.WHITE} is trash. -p0lbang{Fore.LIGHTBLACK_EX}"
-                )
-    else:
-        print(f"\033[A{qualityDict[wildScore]}")
+    if CONFIG["catch"]["autoCatch"]:
+        catchStandard = CONFIG["catch"]["catchStandardDict"][rarity]
+        if ((CONFIG["catch"]["targetAll"] and miscrit not in CONFIG["catch"]["blocked"]) or miscrit in CONFIG["catch"]["targets"]) and wildScore >= catchStandard:
+            print(f"\033[A{Fore.WHITE}{qualityDict[wildScore]} | {Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} found!{Fore.LIGHTBLACK_EX}")
+            playSound(pluck)
+            catchMode()
+            return
+        elif (CONFIG["catch"]["ignoreBlockedIfS+"] and wildScore >= 12) or (CONFIG["catch"]["catchF-"] and wildScore == 0):
+            print(f"\033[A{Fore.WHITE}{qualityDict[wildScore]} | {Fore.WHITE}{qualityDict[wildScore]} miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} found!{Fore.LIGHTBLACK_EX}")
+            playSound(rizz)
+            catchMode()
+            return        
+        elif miscrit not in CONFIG["catch"]["blocked"]:
+            print(f"\033[A{qualityDict[wildScore]} | {Fore.WHITE}This {Fore.YELLOW}{miscrit}{Fore.WHITE} is trash. -p0lbang{Fore.LIGHTBLACK_EX}")
 
     if miscrit not in ["[redacted]", "[unidentified]"]:
         keyMiscrit = miscrit.strip().lower()
@@ -791,6 +776,10 @@ def catchMode():
 
     if weakness:
         action = 0
+    
+    if rarity == "Legendary":
+        playSound(rock)
+        time.sleep(10)
 
     while not caught:
         if not checkActive():
@@ -992,6 +981,7 @@ def login():
     print("Account logged back in. Resuming...   ")
     time.sleep(5)
     dailySpin()
+    time.sleep(3)
 
 
 def dailySpin():
