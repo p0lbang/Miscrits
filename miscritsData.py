@@ -29,11 +29,10 @@ class MiscritsData:
         self.timeElapsed = 0
         self.timeoutThreshold = 60
         self.TOKENS = []
-        self.currenttok = ""
-        self.wholepacketdata = ""
-        self.previousWild = []
         self.currentWild = []
         self.output = {}
+        self.databuilder = {}
+        self.ID = ""
 
     def setTimeStarted(self):
         self.timeStarted = time.perf_counter()
@@ -71,43 +70,49 @@ class MiscritsData:
     def poptoken(self):
         try:
             tok = self.TOKENS.pop(0)
-            self.currenttok = tok
             if len(tok) == 8:
                 return tok
-            return None
-        except Exception:
-            return None
+        except Exception as error:
+            logger.warning("exception pop:", error)
+
+        return None
 
     def splitToN(self, inputstr: str, n: int):
         return [inputstr[i : i + n] for i in range(0, len(inputstr), n)]
 
-    def getTokens(self, rawdata: str):
-        index = 0
-        if (
-            rawdata.startswith("000200000000")
-            or rawdata.startswith("000300000000")
-            or rawdata.startswith("000400000000")
-        ):
-            index = 36
-        elif (
-            rawdata.startswith("0002000000")
-            or rawdata.startswith("0003000000")
-            or rawdata.startswith("0004000000")
-        ):
-            index = 28
+    def mergePackets(self, rawdata: str):
+        packetGroup = rawdata[16:20]
+        rawdatalen = len(rawdata)
+
+        if rawdatalen > 32 + 8:
+            packetCount = int(rawdata[24 : 24 + 8], 16)
+            packetIndex = int(rawdata[32 : 32 + 8], 16)
+
+        if rawdatalen > 64 + 8 and rawdata[64 : 64 + 8] == "80120801":  # login data
+            body = rawdata[72:]
+            self.databuilder[packetGroup] = [None for _ in range(packetCount)]
+            self.databuilder[packetGroup][packetIndex] = body
+        elif rawdatalen > 58 + 8 and rawdata[56 : 56 + 8] == "00010e03":  # battle data
+            body = rawdata[64:]
+            self.databuilder[packetGroup] = [None for _ in range(packetCount)]
+            self.databuilder[packetGroup][packetIndex] = body
+        elif packetGroup in self.databuilder.keys():
+            body = rawdata[56:]
+            self.databuilder[packetGroup][packetIndex] = body
+            if None not in self.databuilder[packetGroup]:
+                return True, "".join(self.databuilder[packetGroup])
         else:
             index = 1_000_000
             for datatype in GODOT_DATATYPES:
                 x = rawdata.find(datatype)
                 if x > -1 and x < index:
                     index = x
+            return True, rawdata[index:]
 
-        # every 8 characters
-        tkns = self.splitToN(rawdata[index:], 8)
-        return tkns
+        return False, None
 
-    def parsegodot(self, rawdata):
-        self.TOKENS = self.getTokens(rawdata=rawdata)
+    def parseGodotData(self, rawdata):
+        self.TOKENS = self.splitToN(rawdata, 8)
         values = []
         while len(self.TOKENS) != 0:
             values.append(self.keywords(self.poptoken()))
@@ -160,7 +165,7 @@ class MiscritsData:
             return temp
         return 0
 
-    def _getStats(self, packet: Packet):
+    def packetFilter(self, packet: Packet):
         pkt = packet[0][1]
 
         if self.elapsedTime() > self.timeoutThreshold:
@@ -169,30 +174,18 @@ class MiscritsData:
 
         if (pkt.src == "34.105.0.189" or pkt.dst == "34.105.0.189") and pkt.len > 44:
             try:
-                line = pkt.load.hex()
-                n = 2
-                temp_hex = self.splitToN(line, n)
-                temp_hex = "".join(temp_hex)
-
-                # remove first 28 characters, TODO: determine what is the purpose
-                temp_hex = temp_hex[28:]
-
-                # if udp packet is greater len than 1420 it means it has a next part
-                if pkt.len >= 1420:
-                    self.wholepacketdata += "".join(self.getTokens(temp_hex))
+                validPacket, mergedPacket = self.mergePackets(pkt.load.hex())
+                if not validPacket:
                     return False
 
-                self.wholepacketdata += "".join(self.getTokens(temp_hex))
+                parsedObject = self.parseGodotData(mergedPacket)
 
-                parsedobject = self.parsegodot(self.wholepacketdata)
-
-                if isinstance(parsedobject, (list, dict)):
-                    if parsedobject == []:
+                if isinstance(parsedObject, (list, dict)):
+                    if parsedObject == []:
                         return False
                     try:
-                        wildstar = parsedobject[1][0]["Star"]
-                        self.currentWild = parsedobject[1][0]
-                        self.previousWild = self.currentWild
+                        wildstar = parsedObject[1][0]["Star"]
+                        self.currentWild = parsedObject[1][0]
                         wildstardict = {
                             "hp": wildstar[2],
                             "spd": wildstar[3],
@@ -202,15 +195,14 @@ class MiscritsData:
                             "pd": wildstar[4],
                         }
                         self.output = wildstardict
-                        self.ID = parsedobject[1][0]["Id"]
-                        logger.info(json.dumps(parsedobject, indent=2))
+                        self.ID = parsedObject[1][0]["Id"]
+                        logger.info(json.dumps(parsedObject, indent=2))
                         return True
                     except Exception as e:
                         logger.warning(e)
 
-                    logger.info(json.dumps(parsedobject, indent=2))
+                    logger.info(json.dumps(parsedObject, indent=2))
 
-                self.wholepacketdata = ""
             except Exception as error:
                 logger.warning("An error occurred:", error)
 
@@ -220,7 +212,7 @@ class MiscritsData:
         self.clear()
         self.timeoutThreshold = timeout
         self.setTimeStarted()
-        sniff(filter="udp", stop_filter=self._getStats)
+        sniff(filter="udp", stop_filter=self.packetFilter)
         self.timeElapsed = self.elapsedTime()
 
     def getStats(self, timeout: int = 60) -> dict:
@@ -239,10 +231,5 @@ class MiscritsData:
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     mcdata = MiscritsData()
-    stats = mcdata.getWildData(10)
+    stats = mcdata.getStatsID(10)
     logger.info(stats)
-
-    # from playsound import playsound
-    # import pathlib
-
-    # playsound(pathlib.PurePath("audio", "on.mp3"))
