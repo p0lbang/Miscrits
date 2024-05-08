@@ -241,5 +241,23 @@
     "heal": 1,
     "bigpoke": 6,
     "poke": 10
+  },
+  "newProfile": {
+    "skipWeakness": true,
+    "strength": "gold.png",
+    "weakness": "gold.png",
+    "isDual": false,
+    "strength2": "gold.png",
+    "weakness2": "gold.png",
+    "ignoreWeakness": false,
+    "hasNegate": false,
+    "hasHeal": false,
+    "healCD": 1,
+    "main": 1,
+    "strong": 1,
+    "weak": 3,
+    "heal": 1,
+    "bigpoke": 1,
+    "poke": 10
   }
 }

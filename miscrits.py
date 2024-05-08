@@ -501,7 +501,11 @@ def searchMode():
                 pyautogui.leftClick()
 
                 wildScore = 0
-                wildStats, wildID = MCDATA.getStatsID(CONFIG["search"]["searchInterval"])
+                try:
+                    wildStats, wildID = MCDATA.getStatsID(CONFIG["search"]["searchInterval"])
+                except:
+                    wildStats = [0,0,0,0,0,0]
+                    wildID = 0
                 # print(f"\n\n{wildDATA}\n")
 
                 for stat in wildStats:
@@ -525,6 +529,30 @@ def searchMode():
                 conclude()
 
         else:
+            wildScore = 0
+            try:
+                wildStats, wildID = MCDATA.getStatsID(CONFIG["search"]["searchInterval"])
+            except:
+                wildStats = [0,0,0,0,0,0]
+                wildID = 0
+            # print(f"\n\n{wildDATA}\n")
+
+            for stat in wildStats:
+                wildScore += int(wildStats[stat])
+            if wildScore == 0:
+                wildScore = 13
+            else:
+                wildScore -= 6
+
+            time.sleep(max(CONFIG["search"]["searchInterval"] - MCDATA.timeElapsed, 0))
+            loopcount = 0
+
+            if (
+                LXVI_locateCenterOnScreen(UIImage("battlebtns.png"), 0.8)
+                is not None
+            ):
+                encounterMode()
+                summary()
             time.sleep(0.5)
 
 
@@ -602,6 +630,18 @@ def encounterMode():
             weakness = True
 
     if CONFIG["catch"]["autoCatch"]:
+        if miscrit not in ["[redacted]", "[unidentified]"]:
+            keyMiscrit = miscrit.strip().lower()
+            if keyMiscrit not in CATCHRATE:
+                CATCHRATE[keyMiscrit] = {}
+
+            keyQuality = qualityDict[wildScore]
+
+            if keyQuality not in CATCHRATE[keyMiscrit]:
+                CATCHRATE[keyMiscrit][keyQuality] = 1
+            else:
+                CATCHRATE[keyMiscrit][keyQuality] += 1
+
         catchStandard = CONFIG["catch"]["catchStandardDict"][rarity]
         if ((CONFIG["catch"]["targetAll"] and miscrit not in CONFIG["catch"]["blocked"]) or miscrit in CONFIG["catch"]["targets"]) and wildScore >= catchStandard:
             print(f"\033[A{Fore.WHITE}{qualityDict[wildScore]} | {Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} found!{Fore.LIGHTBLACK_EX}")
@@ -615,18 +655,6 @@ def encounterMode():
             return        
         elif miscrit not in CONFIG["catch"]["blocked"]:
             print(f"\033[A{qualityDict[wildScore]} | {Fore.WHITE}This {Fore.YELLOW}{miscrit}{Fore.WHITE} is trash. -p0lbang{Fore.LIGHTBLACK_EX}")
-
-    if miscrit not in ["[redacted]", "[unidentified]"]:
-        keyMiscrit = miscrit.strip().lower()
-        if keyMiscrit not in CATCHRATE:
-            CATCHRATE[keyMiscrit] = {}
-
-        keyQuality = qualityDict[wildScore]
-
-        if keyQuality not in CATCHRATE[keyMiscrit]:
-            CATCHRATE[keyMiscrit][keyQuality] = 1
-        else:
-            CATCHRATE[keyMiscrit][keyQuality] += 1
 
     if not checkActive():
         print("Minimized while in encounter mode, concluding process...")

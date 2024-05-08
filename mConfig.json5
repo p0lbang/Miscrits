@@ -29,7 +29,7 @@
     "search": { // if you want to use custom, duplicate existing then comment out the original
         "autoSearch": true, // .............. | looks for miscrits in searchable spots for you
         "searchInterval": 5, // ............. | time before clicking the next location (min: 5)
-        "searchCode": "gd_boltzee_ffossillia", // ...... | paste from search codes below, ex: "fa_waddles" 
+        "searchCode": "ga_munkee_liothning_dpoltergust_fflintly", // ...... | paste from search codes below, ex: "fa_waddles" 
         "searchSeq": { // ................... | don't change the existing sequences pls don't no no 
     //Miscrian Forest
             "fa_waddles": ["a1_typha1", "a1_bushsun", "a1_typha1_2"],
@@ -58,8 +58,8 @@
             "gd_dowlie": ["b3_rockA", "b3_rockB", "b3_rockC"],
             "gd_boltzee_ffossillia": ["b3_gigarock", "b3_potrock", "b3_sparkcrystal", "b3_megarock", "b3_typha"],
             "gc_fthundercracker": ["b4_twilightcrystal", "b4_potrock", "b4_galaxycrystal", "b4_typha"],
-            "ga_munkee_liothning_dpoltergust_fflintly": ["b4_gold", "b4_fade", "b4_purpred", "b4_blue"],
-                // "ga_munkee_liothning_dpoltergust_fflintly": ["b4_purpred", "b4_fade"],
+            // "ga_munkee_liothning_dpoltergust_fflintly": ["b4_gold", "b4_fade", "b4_purpred", "b4_blue"],
+                "ga_munkee_liothning_dpoltergust_fflintly": ["b4_purpred", "b4_fade"],
     //The Mansion
             "m0_kelpa": ["m0_typha", "m0_hay"],
             "m0_A": ["m0_sapling", "m0_rock1", "m0_rock2", "m0_stone1", "m0_grass", "m0_rock3"],
@@ -117,6 +117,8 @@
             "Epic": 12, // ......# 0-12
             "Exotic": 10, // ....# 0-12
             "Legendary": 6, // .# 6-12
+            "Premium": 6, // just in case they exist again
+            "Exclusive": 6, // same as above
             "Unidentified": 12,  // -> if rarity identification fails
         },
     },

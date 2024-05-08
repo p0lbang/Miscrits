@@ -1,4 +1,8 @@
 {
+  "000": {
+    "name": "Unidentified",
+    "rarity": "Unidentified"
+  },
   "001": {
     "name": "Flue",
     "rarity": "Common"
@@ -7,12 +11,168 @@
     "name": "Flowerpiller",
     "rarity": "Common"
   },
+  "003": {
+    "name": "Prawnja",
+    "rarity": "Common"
+  },
+  "005": {
+    "name": "Cubsprout",
+    "rarity": "Common"
+  },
+  "006": {
+    "name": "Sparkupine",
+    "rarity": "Common"
+  },
+  "007": {
+    "name": "Hydroseal",
+    "rarity": "Common"
+  },
+  "008": {
+    "name": "Snortus",
+    "rarity": "Common"
+  },
+  "009": {
+    "name": "Quirk",
+    "rarity": "Common"
+  },
+  "010": {
+    "name": "Flameling",
+    "rarity": "Common"
+  },
+  "011": {
+    "name": "Lumera",
+    "rarity": "Common"
+  },
+  "012": {
+    "name": "Snatcher",
+    "rarity": "Common"
+  },
+  "013": {
+    "name": "Elefauna",
+    "rarity": "Common"
+  },
+  "014": {
+    "name": "Nessy",
+    "rarity": "Common"
+  },
+  "015": {
+    "name": "Hotfoot",
+    "rarity": "Common"
+  },
+  "016": {
+    "name": "Twiggum",
+    "rarity": "Common"
+  },
+  "017": {
+    "name": "Shellbee",
+    "rarity": "Common"
+  },
+  "018": {
+    "name": "Squibee",
+    "rarity": "Common"
+  },
+  "019": {
+    "name": "Steamguin",
+    "rarity": "Common"
+  },
+  "020": {
+    "name": "Waddles",
+    "rarity": "Rare"
+  },
+  "021": {
+    "name": "Treemur",
+    "rarity": "Rare"
+  },
+  "022": {
+    "name": "Tulipinny",
+    "rarity": "Rare"
+  },
+  "023": {
+    "name": "DarkFlue",
+    "rarity": "Rare"
+  },
+  "024": {
+    "name": "DarkFlowerpiller",
+    "rarity": "Rare"
+  },
+  "025": {
+    "name": "DarkPrawnja",
+    "rarity": "Rare"
+  },
+  "026": {
+    "name": "Blazebit",
+    "rarity": "Rare"
+  },
+  "027": {
+    "name": "Frostmite",
+    "rarity": "Common"
+  },
+  "029": {
+    "name": "Statikat",
+    "rarity": "Common"
+  },
+  "034": {
+    "name": "Mumbah",
+    "rarity": "Common"
+  },
   "038": {
     "name": "Sparkslug",
     "rarity": "Common"
   },
+  "039": {
+    "name": "Craggy",
+    "rarity": "Common"
+  },
   "040": {
     "name": "Owlie",
+    "rarity": "Common"
+  },
+  "041": {
+    "name": "Luna",
+    "rarity": "Rare"
+  },
+  "042": {
+    "name": "Poltergust",
+    "rarity": "Rare"
+  },
+  "065": {
+    "name": "Ignios",
+    "rarity": "Rare"
+  },
+  "072": {
+    "name": "Flurrious",
+    "rarity": "Exclusive"
+  },
+  "076": {
+    "name": "Valentino",
+    "rarity": "Exclusive"
+  },
+  "077": {
+    "name": "DarkCubsprout",
+    "rarity": "Rare"
+  },
+  "084": {
+    "name": "Patrik",
+    "rarity": "Exclusive"
+  },
+  "093": {
+    "name": "Mama",
+    "rarity": "Exclusive"
+  },
+  "101": {
+    "name": "Whik",
+    "rarity": "Common"
+  },
+  "115": {
+    "name": "Lavarilla",
+    "rarity": "Common"
+  },
+  "133": {
+    "name": "Boneshee",
+    "rarity": "Premium"
+  },
+  "141": {
+    "name": "Chinook",
     "rarity": "Common"
   },
   "142": {
@@ -23,8 +183,72 @@
     "name": "Felis",
     "rarity": "Common"
   },
-  "039": {
-    "name": "Craggy",
+  "195": {
+    "name": "Cindera",
+    "rarity": "Common"
+  },
+  "204": {
+    "name": "DarkSnatcher",
+    "rarity": "Rare"
+  },
+  "222": {
+    "name": "GrimmKiloray",
+    "rarity": "Common"
+  },
+  "223": {
+    "name": "Skelepup",
+    "rarity": "Exclusive"
+  },
+  "233": {
+    "name": "DarkWeevern",
+    "rarity": "Rare"
+  },
+  "236": {
+    "name": "Casanova",
+    "rarity": "Exclusive"
+  },
+  "245": {
+    "name": "Alpha",
+    "rarity": "Exclusive"
+  },
+  "251": {
+    "name": "Goldy",
+    "rarity": "Premium"
+  },
+  "310": {
+    "name": "Lyeogryph",
+    "rarity": "Rare"
+  },
+  "311": {
+    "name": "Jenezap",
+    "rarity": "Rare"
+  },
+  "334": {
+    "name": "Furfin",
+    "rarity": "Common"
+  },
+  "397": {
+    "name": "EliteQuirk",
+    "rarity": "Exclusive"
+  },
+  "403": {
+    "name": "EliteAlpha",
+    "rarity": "Exclusive"
+  },
+  "423": {
+    "name": "Kasai",
+    "rarity": "Premium"
+  },
+  "430": {
+    "name": "BlightedCubsprout",
+    "rarity": "Exclusive"
+  },
+  "459": {
+    "name": "LightQuirk",
+    "rarity": "Legendary"
+  },
+  "390": {
+    "name": "Peekly",
     "rarity": "Common"
   }
 }
