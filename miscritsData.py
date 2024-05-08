@@ -32,6 +32,7 @@ class MiscritsData:
         self.currentWild = []
         self.output = {}
         self.databuilder = {}
+        self.ID = ""
 
     def setTimeStarted(self):
         self.timeStarted = time.perf_counter()
@@ -91,8 +92,8 @@ class MiscritsData:
             body = rawdata[72:]
             self.databuilder[packetGroup] = [None for _ in range(packetCount)]
             self.databuilder[packetGroup][packetIndex] = body
-        elif rawdatalen > 58 + 8 and rawdata[58 : 58 + 8] == "010e031c":  # battle data
-            body = rawdata[80:]
+        elif rawdatalen > 58 + 8 and rawdata[56 : 56 + 8] == "00010e03":  # battle data
+            body = rawdata[64:]
             self.databuilder[packetGroup] = [None for _ in range(packetCount)]
             self.databuilder[packetGroup][packetIndex] = body
         elif packetGroup in self.databuilder.keys():
@@ -230,5 +231,5 @@ class MiscritsData:
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     mcdata = MiscritsData()
-    stats = mcdata.getWildData(10)
+    stats = mcdata.getStatsID(10)
     logger.info(stats)
