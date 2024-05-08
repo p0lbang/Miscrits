@@ -3,3 +3,4 @@ env/*
 .vscode/*
 mFiles/*
 catchrate.json5
+gitData.json5

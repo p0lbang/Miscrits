@@ -29,7 +29,7 @@
     "search": { // if you want to use custom, duplicate existing then comment out the original
         "autoSearch": true, // .............. | looks for miscrits in searchable spots for you
         "searchInterval": 5, // ............. | time before clicking the next location (min: 5)
-        "searchCode": "m0_kelpa", // ...... | paste from search codes below, ex: "fa_waddles" 
+        "searchCode": "gd_dowlie", // ...... | paste from search codes below, ex: "fa_waddles" 
         "searchSeq": { // ................... | don't change the existing sequences pls don't no no 
     //Miscrian Forest
             "fa_waddles": ["a1_typha1", "a1_bushsun", "a1_typha1_2"],
@@ -48,7 +48,7 @@
     //Mount Gemma
             "ga_luna": ["b1_stone", "b1_typha", "b1_potrock", "b1_mound1"],
             "gb_poltergust_dkiloray": ["b1_crystal1", "b1_dead", "b1_mound2", "b1_smallcact", "b1_stack"],
-            "gb_fangly": ["b1_slimrock", "b1_stump", "b1_typha2"], 
+            "gb_fangly": ["b1_slimrock", "b1_stump", "b1_typha2"],
             "gb_fkiloray": ["b1_crystal2", "b1_megarock", "b1_shrub", "b1_gigarock"],
             "gc_thundercracker_fiender": ["b2_deadbush2", "b2_dead", "b2_smallcact", "b2_sapling2"],
             "gc_dcroaky": ["b2_pink", "b2_yellow", "b2_deadbush", "b2_stone", "b2_sapling"],
@@ -92,7 +92,7 @@
         "bigpokeThreshold": 70,
         "targetAll": true,  // ....... | true -> every encountered miscrit is tagged for capture
         "targets": [
-            "BlightedFlue", "DarkPoltergust", "FoilWWaddles", "FoilWaddles", "FoilThundercracker", "Flintly"
+            "BlightedFlue", "DarkPoltergust", "FoilThundercracker", "DarkOwlie",
             ],  
         // ........................... | miscrits added above are prioritized for capture regardless of their initial catch chance
         "ignoreBlockedIfS+": false,
@@ -102,10 +102,11 @@
             "Quirk", "Flameling", // forest 2
             "Snatcher", "Elefauna", "Hotfoot", "DarkFlowerpiller", // forest 3
             "Twiggum", "Shellbee", "Squibee", "Steamguin", "Crickin", // forest 4
-            "Breezycheeks", "Statikat", // gemma 1
+            "Breezycheeks", "Mumbah", "Statikat", // gemma 1
             "Croaky", "Aria", // gemma 2
             "Craggy", "Vexie", "Owlie", "Peekly", "Sparkslug", "Felis", // gemma 3
             "MunKee", "Liothning", // gemma 4
+            "Kelpa", // outside mansion
             "Frostmite", "Bubbles", "Spinnerette", "Slithero", "Rafiery", // mansion 1
             "Humbug", "Nanaslug", // mansion 2
         ],

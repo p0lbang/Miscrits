@@ -54,6 +54,7 @@ def readJSON(filename: str, sortouter: bool = True, sortinner: bool = True) -> d
 CATCHRATE = readJSON("catchrate.json5")
 CONFIG = readJSON("mConfig.json5", sortouter=False, sortinner=False)
 PRESETS = readJSON("mPresets.json5", sortouter=True, sortinner=False)
+CRITS = readJSON("mData.json5", sortouter=True, sortinner=False)
 
 reader = easyocr.Reader(["en"], gpu=True, verbose=True)
 MCDATA = miscritsData.MiscritsData()

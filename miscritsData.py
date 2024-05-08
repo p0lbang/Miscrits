@@ -232,9 +232,10 @@ class MiscritsData:
 
 
 if __name__ == "__main__":
+    logger.disabled = False
     logging.basicConfig(level=logging.INFO)
     mcdata = MiscritsData()
-    stats = mcdata.getStats(10)
+    stats = mcdata.getWildData(10)
     logger.info(stats)
 
     # from playsound import playsound
