@@ -29,9 +29,6 @@ class MiscritsData:
         self.timeElapsed = 0
         self.timeoutThreshold = 60
         self.TOKENS = []
-        self.currenttok = ""
-        self.wholepacketdata = ""
-        self.previousWild = []
         self.currentWild = []
         self.output = {}
         self.databuilder = {}
@@ -72,13 +69,12 @@ class MiscritsData:
     def poptoken(self):
         try:
             tok = self.TOKENS.pop(0)
-            self.currenttok = tok
             if len(tok) == 8:
                 return tok
-            return None
         except Exception as error:
             logger.warning("exception pop:", error)
-            return None
+        
+        return None
 
     def splitToN(self, inputstr: str, n: int):
         return [inputstr[i : i + n] for i in range(0, len(inputstr), n)]
@@ -190,7 +186,6 @@ class MiscritsData:
                     try:
                         wildstar = parsedObject[1][0]["Star"]
                         self.currentWild = parsedObject[1][0]
-                        self.previousWild = self.currentWild
                         wildstardict = {
                             "hp": wildstar[2],
                             "spd": wildstar[3],
@@ -208,7 +203,6 @@ class MiscritsData:
 
                     logger.info(json.dumps(parsedObject, indent=2))
 
-                self.wholepacketdata = ""
             except Exception as error:
                 logger.warning("An error occurred:", error)
 
