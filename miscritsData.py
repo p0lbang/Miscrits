@@ -73,25 +73,25 @@ class MiscritsData:
                 return tok
         except Exception as error:
             logger.warning("exception pop:", error)
-        
+
         return None
 
     def splitToN(self, inputstr: str, n: int):
         return [inputstr[i : i + n] for i in range(0, len(inputstr), n)]
-    
+
     def mergePackets(self, rawdata: str):
         packetGroup = rawdata[16:20]
         rawdatalen = len(rawdata)
 
-        if rawdatalen > 32+8:
-            packetCount = int(rawdata[24:24+8],16)
-            packetIndex = int(rawdata[32:32+8],16)
+        if rawdatalen > 32 + 8:
+            packetCount = int(rawdata[24 : 24 + 8], 16)
+            packetIndex = int(rawdata[32 : 32 + 8], 16)
 
-        if rawdatalen > 64+8 and rawdata[64:64+8] == "80120801": # login data
+        if rawdatalen > 64 + 8 and rawdata[64 : 64 + 8] == "80120801":  # login data
             body = rawdata[72:]
             self.databuilder[packetGroup] = [None for _ in range(packetCount)]
             self.databuilder[packetGroup][packetIndex] = body
-        elif rawdatalen > 58+8 and rawdata[58:58+8] == "010e031c": # battle data
+        elif rawdatalen > 58 + 8 and rawdata[58 : 58 + 8] == "010e031c":  # battle data
             body = rawdata[80:]
             self.databuilder[packetGroup] = [None for _ in range(packetCount)]
             self.databuilder[packetGroup][packetIndex] = body
@@ -109,7 +109,6 @@ class MiscritsData:
             return True, rawdata[index:]
 
         return False, None
-
 
     def parseGodotData(self, rawdata):
         self.TOKENS = self.splitToN(rawdata, 8)
@@ -157,7 +156,7 @@ class MiscritsData:
                 value = self.keywords(self.poptoken())
                 temp[key] = value
             return temp
-        elif tok == "1c000000" or tok == "1d000000" or tok == "1e000000" or tok == "1f000000":  # array
+        elif tok == "1c000000" or tok == "1f000000":  # array
             temp = []
             numelements = self.toInt(self.poptoken())
             for x in range(numelements):
@@ -177,7 +176,7 @@ class MiscritsData:
                 validPacket, mergedPacket = self.mergePackets(pkt.load.hex())
                 if not validPacket:
                     return False
-                
+
                 parsedObject = self.parseGodotData(mergedPacket)
 
                 if isinstance(parsedObject, (list, dict)):
