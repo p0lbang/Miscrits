@@ -117,21 +117,7 @@ for w, walk in enumerate(walkSeq):
     )
 walkRegion = str(pathlib.PurePath("walkImages", f"{walkRegion}.png"))
 
-qualityDict = [
-    "F-",
-    "F ",
-    "F+",
-    "D ",
-    "D+",
-    "C ",
-    "C+",
-    "B ",
-    "B+",
-    "A ",
-    "A+",
-    "S ",
-    "S+",
-]
+qualityDict = ["F-","F ","F+","D ","D+","C ","C+","B ","B+","A ","A+","S ","S+","XX"]
 
 with mss.mss() as sct:
     # Get information of monitor 2
@@ -484,7 +470,7 @@ def walkMode():
 
 
 def searchMode():
-    global wildStats, wildScore
+    global wildDATA, wildID, wildStats, wildScore
 
     loopcount = 0
     while True:
@@ -515,13 +501,17 @@ def searchMode():
                 pyautogui.leftClick()
 
                 wildScore = 0
-                wildStats = MCDATA.getStats(CONFIG["search"]["searchInterval"])
-                # print(f"\n{wildStats}")
+                wildStats, wildID = MCDATA.getStatsID(CONFIG["search"]["searchInterval"])
+                # print(f"\n\n{wildDATA}\n")
+
                 for stat in wildStats:
-                    wildScore += int(wildStats[stat]) - 1
-                time.sleep(
-                    max(CONFIG["search"]["searchInterval"] - MCDATA.timeElapsed, 0)
-                )
+                    wildScore += int(wildStats[stat])
+                if wildScore == 0:
+                    wildScore = 13
+                else:
+                    wildScore -= 6
+
+                time.sleep(max(CONFIG["search"]["searchInterval"] - MCDATA.timeElapsed, 0))
                 loopcount = 0
 
                 if (
@@ -543,13 +533,13 @@ def encounterMode():
 
     b += 1
     sNo = 1
-    miscrit = "[redacted]"
-    rarity = "Unidentified"
     action = 0
     onSkillPage = 1
     battle_start = time.perf_counter()
     weakness = False
     strength1 = False
+    miscrit = "[redacted]"
+    rarity = "Unidentified"
 
     while LXVI_locateCenterOnScreen(UIImage("battlebtns.png"), 0.8) is None:
         pass
@@ -563,13 +553,26 @@ def encounterMode():
         current = updateCurrentMiscrit()
 
     # miscritsCheck info
-    click(UIImage("miscripedia.png"), 0.8, 0.555, 0)
-    getMiscritData()
-    print(
-        f"{qualityDict[wildScore]} | {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} wants to fight."
-    )
-    click(UIImage("mpedia_exit.png"), 0.8, 0, 0)
-    pyautogui.leftClick()
+    CRITS = readJSON("mData.json5", sortouter=True, sortinner=False)
+
+    try:
+        miscrit = CRITS[str(f"{int(wildID):03d}")]["name"]
+        rarity = CRITS[str(f"{int(wildID):03d}")]["rarity"]
+    except KeyError:
+        click(UIImage("miscripedia.png"), 0.8, 0.555, 0)
+        getMiscritData()
+        click(UIImage("mpedia_exit.png"), 0.8, 0, 0)
+        pyautogui.leftClick()
+        
+        CRITS[str(f"{int(wildID):03d}")] = {}
+        CRITS[str(f"{int(wildID):03d}")]["name"] = miscrit
+        CRITS[str(f"{int(wildID):03d}")]["rarity"] = rarity
+        with open("mData.json5", "w") as file:
+            outputtxt = json.dumps(CRITS, indent=2)
+            file.write(outputtxt)
+
+
+    print(f"{qualityDict[wildScore]} | {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} wants to fight.")
 
     if (
         LXVI_locateCenterOnScreen(UIImage(PRESETS[current]["strength"]), 0.8)

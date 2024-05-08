@@ -1,10 +1,30 @@
 {
-    "1": {
-        "name": "Flue",
-        "rarity": "Common",
-    },
-    "2": {
-        "name": "Flowerpiller",
-        "rarity": "Common",
-    },
+  "001": {
+    "name": "Flue",
+    "rarity": "Common"
+  },
+  "002": {
+    "name": "Flowerpiller",
+    "rarity": "Common"
+  },
+  "038": {
+    "name": "Sparkslug",
+    "rarity": "Common"
+  },
+  "040": {
+    "name": "Owlie",
+    "rarity": "Common"
+  },
+  "142": {
+    "name": "Vexie",
+    "rarity": "Common"
+  },
+  "156": {
+    "name": "Felis",
+    "rarity": "Common"
+  },
+  "039": {
+    "name": "Craggy",
+    "rarity": "Common"
+  }
 }

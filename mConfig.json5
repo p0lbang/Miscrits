@@ -29,7 +29,7 @@
     "search": { // if you want to use custom, duplicate existing then comment out the original
         "autoSearch": true, // .............. | looks for miscrits in searchable spots for you
         "searchInterval": 5, // ............. | time before clicking the next location (min: 5)
-        "searchCode": "gd_dowlie", // ...... | paste from search codes below, ex: "fa_waddles" 
+        "searchCode": "gd_boltzee_ffossillia", // ...... | paste from search codes below, ex: "fa_waddles" 
         "searchSeq": { // ................... | don't change the existing sequences pls don't no no 
     //Miscrian Forest
             "fa_waddles": ["a1_typha1", "a1_bushsun", "a1_typha1_2"],

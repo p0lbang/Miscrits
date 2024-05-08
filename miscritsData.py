@@ -202,6 +202,7 @@ class MiscritsData:
                             "pd": wildstar[4],
                         }
                         self.output = wildstardict
+                        self.ID = parsedobject[1][0]["Id"]
                         logger.info(json.dumps(parsedobject, indent=2))
                         return True
                     except Exception as e:
@@ -229,10 +230,13 @@ class MiscritsData:
     def getWildData(self, timeout: int = 60) -> dict:
         self.getData(timeout=timeout)
         return self.currentWild
+    
+    def getStatsID(self, timeout: int = 60) -> str:
+        self.getData(timeout=timeout)
+        return self.output, self.ID
 
 
 if __name__ == "__main__":
-    logger.disabled = False
     logging.basicConfig(level=logging.INFO)
     mcdata = MiscritsData()
     stats = mcdata.getWildData(10)
