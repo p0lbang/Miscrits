@@ -83,7 +83,7 @@ class MiscritsData:
     def splitToN(self, inputstr: str, n: int):
         return [inputstr[i : i + n] for i in range(0, len(inputstr), n)]
     
-    def getTokensV2(self, rawdata: str):
+    def mergePackets(self, rawdata: str):
         packetGroup = rawdata[16:20]
         rawdatalen = len(rawdata)
 
@@ -115,7 +115,7 @@ class MiscritsData:
         return False, None
 
 
-    def parsegodot(self, rawdata):
+    def parseGodotData(self, rawdata):
         self.TOKENS = self.splitToN(rawdata, 8)
         values = []
         while len(self.TOKENS) != 0:
@@ -169,7 +169,7 @@ class MiscritsData:
             return temp
         return 0
 
-    def _getStats(self, packet: Packet):
+    def packetFilter(self, packet: Packet):
         pkt = packet[0][1]
 
         if self.elapsedTime() > self.timeoutThreshold:
@@ -178,18 +178,18 @@ class MiscritsData:
 
         if (pkt.src == "34.105.0.189" or pkt.dst == "34.105.0.189") and pkt.len > 44:
             try:
-                validoutput, output = self.getTokensV2(pkt.load.hex())
-                if not validoutput:
+                validPacket, mergedPacket = self.mergePackets(pkt.load.hex())
+                if not validPacket:
                     return False
                 
-                parsedobject = self.parsegodot(output)
+                parsedObject = self.parseGodotData(mergedPacket)
 
-                if isinstance(parsedobject, (list, dict)):
-                    if parsedobject == []:
+                if isinstance(parsedObject, (list, dict)):
+                    if parsedObject == []:
                         return False
                     try:
-                        wildstar = parsedobject[1][0]["Star"]
-                        self.currentWild = parsedobject[1][0]
+                        wildstar = parsedObject[1][0]["Star"]
+                        self.currentWild = parsedObject[1][0]
                         self.previousWild = self.currentWild
                         wildstardict = {
                             "hp": wildstar[2],
@@ -200,13 +200,13 @@ class MiscritsData:
                             "pd": wildstar[4],
                         }
                         self.output = wildstardict
-                        self.ID = parsedobject[1][0]["Id"]
-                        logger.info(json.dumps(parsedobject, indent=2))
+                        self.ID = parsedObject[1][0]["Id"]
+                        logger.info(json.dumps(parsedObject, indent=2))
                         return True
                     except Exception as e:
                         logger.warning(e)
 
-                    logger.info(json.dumps(parsedobject, indent=2))
+                    logger.info(json.dumps(parsedObject, indent=2))
 
                 self.wholepacketdata = ""
             except Exception as error:
@@ -218,7 +218,7 @@ class MiscritsData:
         self.clear()
         self.timeoutThreshold = timeout
         self.setTimeStarted()
-        sniff(filter="udp", stop_filter=self._getStats)
+        sniff(filter="udp", stop_filter=self.packetFilter)
         self.timeElapsed = self.elapsedTime()
 
     def getStats(self, timeout: int = 60) -> dict:
