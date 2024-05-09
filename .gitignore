@@ -4,3 +4,5 @@ env/*
 mFiles/*
 catchrate.json5
 gitData.json5
+mpediaExtractor.py
+testing/*

@@ -179,6 +179,8 @@ class MiscritsData:
                     return False
 
                 parsedObject = self.parseGodotData(mergedPacket)
+                # with open(f"testing\\testData{time.time()}.json5", "w") as file:
+                #     file.write(str(json.dumps(parsedObject, indent=2)))
 
                 if isinstance(parsedObject, (list, dict)):
                     if parsedObject == []:

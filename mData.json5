@@ -1,254 +1,220 @@
 {
-  "000": {
-    "name": "Unidentified",
-    "rarity": "Unidentified"
-  },
-  "001": {
-    "name": "Flue",
-    "rarity": "Common"
-  },
-  "002": {
-    "name": "Flowerpiller",
-    "rarity": "Common"
-  },
-  "003": {
-    "name": "Prawnja",
-    "rarity": "Common"
-  },
-  "005": {
-    "name": "Cubsprout",
-    "rarity": "Common"
-  },
-  "006": {
-    "name": "Sparkupine",
-    "rarity": "Common"
-  },
-  "007": {
-    "name": "Hydroseal",
-    "rarity": "Common"
-  },
-  "008": {
-    "name": "Snortus",
-    "rarity": "Common"
-  },
-  "009": {
-    "name": "Quirk",
-    "rarity": "Common"
-  },
-  "010": {
-    "name": "Flameling",
-    "rarity": "Common"
-  },
-  "011": {
-    "name": "Lumera",
-    "rarity": "Common"
-  },
-  "012": {
-    "name": "Snatcher",
-    "rarity": "Common"
-  },
-  "013": {
-    "name": "Elefauna",
-    "rarity": "Common"
-  },
-  "014": {
-    "name": "Nessy",
-    "rarity": "Common"
-  },
-  "015": {
-    "name": "Hotfoot",
-    "rarity": "Common"
-  },
-  "016": {
-    "name": "Twiggum",
-    "rarity": "Common"
-  },
-  "017": {
-    "name": "Shellbee",
-    "rarity": "Common"
-  },
-  "018": {
-    "name": "Squibee",
-    "rarity": "Common"
-  },
-  "019": {
-    "name": "Steamguin",
-    "rarity": "Common"
-  },
-  "020": {
-    "name": "Waddles",
-    "rarity": "Rare"
-  },
-  "021": {
-    "name": "Treemur",
-    "rarity": "Rare"
-  },
-  "022": {
-    "name": "Tulipinny",
-    "rarity": "Rare"
-  },
-  "023": {
-    "name": "DarkFlue",
-    "rarity": "Rare"
-  },
-  "024": {
-    "name": "DarkFlowerpiller",
-    "rarity": "Rare"
-  },
-  "025": {
-    "name": "DarkPrawnja",
-    "rarity": "Rare"
-  },
-  "026": {
-    "name": "Blazebit",
-    "rarity": "Rare"
-  },
-  "027": {
-    "name": "Frostmite",
-    "rarity": "Common"
-  },
-  "029": {
-    "name": "Statikat",
-    "rarity": "Common"
-  },
-  "034": {
-    "name": "Mumbah",
-    "rarity": "Common"
-  },
-  "038": {
-    "name": "Sparkslug",
-    "rarity": "Common"
-  },
-  "039": {
-    "name": "Craggy",
-    "rarity": "Common"
-  },
-  "040": {
-    "name": "Owlie",
-    "rarity": "Common"
-  },
-  "041": {
-    "name": "Luna",
-    "rarity": "Rare"
-  },
-  "042": {
-    "name": "Poltergust",
-    "rarity": "Rare"
-  },
-  "065": {
-    "name": "Ignios",
-    "rarity": "Rare"
-  },
-  "072": {
-    "name": "Flurrious",
-    "rarity": "Exclusive"
-  },
-  "076": {
-    "name": "Valentino",
-    "rarity": "Exclusive"
-  },
-  "077": {
-    "name": "DarkCubsprout",
-    "rarity": "Rare"
-  },
-  "084": {
-    "name": "Patrik",
-    "rarity": "Exclusive"
-  },
-  "093": {
-    "name": "Mama",
-    "rarity": "Exclusive"
-  },
-  "101": {
-    "name": "Whik",
-    "rarity": "Common"
-  },
-  "115": {
-    "name": "Lavarilla",
-    "rarity": "Common"
-  },
-  "133": {
-    "name": "Boneshee",
-    "rarity": "Premium"
-  },
-  "141": {
-    "name": "Chinook",
-    "rarity": "Common"
-  },
-  "142": {
-    "name": "Vexie",
-    "rarity": "Common"
-  },
-  "156": {
-    "name": "Felis",
-    "rarity": "Common"
-  },
-  "195": {
-    "name": "Cindera",
-    "rarity": "Common"
-  },
-  "204": {
-    "name": "DarkSnatcher",
-    "rarity": "Rare"
-  },
-  "222": {
-    "name": "GrimmKiloray",
-    "rarity": "Common"
-  },
-  "223": {
-    "name": "Skelepup",
-    "rarity": "Exclusive"
-  },
-  "233": {
-    "name": "DarkWeevern",
-    "rarity": "Rare"
-  },
-  "236": {
-    "name": "Casanova",
-    "rarity": "Exclusive"
-  },
-  "245": {
-    "name": "Alpha",
-    "rarity": "Exclusive"
-  },
-  "251": {
-    "name": "Goldy",
-    "rarity": "Premium"
-  },
-  "310": {
-    "name": "Lyeogryph",
-    "rarity": "Rare"
-  },
-  "311": {
-    "name": "Jenezap",
-    "rarity": "Rare"
-  },
-  "334": {
-    "name": "Furfin",
-    "rarity": "Common"
-  },
-  "397": {
-    "name": "EliteQuirk",
-    "rarity": "Exclusive"
-  },
-  "403": {
-    "name": "EliteAlpha",
-    "rarity": "Exclusive"
-  },
-  "423": {
-    "name": "Kasai",
-    "rarity": "Premium"
-  },
-  "430": {
-    "name": "BlightedCubsprout",
-    "rarity": "Exclusive"
-  },
-  "459": {
-    "name": "LightQuirk",
-    "rarity": "Legendary"
-  },
-  "390": {
-    "name": "Peekly",
-    "rarity": "Common"
-  }
+  "001": { name: "Flue", rarity: "Common" },
+  "010": { name: "Flameling", rarity: "Common" },
+  "100": { name: "Quackers", rarity: "Epic" },
+  "101": { name: "Whik", rarity: "Common" },
+  "102": { name: "Slithero", rarity: "Common" },
+  "103": { name: "Viperd", rarity: "Common" },
+  "104": { name: "Spinnerette", rarity: "Common" },
+  "105": { name: "Blowpuffle", rarity: "Common" },
+  "106": { name: "Gippo", rarity: "Common" },
+  "107": { name: "Hoghedge", rarity: "Common" },
+  "108": { name: "Crickin", rarity: "Common" },
+  "109": { name: "Shroomer", rarity: "Common" },
+  "011": { name: "Lumera", rarity: "Common" },
+  "110": { name: "Beetor", rarity: "Common" },
+  "111": { name: "Bubbles", rarity: "Common" },
+  "112": { name: "Humbug", rarity: "Common" },
+  "113": { name: "Magpole", rarity: "Common" },
+  "114": { name: "Budillo", rarity: "Common" },
+  "115": { name: "Lavarilla", rarity: "Common" },
+  "116": { name: "Pachydo", rarity: "Common" },
+  "117": { name: "Gurgleplops", rarity: "Common" },
+  "012": { name: "Snatcher", rarity: "Common" },
+  "121": { name: "Bloomple", rarity: "Epic" },
+  "122": { name: "Squawcat", rarity: "Rare" },
+  "123": { name: "Bloombat", rarity: "Rare" },
+  "124": { name: "Pamboo", rarity: "Rare" },
+  "125": { name: "Rockodile", rarity: "Rare" },
+  "126": { name: "Dark Whik", rarity: "Rare" },
+  "127": { name: "Dark Viperd", rarity: "Rare" },
+  "128": { name: "Dark Bubbles", rarity: "Rare" },
+  "129": { name: "Magixio", rarity: "Epic" },
+  "013": { name: "Elefauna", rarity: "Common" },
+  "130": { name: "Azteko", rarity: "Epic" },
+  "131": { name: "Pujin", rarity: "Epic" },
+  "132": { name: "Liquifien", rarity: "Rare" },
+  "133": { name: "Boneshee", rarity: "Epic" },
+  "134": { name: "Ursiwave", rarity: "Epic" },
+  "135": { name: "Bludger", rarity: "Common" },
+  "136": { name: "Oxo", rarity: "Common" },
+  "137": { name: "Dillorock", rarity: "Common" },
+  "138": { name: "Zaptor", rarity: "Common" },
+  "139": { name: "Narlope", rarity: "Common" },
+  "014": { name: "Nessy", rarity: "Common" },
+  "140": { name: "Monk Munk", rarity: "Common" },
+  "141": { name: "Chinook", rarity: "Common" },
+  "142": { name: "Vexie", rarity: "Common" },
+  "143": { name: "Dravo", rarity: "Common" },
+  "144": { name: "Tongutail", rarity: "Common" },
+  "145": { name: "Quartex", rarity: "Common" },
+  "146": { name: "Drowsie", rarity: "Common" },
+  "147": { name: "Electryo", rarity: "Common" },
+  "148": { name: "Joltzer", rarity: "Common" },
+  "149": { name: "Toro", rarity: "Rare" },
+  "015": { name: "Hotfoot", rarity: "Common" },
+  "150": { name: "Boltipede", rarity: "Common" },
+  "151": { name: "Hawkai", rarity: "Common" },
+  "152": { name: "Nero", rarity: "Common" },
+  "153": { name: "Minosoar", rarity: "Rare" },
+  "154": { name: "Giggles", rarity: "Rare" },
+  "155": { name: "Pollifog", rarity: "Rare" },
+  "156": { name: "Felis", rarity: "Common" },
+  "157": { name: "Shanghorse", rarity: "Common" },
+  "158": { name: "Tectonyx", rarity: "Common" },
+  "159": { name: "Emberon", rarity: "Epic" },
+  "016": { name: "Twiggum", rarity: "Common" },
+  "161": { name: "Salamindra", rarity: "Common" },
+  "162": { name: "Firebrand", rarity: "Common" },
+  "163": { name: "Hopps", rarity: "Common" },
+  "164": { name: "Bullo", rarity: "Common" },
+  "165": { name: "Bubblegup", rarity: "Common" },
+  "166": { name: "Bloverine", rarity: "Common" },
+  "167": { name: "Scintillion", rarity: "Common" },
+  "168": { name: "Nibbles", rarity: "Common" },
+  "169": { name: "Barkley", rarity: "Common" },
+  "017": { name: "Shellbee", rarity: "Common" },
+  "170": { name: "Scuzzy", rarity: "Rare" },
+  "172": { name: "Osmeron", rarity: "Rare" },
+  "173": { name: "Exo", rarity: "Common" },
+  "174": { name: "Shoctopus", rarity: "Common" },
+  "175": { name: "Ekidna", rarity: "Epic" },
+  "176": { name: "Flintly", rarity: "Rare" },
+  "177": { name: "Charix", rarity: "Rare" },
+  "178": { name: "Clawva", rarity: "Epic" },
+  "179": { name: "Dark Gurgleplops", rarity: "Rare" },
+  "018": { name: "Squibee", rarity: "Common" },
+  "180": { name: "Gog", rarity: "Epic" },
+  "181": { name: "Dark Humbug", rarity: "Rare" },
+  "182": { name: "Light Blazebit", rarity: "Exotic" },
+  "183": { name: "Pipsqueak", rarity: "Epic" },
+  "184": { name: "Rocker Octavio", rarity: "Exotic" },
+  "185": { name: "Dark Felis", rarity: "Rare" },
+  "186": { name: "Dark Shanghorse", rarity: "Rare" },
+  "187": { name: "Dark Firebrand", rarity: "Rare" },
+  "188": { name: "Dark Salamindra", rarity: "Epic" },
+  "189": { name: "Dark Drowsie", rarity: "Rare" },
+  "019": { name: "Steamguin", rarity: "Common" },
+  "190": { name: "Dark Bullo", rarity: "Rare" },
+  "191": { name: "Dark Beetor", rarity: "Rare" },
+  "192": { name: "Crabbles", rarity: "Epic" },
+  "193": { name: "Darryl", rarity: "Epic" },
+  "194": { name: "Tripfire", rarity: "Epic" },
+  "195": { name: "Cindera", rarity: "Rare" },
+  "196": { name: "Inferno", rarity: "Epic" },
+  "197": { name: "Hotdog", rarity: "Epic" },
+  "198": { name: "Cyberdillo", rarity: "Epic" },
+  "199": { name: "Foil Rockodile", rarity: "Exotic" },
+  "002": { name: "Flowerpiller", rarity: "Common" },
+  "020": { name: "Waddles", rarity: "Rare" },
+  "200": { name: "Rafiery", rarity: "Rare" },
+  "201": { name: "Nanaslug", rarity: "Epic" },
+  "202": { name: "Vhisp", rarity: "Common" },
+  "203": { name: "Raldio", rarity: "Rare" },
+  "021": { name: "Treemur", rarity: "Rare" },
+  "022": { name: "Tulipinny", rarity: "Rare" },
+  "226": { name: "Foil Waddles", rarity: "Exotic" },
+  "227": { name: "Foil Fossillia", rarity: "Exotic" },
+  "023": { name: "Dark Flue", rarity: "Rare" },
+  "230": { name: "Foil Thundercracker", rarity: "Exotic" },
+  "024": { name: "Dark Flowerpiller", rarity: "Rare" },
+  "241": { name: "Claviger", rarity: "Legendary" },
+  "247": { name: "Foil Kiloray", rarity: "Exotic" },
+  "025": { name: "Dark Prawnja", rarity: "Rare" },
+  "026": { name: "Blazebit", rarity: "Rare" },
+  "027": { name: "Frostmite", rarity: "Common" },
+  "028": { name: "Blazertooth", rarity: "Epic" },
+  "029": { name: "Statikat", rarity: "Common" },
+  "003": { name: "Prawnja", rarity: "Common" },
+  "030": { name: "Equestrion", rarity: "Common" },
+  "031": { name: "Drilldent", rarity: "Common" },
+  "032": { name: "Kiloray", rarity: "Common" },
+  "322": { name: "Foil Flintly", rarity: "Exotic" },
+  "033": { name: "Breezycheeks", rarity: "Common" },
+  "034": { name: "Mumbah", rarity: "Common" },
+  "035": { name: "Aria", rarity: "Common" },
+  "352": { name: "Fiender", rarity: "Rare" },
+  "036": { name: "Jellyshock", rarity: "Common" },
+  "037": { name: "Croaky", rarity: "Common" },
+  "378": { name: "Auger", rarity: "Common" },
+  "038": { name: "Sparkslug", rarity: "Common" },
+  "384": { name: "Elite Cadbunny", rarity: "Legendary" },
+  "039": { name: "Craggy", rarity: "Common" },
+  "390": { name: "Peekly", rarity: "Common" },
+  "004": { name: "Weevern", rarity: "Common" },
+  "040": { name: "Owlie", rarity: "Common" },
+  "403": { name: "Elite Alpha", rarity: "Legendary" },
+  "405": { name: "Dorux", rarity: "Epic" },
+  "041": { name: "Luna", rarity: "Rare" },
+  "042": { name: "Poltergust", rarity: "Rare" },
+  "425": { name: "Defilio", rarity: "Exotic" },
+  "043": { name: "Fossillia", rarity: "Rare" },
+  "433": { name: "Blighted Flue", rarity: "Legendary" },
+  "044": { name: "Eggy", rarity: "Rare" },
+  "045": { name: "Thundercracker", rarity: "Rare" },
+  "046": { name: "Mun Kee", rarity: "Rare" },
+  "047": { name: "Microblast", rarity: "Epic" },
+  "048": { name: "Sledgehog", rarity: "Epic" },
+  "049": { name: "Sapphron", rarity: "Rare" },
+  "005": { name: "Cubsprout", rarity: "Common" },
+  "050": { name: "Sparkspeck", rarity: "Common" },
+  "500": { name: "Blighted Fiender", rarity: "Exotic" },
+  "501": { name: "Blighted Kiloray", rarity: "Exotic" },
+  "502": { name: "Dark Shellbee", rarity: "Rare" },
+  "503": { name: "Liothning", rarity: "Epic" },
+  "504": { name: "Dark Lumera", rarity: "Rare" },
+  "505": { name: "Dark Steamguin", rarity: "Rare" },
+  "506": { name: "Dark Poltergust", rarity: "Legendary" },
+  "051": { name: "Grubbean", rarity: "Common" },
+  "052": { name: "Echino", rarity: "Common" },
+  "053": { name: "Wavesling", rarity: "Common" },
+  "054": { name: "Sparkitten", rarity: "Common" },
+  "055": { name: "Arigato", rarity: "Common" },
+  "056": { name: "Jack", rarity: "Common" },
+  "057": { name: "Quebble", rarity: "Common" },
+  "058": { name: "Digsy", rarity: "Common" },
+  "059": { name: "Hippoke", rarity: "Common" },
+  "006": { name: "Sparkupine", rarity: "Common" },
+  "060": { name: "Leggy", rarity: "Common" },
+  "061": { name: "Orcatide", rarity: "Common" },
+  "062": { name: "Flutterpat", rarity: "Rare" },
+  "063": { name: "Snorkels", rarity: "Rare" },
+  "064": { name: "Kelpa", rarity: "Rare" },
+  "065": { name: "Ignios", rarity: "Rare" },
+  "067": { name: "Beelzebug", rarity: "Epic" },
+  "068": { name: "Winnebeargo", rarity: "Epic" },
+  "069": { name: "Fennie", rarity: "Epic" },
+  "007": { name: "Hydroseal", rarity: "Common" },
+  "070": { name: "Patchkin", rarity: "Exotic" },
+  "071": { name: "Turkniss", rarity: "Exotic" },
+  "072": { name: "Flurrious", rarity: "Exotic" },
+  "073": { name: "Fangly", rarity: "Epic" },
+  "074": { name: "Dark Kiloray", rarity: "Rare" },
+  "075": { name: "Dark Croaky", rarity: "Rare" },
+  "076": { name: "Valentino", rarity: "Exotic" },
+  "077": { name: "Dark Cubsprout", rarity: "Rare" },
+  "078": { name: "Dark Sparkitten", rarity: "Rare" },
+  "079": { name: "Dark Snortus", rarity: "Epic" },
+  "008": { name: "Snortus", rarity: "Common" },
+  "080": { name: "Boltzee", rarity: "Epic" },
+  "081": { name: "Dark Grubbean", rarity: "Rare" },
+  "082": { name: "Dark Owlie", rarity: "Rare" },
+  "083": { name: "Dark Echino", rarity: "Rare" },
+  "084": { name: "Patrik", rarity: "Exotic" },
+  "085": { name: "Dark Arigato", rarity: "Rare" },
+  "086": { name: "Dark Hydroseal", rarity: "Rare" },
+  "087": { name: "Peepsie", rarity: "Exotic" },
+  "088": { name: "Dark Eggy", rarity: "Epic" },
+  "089": { name: "Dark Equestrion", rarity: "Epic" },
+  "009": { name: "Quirk", rarity: "Common" },
+  "090": { name: "Dark Flameling", rarity: "Rare" },
+  "091": { name: "Dark Elefauna", rarity: "Rare" },
+  "092": { name: "Dark Sparkslug", rarity: "Rare" },
+  "093": { name: "Mama", rarity: "Exotic" },
+  "094": { name: "Dark Nessy", rarity: "Exotic" },
+  "095": { name: "Dark Hotfoot", rarity: "Common" },
+  "096": { name: "Dark Craggy", rarity: "Rare" },
+  "097": { name: "Dark Breezycheeks", rarity: "Rare" },
+  "098": { name: "Papa", rarity: "Exotic" },
+  "099": { name: "Amphibunny", rarity: "Epic" },
 }
