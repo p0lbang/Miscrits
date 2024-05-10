@@ -144,6 +144,9 @@ def playSound(audio: pygame.mixer.Sound) -> None:
 
 
 def checkActive():
+    if CONFIG["minimizable"]:
+        while LXVI_locateCenterOnScreen(UIImage(APPNAMEPNG), 0.8) is None:
+            pass
     if LXVI_locateCenterOnScreen(UIImage("loginbtn.png"), 0.9) is not None:
         login()
         return True
@@ -643,7 +646,7 @@ def encounterMode():
                 CATCHRATE[keyMiscrit][keyQuality] += 1
 
         catchStandard = CONFIG["catch"]["catchStandardDict"][rarity]
-        if ((CONFIG["catch"]["targetAll"] and miscrit not in CONFIG["catch"]["blocked"]) or miscrit in CONFIG["catch"]["targets"]) and wildScore >= catchStandard:
+        if (miscrit in CONFIG["catch"]["targets"] or (CONFIG["catch"]["targetAll"] and miscrit not in CONFIG["catch"]["blocked"] and wildScore >= catchStandard)):
             print(f"\033[A{Fore.WHITE}{qualityDict[wildScore]} | {Fore.WHITE}Target miscrit {Fore.YELLOW}{miscrit}{Fore.WHITE} found!{Fore.LIGHTBLACK_EX}")
             playSound(pluck)
             catchMode()
@@ -820,10 +823,6 @@ def catchMode():
             )
             conclude()
 
-        if LXVI_locateCenterOnScreen(UIImage("currentMiscrit.png"), 0.80) is None:
-            getCurrentMiscrit()
-            current = updateCurrentMiscrit()
-
         if (
             LXVI_locateCenterOnScreen(UIImage("miscripedia.png"), confidence=0.8)
             is None
@@ -832,7 +831,12 @@ def catchMode():
                 print(
                     f"\033[A{Fore.RED}{qualityDict[wildScore]}{Fore.LIGHTBLACK_EX} | {Fore.WHITE}{miscrit}{Fore.LIGHTBLACK_EX} died at {Fore.RED}{chance}%{Fore.LIGHTBLACK_EX} catch rate."
                 )
+
                 return
+
+        if LXVI_locateCenterOnScreen(UIImage("currentMiscrit.png"), 0.80) is None:
+            getCurrentMiscrit()
+            current = updateCurrentMiscrit()
 
         if (
             toClick := LXVI_locateCenterOnScreen(UIImage("run.png"), confidence=0.99)

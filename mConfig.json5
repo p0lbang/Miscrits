@@ -1,5 +1,6 @@
 {
     "audio": true, // false -> mute the code audios and not import pygame
+    "minimizable": false,
     "walk": {
         "autoWalk": true, // ................ | walks until it finds your searching location
         "walkDistance": 200,  // ............ | how far the cursor moves from the 'center' (ALSO DO NOT CHANGE) default: 200
@@ -42,7 +43,7 @@
             "fa_dshelbee": ["a4_pool2", "a4_shrub1", "a4_bush2", "a4_typha1"],
             "fa_dsteamguin": ["a4_flatrock", "a4_sun2", "a4_dead2", "a4_sun3"],
             "fa_dprawnja": ["a4_typha2", "a4_dead1", "a4_shrub2", "a4_typha3"],
-            "fa_defilio": ["a4_blight", "a4_typha4", "a4_minis", "a4_yellow"],
+            "fa_defilio": ["a4_blight", "a4_typha4", "a4_minis"],
             "fb_bflue": ["a4_blight2", "a4_log", "a4_stone", "a4_shrub3"],
                 // "fb_bflue": ["a4_blight2", "a4_blight2R"],
     //Mount Gemma
@@ -59,7 +60,7 @@
             "gd_boltzee_ffossillia": ["b3_gigarock", "b3_potrock", "b3_sparkcrystal", "b3_megarock", "b3_typha"],
             "gc_fthundercracker": ["b4_twilightcrystal", "b4_potrock", "b4_galaxycrystal", "b4_typha"],
             // "ga_munkee_liothning_dpoltergust_fflintly": ["b4_gold", "b4_fade", "b4_purpred", "b4_blue"],
-                "ga_munkee_liothning_dpoltergust_fflintly": ["b4_purpred", "b4_fade"],
+                "ga_munkee_liothning_dpoltergust_fflintly": ["b4_fade", "b4_fadeR"],
     //The Mansion
             "m0_kelpa": ["m0_typha", "m0_hay"],
             "m0_A": ["m0_sapling", "m0_rock1", "m0_rock2", "m0_stone1", "m0_grass", "m0_rock3"],
@@ -115,10 +116,8 @@
             "Common": 12, // ....# 0-12
             "Rare": 12, // ......# 0-12
             "Epic": 12, // ......# 0-12
-            "Exotic": 10, // ....# 0-12
-            "Legendary": 6, // .# 6-12
-            "Premium": 6, // just in case they exist again
-            "Exclusive": 6, // same as above
+            "Exotic": 12, // ....# 0-12
+            "Legendary": 11, // .# 6-12
             "Unidentified": 12,  // -> if rarity identification fails
         },
     },
