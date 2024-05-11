@@ -83,7 +83,7 @@
     },
     "fight": {  // | info of your first miscrit in the team, the hard carry
         "autoFight": true,  // false -> use arrow keys to cycle through the skills and 'z' to click skill ('x' to hover on run)
-        "skipWeakness": false,  // false -> fight weakness element instead of escaping (overrides miscrit preset if true)
+        "skipWeakness": true,  // false -> fight weakness element instead of escaping (overrides miscrit preset if true)
     },
     "catch": {
         "skipAll": false,  // ....... | true -> flee from wild miscrits that are not tagged for capture

@@ -796,6 +796,9 @@ def catchMode():
     global miscrit, caught, current
     action = 1
 
+    while (toClick := LXVI_locateCenterOnScreen(UIImage("run.png"), 0.99)) is None:
+        pass
+    
     chance = getCatchChance()
     if chance >= 46:
         chance = str(chance)
@@ -1017,7 +1020,7 @@ def login():
     print("Account logged back in. Resuming...   ")
     time.sleep(5)
     dailySpin()
-    time.sleep(3)
+    time.sleep(5)
 
 
 def dailySpin():
