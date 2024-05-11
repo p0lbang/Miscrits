@@ -33,6 +33,13 @@ class MiscritsData:
         self.output = {}
         self.databuilder = {}
         self.ID = ""
+    
+    def checkSearchLocation(self, input):
+        if isinstance(input,list):
+            if isinstance(input[0],list):
+                if isinstance(input[0][0],list) and isinstance(input[0][2],int):
+                    return input[0][2]
+        return None
 
     def setTimeStarted(self):
         self.timeStarted = time.perf_counter()
@@ -181,6 +188,10 @@ class MiscritsData:
                 parsedObject = self.parseGodotData(mergedPacket)
                 # with open(f"testing\\testData{time.time()}.json5", "w") as file:
                 #     file.write(str(json.dumps(parsedObject, indent=2)))
+
+                if (searchloc := self.checkSearchLocation(parsedObject)) is not None:
+                    # print(f"Search Location: {searchloc}")
+                    pass
 
                 if isinstance(parsedObject, (list, dict)):
                     if parsedObject == []:
