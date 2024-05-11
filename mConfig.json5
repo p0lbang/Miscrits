@@ -1,5 +1,5 @@
 {
-    "audio": true, // false -> mute the code audios and not import pygame
+    "audio": false, // false -> mute the code audios and not import pygame
     "minimizable": false,
     "walk": {
         "autoWalk": true, // ................ | walks until it finds your searching location
@@ -13,7 +13,7 @@
             "ga": [ 155,  60, 155, 155,  40, -25,  75, 105,   0,  25, 180, 125],
             "ga0":[   3,   1,   8,   2,   7,   4,   1,   2,   1,   1,   2,   1],
             "gb": [ 155,  60,  35, 145,  25],
-            "gb0":[   3,   1,   6,   3,   1],
+            "gb0":[   3.02,   1,   6,   3,   1],
             "gc": [ 155,  60, 155, 180,  35,  30, -25,  75, 155],
             "gc0":[   3,   1,  10,   3,   4,   5,   4,   1,   3],
             "gd": [ 155,  60, 155,  40, -25, -25,  35, -35],
@@ -30,11 +30,13 @@
     "search": { // if you want to use custom, duplicate existing then comment out the original
         "autoSearch": true, // .............. | looks for miscrits in searchable spots for you
         "searchInterval": 5, // ............. | time before clicking the next location (min: 5)
-        "searchCode": "ga_munkee_liothning_dpoltergust_fflintly", // ...... | paste from search codes below, ex: "fa_waddles" 
+        "searchCode": "fa_dtreemur", // ...... | paste from search codes below, ex: "fa_waddles" 
         "searchSeq": { // ................... | don't change the existing sequences pls don't no no 
     //Miscrian Forest
             "fa_waddles": ["a1_typha1", "a1_bushsun", "a1_typha1_2"],
-            "fa_dflue_bkiloray": ["a2_blight", "a2_palm", "a2_tree", "a2_rock1"],
+            "fa_dflue_bkiloray": ["a2_blight", "a2_palm", 
+            "a2_tree", "a2_rock1"
+            ],
                 //"fa_dflue_bkiloray": ["a2_blight", "a2_palm"], // custom
             "fa_dlumera": ["a2_chops2", "a2_axe", "a2_chops1", "a2_rock2"],
             "fa_tulipinny_dflowerpiller_bfiender": ["a3_blight", "a3_sun", "a3_magic", "a3_fuchsia"],
@@ -46,6 +48,8 @@
             "fa_defilio": ["a4_blight", "a4_typha4", "a4_minis"],
             "fb_bflue": ["a4_blight2", "a4_log", "a4_stone", "a4_shrub3"],
                 // "fb_bflue": ["a4_blight2", "a4_blight2R"],
+            "fa_dtreemur": ["a2_deadcorner","a2_chopscorner"],
+                
     //Mount Gemma
             "ga_luna": ["b1_stone", "b1_typha", "b1_potrock", "b1_mound1"],
             "gb_poltergust_dkiloray": ["b1_crystal1", "b1_dead", "b1_mound2", "b1_smallcact", "b1_stack"],
@@ -57,8 +61,16 @@
             "gc_fwaddles": ["b2_fwcrystal","b2_fwcactus","b2_fwrock",],
             "gd_fossillia_eggy": ["b3_valleyrock", "b3_stump", "b3_deadbush", "b3_bonsai"],
             "gd_dowlie": ["b3_rockA", "b3_rockB", "b3_rockC"],
-            "gd_boltzee_ffossillia": ["b3_gigarock", "b3_potrock", "b3_sparkcrystal", "b3_megarock", "b3_typha"],
-            "gc_fthundercracker": ["b4_twilightcrystal", "b4_potrock", "b4_galaxycrystal", "b4_typha"],
+            "gd_boltzee_ffossillia": [
+                "b3_megarock", 
+                "b3_gigarock", 
+                //  "b3_sparkcrystal", 
+                // "b3_potrock",
+                // "b3_typha",
+                 ],
+            "gc_fthundercracker": ["b4_twilightcrystal", "b4_potrock", 
+            // "b4_galaxycrystal", "b4_typha"
+            ],
             // "ga_munkee_liothning_dpoltergust_fflintly": ["b4_gold", "b4_fade", "b4_purpred", "b4_blue"],
                 "ga_munkee_liothning_dpoltergust_fflintly": ["b4_fade", "b4_fadeR"],
     //The Mansion
@@ -76,7 +88,7 @@
     "team": {
         "autoTrain": true,  // .. | levels up your miscrits for you
         "bonusTrain": false,  //  | true -> spend platinum for bonus stats when levelling up
-        "autoSwitch": true,  // . | switches miscrits on your team depending on the reached level
+        "autoSwitch": false,  // . | switches miscrits on your team depending on the reached level
         "switchAmount": 3,  // . | amount of miscrits to check on your team from the right
         "switchMain": false,  // . | false if miscrit 1 is excluded from switching
         "switchLevel": 30,  // .. | the reached level in question
@@ -93,10 +105,13 @@
         "bigpokeThreshold": 70,
         "targetAll": true,  // ....... | true -> every encountered miscrit is tagged for capture
         "targets": [
-            "BlightedFlue", "DarkPoltergust", "FoilThundercracker", "DarkOwlie",
+            "BlightedFlue", "DarkPoltergust", "FoilThundercracker", "DarkOwlie", "FoilThundercracke", 
+            "Darkowlie",
+            "Boltzee",
+            "DarkFlue",
             ],  
         // ........................... | miscrits added above are prioritized for capture regardless of their initial catch chance
-        "ignoreBlockedIfS+": false,
+        "ignoreBlockedIfS+": true,
         "catchF-": true,
         "blocked": [
             "Cubsprout", "Hydroseal", "Sparkupine", // forest 1
