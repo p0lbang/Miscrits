@@ -6,3 +6,4 @@ catchrate.json5
 gitData.json5
 mpediaExtractor.py
 testing/*
+*.sh
