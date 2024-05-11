@@ -186,19 +186,21 @@ def LXVI_dragTo(p: Point, duration: float = 0):
 
 
 def LXVI_screenshot(
-    region: tuple[int, int, int, int] = (0, 0, 0, 0),
+    region: tuple[int, int, int, int] | None = None,
 ):
     # PIL library, bbox = (left,top,right,bottom)
     # pyautogui library, region = (left,top,width,height)
 
     # converts region to bbox
-    bbox_left = monitor["left"] + region[0]
-    bbox_top = monitor["top"] + region[1]
-    bbox_right = bbox_left + region[2]
-    bbox_bottom = bbox_top + region[3]
+    computedBbox = None
+    if region is not None:
+        bbox_left = monitor["left"] + region[0]
+        bbox_top = monitor["top"] + region[1]
+        bbox_right = bbox_left + region[2]
+        bbox_bottom = bbox_top + region[3]
 
-    computedBbox = (bbox_left, bbox_top, bbox_right, bbox_bottom)
-
+        computedBbox = (bbox_left, bbox_top, bbox_right, bbox_bottom)
+        
     img = ImageGrab.grab(bbox=computedBbox, all_screens=True)
 
     return img
